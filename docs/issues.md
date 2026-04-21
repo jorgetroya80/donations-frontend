@@ -80,3 +80,23 @@ ADMIN role lacks backend permission for report endpoints (balance, donation summ
 - Multi-role users see all applicable widgets merged
 
 Created `src/lib/permissions.ts` with `canViewReports`, `canManageUsers`, `canRecordData` helpers. Dashboard page now composes widgets conditionally based on user roles.
+
+# Phase 3.5: Testing Setup + Backfill
+
+## Issues encountered
+
+### 1. ky relative prefix fails in jsdom/Node
+
+ky's `prefix: '/api/v1'` constructs a `new Request('/api/v1/login')` internally. In jsdom, Node's native `fetch`/`Request` can't resolve relative URLs (no implicit base URL like a browser). Error: `TypeError: Failed to parse URL from /api/v1/login`. Fixed by making the prefix absolute: `${window.location.origin}/api/v1`. Works in both browser (resolves to current origin) and test env (jsdom sets `window.location.origin` to `http://localhost:3000` via `environmentOptions.jsdom.url`).
+
+### 2. msw handlers need wildcard prefix for jsdom
+
+msw in Node intercepts full URLs. Since ky builds `http://localhost:3000/api/v1/...`, handlers using `/api/v1/...` didn't match. Fixed by using glob prefix `*/api/v1` in handler paths.
+
+### 3. Test files with JSX must use .tsx extension
+
+Vite's oxc transform rejects JSX in `.ts` files. Hook tests using `<QueryClientProvider>` in wrapper functions need `.test.tsx` extension, not `.test.ts`. Error: `Expected '>' but found 'Identifier'`.
+
+### 4. Currency formatting varies across Node/ICU versions
+
+`Intl.NumberFormat('es-ES', { currency: 'EUR' })` may produce different thousands separators depending on Node's ICU data (full vs small-icu). Tests use flexible regex `5[.\s]?000` instead of exact `5.000,00` to avoid CI failures across environments.

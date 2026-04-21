@@ -3,7 +3,7 @@ import ky from 'ky'
 const AUTH_STORAGE_KEY = 'auth_user'
 
 export const api = ky.create({
-  prefix: '/api/v1',
+  prefix: `${typeof document !== 'undefined' ? window.location.origin : 'http://localhost:3000'}/api/v1`,
   credentials: 'include',
   hooks: {
     afterResponse: [
