@@ -37,3 +37,23 @@ After adding shadcn components (dropdown-menu, sheet, tooltip, separator) + reac
 ### 3. No issues with i18n setup
 
 react-i18next configured with static import of `es.json` (no HTTP backend needed for single-language). All hardcoded Spanish strings in login page and dashboard replaced with `t()` calls.
+
+# Login bug fixes
+
+## Issues encountered
+
+### 1. Base UI Button overrides `type="submit"`
+
+shadcn's latest Button uses `@base-ui/react` Button, which hardcodes `type="button"` internally via `useButton` hook. The merge order in `useRenderElement` makes Base UI's `type` override the consumer's `type="submit"`. Form `onSubmit` never fired — no network request at all. Fixed by replacing `@base-ui/react` Button with a plain `<button>` element in `src/components/ui/button.tsx`.
+
+### 2. ky v2 renamed `prefixUrl` to `prefix`
+
+ky v2 throws immediately if `prefixUrl` is used (renamed to `prefix`). The error was caught by the generic catch block showing "Error de conexión" with no network request visible. Fixed by changing `prefixUrl` to `prefix` in `src/lib/api.ts`.
+
+### 3. CORS 403 — Vite proxy forwards `Origin` header
+
+Vite proxy's `changeOrigin: true` only changes `Host`, not `Origin`. Spring Boot rejected requests with `Origin: http://localhost:3000` as invalid CORS. Fixed by adding `configure` callback to strip the `Origin` header from proxied requests in `vite.config.ts`.
+
+### 4. ky v2 `afterResponse` hook signature changed
+
+ky v2 hooks receive a single object `{ request, options, response, retryCount }` instead of positional args `(request, options, response)`. The old signature caused the hook to crash on every response (including 200), caught as "Error de conexión". Fixed by destructuring the object in `src/lib/api.ts`.
