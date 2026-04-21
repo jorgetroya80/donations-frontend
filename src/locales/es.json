@@ -23,7 +23,17 @@
   },
   "dashboard": {
     "welcome": "Bienvenido, {{username}}",
-    "roles": "Roles: {{roles}}"
+    "roles": "Roles: {{roles}}",
+    "totalIncome": "Ingresos totales",
+    "totalExpenses": "Gastos totales",
+    "netBalance": "Balance neto",
+    "newDonation": "Nueva donaci\u00f3n",
+    "newExpense": "Nuevo gasto",
+    "donationsByType": "Donaciones por tipo",
+    "expensesByCategory": "Gastos por categor\u00eda",
+    "selectRange": "Seleccione un rango de fechas",
+    "errorLoading": "Error al cargar los datos del panel",
+    "noData": "Sin datos para el per\u00edodo seleccionado"
   },
   "sidebar": {
     "collapse": "Colapsar men\u00fa",

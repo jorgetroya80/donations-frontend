@@ -57,3 +57,15 @@ Vite proxy's `changeOrigin: true` only changes `Host`, not `Origin`. Spring Boot
 ### 4. ky v2 `afterResponse` hook signature changed
 
 ky v2 hooks receive a single object `{ request, options, response, retryCount }` instead of positional args `(request, options, response)`. The old signature caused the hook to crash on every response (including 200), caught as "Error de conexión". Fixed by destructuring the object in `src/lib/api.ts`.
+
+# Phase 3: Dashboard Home
+
+## Issues encountered
+
+### 1. shadcn `add` overwrites button.tsx on every install
+
+Running `npx shadcn@latest add calendar --overwrite` reverts `button.tsx` to the Base UI version, undoing our plain `<button>` fix. Must restore the fix after every `shadcn add` that touches button.tsx. Consider pinning the file or adding a post-install check.
+
+### 2. Bundle size grows significantly with Recharts
+
+Adding recharts (via shadcn charts) pushed the main bundle to ~985KB. Expected for charting libraries. Will code-split with lazy routes in a later phase.
