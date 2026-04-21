@@ -7,6 +7,9 @@
     "defaultBranch": "main"
   },
   "files": { "ignoreUnknown": false },
+  "css": {
+    "parser": { "cssModules": true, "tailwindDirectives": true }
+  },
   "formatter": {
     "enabled": true,
     "formatWithErrors": false,
