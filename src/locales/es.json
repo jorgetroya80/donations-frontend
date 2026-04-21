@@ -33,7 +33,12 @@
     "expensesByCategory": "Gastos por categor\u00eda",
     "selectRange": "Seleccione un rango de fechas",
     "errorLoading": "Error al cargar los datos del panel",
-    "noData": "Sin datos para el per\u00edodo seleccionado"
+    "noData": "Sin datos para el per\u00edodo seleccionado",
+    "viewDonors": "Ver donantes",
+    "userManagement": "Gesti\u00f3n de usuarios",
+    "totalUsers": "Usuarios registrados",
+    "manageUsers": "Administrar usuarios",
+    "financialOverview": "Resumen financiero"
   },
   "sidebar": {
     "collapse": "Colapsar men\u00fa",

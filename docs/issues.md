@@ -69,3 +69,14 @@ Running `npx shadcn@latest add calendar --overwrite` reverts `button.tsx` to the
 ### 2. Bundle size grows significantly with Recharts
 
 Adding recharts (via shadcn charts) pushed the main bundle to ~985KB. Expected for charting libraries. Will code-split with lazy routes in a later phase.
+
+### 3. ADMIN role gets 403 on `/api/v1/reports/*` endpoints
+
+ADMIN role lacks backend permission for report endpoints (balance, donation summary, expense summary). Dashboard was showing financial charts for all users, causing 403 errors for ADMIN-only users. Fixed by refactoring the dashboard into role-based widgets:
+
+- **FinancialOverview** (TREASURER, PASTOR) — balance cards + charts + date range picker
+- **UserStats** (ADMIN) — total registered users + link to manage users
+- **QuickActions** (OPERATOR, TREASURER, ADMIN) — New Donation, New Expense, View Donors buttons
+- Multi-role users see all applicable widgets merged
+
+Created `src/lib/permissions.ts` with `canViewReports`, `canManageUsers`, `canRecordData` helpers. Dashboard page now composes widgets conditionally based on user roles.

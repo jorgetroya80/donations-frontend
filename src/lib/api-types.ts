@@ -36,3 +36,20 @@ export interface ExpenseSummaryResponse {
   totalsByCategory: CategoryTotal[]
   grandTotal: number
 }
+
+export interface UserResponse {
+  id: number
+  username: string
+  fullName: string
+  email: string
+  active: boolean
+  roles: string[]
+}
+
+export interface PageResponse<T> {
+  content: T[]
+  totalElements: number
+  totalPages: number
+  size: number
+  number: number
+}
