@@ -21,3 +21,19 @@ shadcn/ui init rewrites `index.css` with `@custom-variant`, `@theme`, and `@appl
 ### 5. ESLint react-refresh errors on non-component exports
 
 `buttonVariants` (shadcn) and `useAuth` hook triggered `react-refresh/only-export-components` error. Changed rule to `warn` with `allowConstantExport: true` in `eslint.config.js`.
+
+# Phase 2: Layout + Navigation
+
+## Issues encountered
+
+### 1. shadcn add prompts for overwrite on existing files
+
+`npx shadcn@latest add` prompts interactively when `button.tsx` already exists. Fixed by using `--overwrite` flag.
+
+### 2. Chunk size warning on build
+
+After adding shadcn components (dropdown-menu, sheet, tooltip, separator) + react-i18next + react-router, the main bundle exceeds 500KB. Not blocking — will code-split with lazy routes in later phases.
+
+### 3. No issues with i18n setup
+
+react-i18next configured with static import of `es.json` (no HTTP backend needed for single-language). All hardcoded Spanish strings in login page and dashboard replaced with `t()` calls.

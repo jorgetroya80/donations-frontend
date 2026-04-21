@@ -1,0 +1,47 @@
+{
+  "app": {
+    "name": "Donaciones"
+  },
+  "nav": {
+    "dashboard": "Inicio",
+    "donations": "Donaciones",
+    "donors": "Donantes",
+    "expenses": "Gastos",
+    "reports": "Reportes",
+    "users": "Usuarios"
+  },
+  "auth": {
+    "login": "Iniciar sesi\u00f3n",
+    "logout": "Cerrar sesi\u00f3n",
+    "username": "Usuario",
+    "password": "Contrase\u00f1a",
+    "submit": "Ingresar",
+    "submitting": "Ingresando...",
+    "changePassword": "Cambiar contrase\u00f1a",
+    "errorInvalidCredentials": "Usuario o contrase\u00f1a incorrectos",
+    "errorConnection": "Error de conexi\u00f3n. Intente nuevamente."
+  },
+  "dashboard": {
+    "welcome": "Bienvenido, {{username}}",
+    "roles": "Roles: {{roles}}"
+  },
+  "sidebar": {
+    "collapse": "Colapsar men\u00fa",
+    "expand": "Expandir men\u00fa"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "confirm": "Confirmar",
+    "back": "Volver",
+    "search": "Buscar",
+    "actions": "Acciones",
+    "yes": "S\u00ed",
+    "no": "No"
+  }
+}

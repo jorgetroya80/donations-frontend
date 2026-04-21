@@ -1,0 +1,144 @@
+import {
+  ChevronLeft,
+  ChevronRight,
+  Church,
+  HandCoins,
+  Home,
+  LayoutDashboard,
+  Receipt,
+  Users,
+  UsersRound,
+} from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { NavLink } from 'react-router'
+import { Button } from '@/components/ui/button'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { useAuth } from '@/features/auth/auth-context'
+import { cn } from '@/lib/utils'
+
+const SIDEBAR_KEY = 'sidebar_collapsed'
+
+function getStoredCollapsed(): boolean {
+  return localStorage.getItem(SIDEBAR_KEY) === 'true'
+}
+
+interface SidebarProps {
+  collapsed: boolean
+  onToggle: () => void
+}
+
+interface NavItem {
+  to: string
+  labelKey: string
+  icon: React.ReactNode
+  adminOnly?: boolean
+}
+
+const navItems: NavItem[] = [
+  { to: '/', labelKey: 'nav.dashboard', icon: <Home size={20} /> },
+  {
+    to: '/donations',
+    labelKey: 'nav.donations',
+    icon: <HandCoins size={20} />,
+  },
+  {
+    to: '/donors',
+    labelKey: 'nav.donors',
+    icon: <UsersRound size={20} />,
+  },
+  { to: '/expenses', labelKey: 'nav.expenses', icon: <Receipt size={20} /> },
+  {
+    to: '/reports',
+    labelKey: 'nav.reports',
+    icon: <LayoutDashboard size={20} />,
+  },
+  {
+    to: '/users',
+    labelKey: 'nav.users',
+    icon: <Users size={20} />,
+    adminOnly: true,
+  },
+]
+
+export { getStoredCollapsed, SIDEBAR_KEY }
+
+export function Sidebar({ collapsed, onToggle }: SidebarProps) {
+  const { t } = useTranslation()
+  const { user } = useAuth()
+  const isAdmin = user?.roles.includes('ADMIN') ?? false
+
+  return (
+    <aside
+      className={cn(
+        'flex h-screen flex-col border-r bg-card transition-[width] duration-200',
+        collapsed ? 'w-16' : 'w-56'
+      )}
+    >
+      <div
+        className={cn(
+          'flex h-14 items-center border-b px-3',
+          collapsed ? 'justify-center' : 'gap-2'
+        )}
+      >
+        <Church size={24} className="shrink-0 text-primary" />
+        {!collapsed && (
+          <span className="truncate font-semibold">{t('app.name')}</span>
+        )}
+      </div>
+
+      <nav className="flex-1 space-y-1 p-2">
+        {navItems.map((item) => {
+          if (item.adminOnly && !isAdmin) return null
+
+          const link = (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.to === '/'}
+              className={({ isActive }) =>
+                cn(
+                  'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                  'hover:bg-accent hover:text-accent-foreground',
+                  isActive
+                    ? 'bg-accent text-accent-foreground'
+                    : 'text-muted-foreground',
+                  collapsed && 'justify-center px-0'
+                )
+              }
+            >
+              {item.icon}
+              {!collapsed && <span>{t(item.labelKey)}</span>}
+            </NavLink>
+          )
+
+          if (collapsed) {
+            return (
+              <Tooltip key={item.to} delayDuration={0}>
+                <TooltipTrigger asChild>{link}</TooltipTrigger>
+                <TooltipContent side="right">{t(item.labelKey)}</TooltipContent>
+              </Tooltip>
+            )
+          }
+
+          return link
+        })}
+      </nav>
+
+      <div className="border-t p-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="w-full"
+          onClick={onToggle}
+          aria-label={collapsed ? t('sidebar.expand') : t('sidebar.collapse')}
+        >
+          {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+        </Button>
+      </div>
+    </aside>
+  )
+}
