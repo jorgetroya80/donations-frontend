@@ -66,6 +66,131 @@ export const handlers = [
     })
   }),
 
+  http.get(`${API}/donations`, () => {
+    return HttpResponse.json({
+      content: [
+        {
+          id: 1,
+          amount: 100,
+          donationDate: '2026-04-15',
+          donationType: 'TITHE',
+          paymentMethod: 'CASH',
+          donorId: 1,
+          donorName: 'Juan Pérez',
+          notes: null,
+          createdAt: '2026-04-15T10:00:00',
+          updatedAt: '2026-04-15T10:00:00',
+        },
+        {
+          id: 2,
+          amount: 50,
+          donationDate: '2026-04-16',
+          donationType: 'OFFERING',
+          paymentMethod: 'BANK_TRANSFER',
+          donorId: null,
+          donorName: null,
+          notes: 'Test',
+          createdAt: '2026-04-16T10:00:00',
+          updatedAt: '2026-04-16T10:00:00',
+        },
+      ],
+      totalElements: 2,
+      totalPages: 1,
+      size: 10,
+      number: 0,
+    })
+  }),
+
+  http.get(`${API}/donations/:id`, ({ params }) => {
+    return HttpResponse.json({
+      id: Number(params.id),
+      amount: 100,
+      donationDate: '2026-04-15',
+      donationType: 'TITHE',
+      paymentMethod: 'CASH',
+      donorId: 1,
+      donorName: 'Juan Pérez',
+      notes: null,
+      createdAt: '2026-04-15T10:00:00',
+      updatedAt: '2026-04-15T10:00:00',
+    })
+  }),
+
+  http.post(`${API}/donations`, async ({ request }) => {
+    const body = (await request.json()) as { confirmDuplicate?: boolean }
+    if (body.confirmDuplicate) {
+      return HttpResponse.json({
+        donation: {
+          id: 3,
+          amount: 100,
+          donationDate: '2026-04-15',
+          donationType: 'TITHE',
+          paymentMethod: 'CASH',
+          donorId: null,
+          donorName: null,
+          notes: null,
+          createdAt: '2026-04-15T10:00:00',
+          updatedAt: '2026-04-15T10:00:00',
+        },
+        duplicateWarning: false,
+        saved: true,
+      })
+    }
+    return HttpResponse.json({
+      donation: {
+        id: 3,
+        amount: 100,
+        donationDate: '2026-04-15',
+        donationType: 'TITHE',
+        paymentMethod: 'CASH',
+        donorId: null,
+        donorName: null,
+        notes: null,
+        createdAt: '2026-04-15T10:00:00',
+        updatedAt: '2026-04-15T10:00:00',
+      },
+      duplicateWarning: false,
+      saved: true,
+    })
+  }),
+
+  http.put(`${API}/donations/:id`, () => {
+    return HttpResponse.json({
+      id: 1,
+      amount: 200,
+      donationDate: '2026-04-15',
+      donationType: 'TITHE',
+      paymentMethod: 'CASH',
+      donorId: 1,
+      donorName: 'Juan Pérez',
+      notes: null,
+      createdAt: '2026-04-15T10:00:00',
+      updatedAt: '2026-04-15T12:00:00',
+    })
+  }),
+
+  http.get(`${API}/donors`, () => {
+    return HttpResponse.json({
+      content: [
+        {
+          id: 1,
+          fullName: 'Juan Pérez',
+          dniNie: '12345678A',
+          email: 'juan@test.com',
+          phone: null,
+          address: null,
+          active: true,
+          createdAt: '2026-01-01T10:00:00',
+          updatedAt: '2026-01-01T10:00:00',
+        },
+      ],
+      totalElements: 1,
+      totalPages: 1,
+      size: 100,
+      number: 0,
+    })
+  }),
+
   http.get(`${API}/users`, () => {
     return HttpResponse.json({
       content: [

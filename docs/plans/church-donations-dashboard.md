@@ -27,7 +27,7 @@ Durable decisions that apply across all phases:
 - **i18n**: Single `es.json` translation file, react-i18next
 - **UI pattern**: shadcn/ui primitives, feature-based folder structure, inline alerts (no toasts), confirmation modals for destructive actions
 - **Data fetching**: TanStack Query for all server state, ky as HTTP client
-- **Forms**: React Hook Form + Zod, validation mirrors API constraints
+- **Forms**: React Hook Form + Zod for CRUD forms (Phase 4+), validation mirrors API constraints. Login form stays manual (only 2 required fields, no complex validation needed)
 - **Tables**: Server-side pagination + sorting via Pageable params
 - **Testing**: Vitest + jsdom + React Testing Library + msw (Mock Service Worker)
   - Test files colocated: `component.tsx` → `component.test.tsx`

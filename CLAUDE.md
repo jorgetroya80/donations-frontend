@@ -8,6 +8,9 @@ This file provides guidance to Claude Code when working with code in this reposi
 - `npm run check` — Biome lint + format with auto-fix (`src/**/*.{ts,tsx}`)
 - `npm run lint` — ESLint check (`src/**/*.{ts,tsx}`)
 - `npm run preview` — Preview production build
+- `npm run test` — Run unit tests,
+- `npm run test:watch` — Run unit tests in watch mode,
+- `npm run test:coveragee` — Run test coveragee,
 
 ## Architecture
 

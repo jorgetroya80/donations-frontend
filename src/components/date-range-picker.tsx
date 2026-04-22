@@ -30,7 +30,7 @@ export function DateRangePicker({ from, to, onChange }: DateRangePickerProps) {
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger>
         <Button
           variant="outline"
           className={cn('justify-start text-left font-normal')}
@@ -47,7 +47,7 @@ export function DateRangePicker({ from, to, onChange }: DateRangePickerProps) {
           onSelect={handleSelect}
           numberOfMonths={2}
           footer={
-            <p className="text-center text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-center text-xs">
               {t('dashboard.selectRange')}
             </p>
           }

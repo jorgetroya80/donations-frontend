@@ -40,6 +40,46 @@
     "manageUsers": "Administrar usuarios",
     "financialOverview": "Resumen financiero"
   },
+  "donations": {
+    "title": "Donaciones",
+    "new": "Nueva donaci\u00f3n",
+    "edit": "Editar donaci\u00f3n",
+    "amount": "Monto",
+    "date": "Fecha",
+    "type": "Tipo",
+    "paymentMethod": "M\u00e9todo de pago",
+    "donor": "Donante",
+    "donorOptional": "Donante (opcional)",
+    "notes": "Notas",
+    "notesOptional": "Notas (opcional)",
+    "noDonor": "An\u00f3nimo",
+    "noNotes": "\u2014",
+    "types": {
+      "TITHE": "Diezmo",
+      "OFFERING": "Ofrenda",
+      "SPECIAL_OFFERING": "Ofrenda especial",
+      "OTHER": "Otro"
+    },
+    "paymentMethods": {
+      "CASH": "Efectivo",
+      "BANK_TRANSFER": "Transferencia bancaria"
+    },
+    "duplicateWarning": "Se detectó un posible duplicado. ¿Desea guardar de todos modos?",
+    "confirmSave": "Confirmar y guardar",
+    "confirmEdit": "Confirmar cambios",
+    "confirmEditDescription": "Se actualizarán los datos de esta donación.",
+    "successCreated": "Donaci\u00f3n creada exitosamente",
+    "successUpdated": "Donaci\u00f3n actualizada exitosamente",
+    "errorSaving": "Error al guardar la donaci\u00f3n",
+    "errorLoading": "Error al cargar las donaciones",
+    "empty": "No hay donaciones registradas",
+    "page": "P\u00e1gina {{page}} de {{total}}",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "selectType": "Seleccione tipo",
+    "selectPayment": "Seleccione m\u00e9todo",
+    "selectDonor": "Seleccione donante"
+  },
   "sidebar": {
     "collapse": "Colapsar men\u00fa",
     "expand": "Expandir men\u00fa"

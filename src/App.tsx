@@ -6,6 +6,9 @@ import { AuthProvider } from '@/features/auth/auth-context'
 import { LoginPage } from '@/features/auth/login-page'
 import { ProtectedRoute } from '@/features/auth/protected-route'
 import { DashboardPage } from '@/features/dashboard/dashboard-page'
+import { DonationCreatePage } from '@/features/donations/donation-create-page'
+import { DonationEditPage } from '@/features/donations/donation-edit-page'
+import { DonationsPage } from '@/features/donations/donations-page'
 import { AppLayout } from '@/layouts/app-layout'
 
 const queryClient = new QueryClient({
@@ -28,6 +31,15 @@ export default function App() {
               <Route element={<ProtectedRoute />}>
                 <Route element={<AppLayout />}>
                   <Route path="/" element={<DashboardPage />} />
+                  <Route path="/donations" element={<DonationsPage />} />
+                  <Route
+                    path="/donations/new"
+                    element={<DonationCreatePage />}
+                  />
+                  <Route
+                    path="/donations/:id/edit"
+                    element={<DonationEditPage />}
+                  />
                 </Route>
               </Route>
               <Route path="*" element={<Navigate to="/" replace />} />

@@ -26,9 +26,9 @@ export function Header() {
   }
 
   return (
-    <header className="flex h-14 items-center justify-end border-b bg-card px-4">
+    <header className="bg-card flex h-14 items-center justify-end border-b px-4">
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+        <DropdownMenuTrigger>
           <Button variant="ghost" size="sm" className="gap-2">
             <User size={16} />
             <span>{user?.username}</span>

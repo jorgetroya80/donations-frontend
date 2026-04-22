@@ -74,7 +74,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   return (
     <aside
       className={cn(
-        'flex h-screen flex-col border-r bg-card transition-[width] duration-200',
+        'bg-card flex h-screen flex-col border-r transition-[width] duration-200',
         collapsed ? 'w-16' : 'w-56'
       )}
     >
@@ -84,7 +84,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           collapsed ? 'justify-center' : 'gap-2'
         )}
       >
-        <Church size={24} className="shrink-0 text-primary" />
+        <Church size={24} className="text-primary shrink-0" />
         {!collapsed && (
           <span className="truncate font-semibold">{t('app.name')}</span>
         )}
@@ -118,7 +118,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           if (collapsed) {
             return (
               <Tooltip key={item.to} delayDuration={0}>
-                <TooltipTrigger asChild>{link}</TooltipTrigger>
+                <TooltipTrigger>{link}</TooltipTrigger>
                 <TooltipContent side="right">{t(item.labelKey)}</TooltipContent>
               </Tooltip>
             )

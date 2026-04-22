@@ -53,3 +53,56 @@ export interface PageResponse<T> {
   size: number
   number: number
 }
+
+export type DonationType = 'TITHE' | 'OFFERING' | 'SPECIAL_OFFERING' | 'OTHER'
+export type PaymentMethod = 'CASH' | 'BANK_TRANSFER'
+
+export interface DonationResponse {
+  id: number
+  amount: number
+  donationDate: string
+  donationType: DonationType
+  paymentMethod: PaymentMethod
+  donorId: number | null
+  donorName: string | null
+  notes: string | null
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CreateDonationRequest {
+  amount: number
+  donationDate: string
+  donationType: DonationType
+  paymentMethod: PaymentMethod
+  donorId?: number | null
+  notes?: string | null
+  confirmDuplicate?: boolean
+}
+
+export interface UpdateDonationRequest {
+  amount?: number
+  donationDate?: string
+  donationType?: DonationType
+  paymentMethod?: PaymentMethod
+  donorId?: number | null
+  notes?: string | null
+}
+
+export interface DonationCreateResponse {
+  donation: DonationResponse
+  duplicateWarning: boolean
+  saved: boolean
+}
+
+export interface DonorResponse {
+  id: number
+  fullName: string
+  dniNie: string
+  email: string | null
+  phone: string | null
+  address: string | null
+  active: boolean
+  createdAt: string
+  updatedAt: string
+}

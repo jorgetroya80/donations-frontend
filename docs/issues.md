@@ -100,3 +100,19 @@ Vite's oxc transform rejects JSX in `.ts` files. Hook tests using `<QueryClientP
 ### 4. Currency formatting varies across Node/ICU versions
 
 `Intl.NumberFormat('es-ES', { currency: 'EUR' })` may produce different thousands separators depending on Node's ICU data (full vs small-icu). Tests use flexible regex `5[.\s]?000` instead of exact `5.000,00` to avoid CI failures across environments.
+
+# Phase 4: Donations CRUD
+
+## Issues encountered
+
+### 1. base-ui Select `pointer-events: none` breaks userEvent in jsdom
+
+base-ui `Select` renders dropdown items inside a portal with CSS that includes `pointer-events: none` on certain elements. `@testing-library/user-event` checks computed `pointer-events` before clicking, so `user.click()` on Select options throws `Unable to perform pointer interaction as the element has pointer-events: none`. Fixed by using `fireEvent.click()` (which skips pointer-events checks) for all Select interactions in tests.
+
+### 2. i18n text mismatched test assertions
+
+Test assertions used different Spanish text than the i18n keys (e.g. test expected "Confirmar cambios" but i18n had "¿Guardar cambios?"; test expected "posible duplicado" but i18n had "Se detectó una donación similar"). Fixed by aligning the i18n values in `es.json` to match the intended test assertions.
+
+### 3. base-ui Dialog renders via Portal in jsdom
+
+base-ui `Dialog` uses `DialogPrimitive.Portal` to render content outside the component tree. In jsdom this works correctly (unlike some other base-ui components), but required verifying that the portal target exists. No code fix needed — tests for the edit page confirmation dialog pass as-is once the i18n text was corrected.
