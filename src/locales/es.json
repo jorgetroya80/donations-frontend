@@ -80,6 +80,32 @@
     "selectPayment": "Seleccione m\u00e9todo",
     "selectDonor": "Seleccione donante"
   },
+  "donors": {
+    "title": "Donantes",
+    "new": "Nuevo donante",
+    "edit": "Editar donante",
+    "fullName": "Nombre completo",
+    "dniNie": "DNI/NIE",
+    "email": "Email",
+    "emailOptional": "Email (opcional)",
+    "phone": "Teléfono",
+    "phoneOptional": "Teléfono (opcional)",
+    "address": "Dirección",
+    "addressOptional": "Dirección (opcional)",
+    "status": "Estado",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "confirmEdit": "Confirmar cambios",
+    "confirmEditDescription": "Se actualizarán los datos de este donante.",
+    "successCreated": "Donante creado exitosamente",
+    "successUpdated": "Donante actualizado exitosamente",
+    "errorSaving": "Error al guardar el donante",
+    "errorLoading": "Error al cargar los donantes",
+    "empty": "No hay donantes registrados",
+    "page": "Página {{page}} de {{total}}",
+    "previous": "Anterior",
+    "next": "Siguiente"
+  },
   "sidebar": {
     "collapse": "Colapsar men\u00fa",
     "expand": "Expandir men\u00fa"

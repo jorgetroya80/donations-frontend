@@ -106,3 +106,20 @@ export interface DonorResponse {
   createdAt: string
   updatedAt: string
 }
+
+export interface CreateDonorRequest {
+  fullName: string
+  dniNie: string
+  email?: string | null
+  phone?: string | null
+  address?: string | null
+}
+
+export interface UpdateDonorRequest {
+  fullName?: string
+  dniNie?: string
+  email?: string | null
+  phone?: string | null
+  address?: string | null
+  active?: boolean
+}

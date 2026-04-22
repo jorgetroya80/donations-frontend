@@ -9,6 +9,9 @@ import { DashboardPage } from '@/features/dashboard/dashboard-page'
 import { DonationCreatePage } from '@/features/donations/donation-create-page'
 import { DonationEditPage } from '@/features/donations/donation-edit-page'
 import { DonationsPage } from '@/features/donations/donations-page'
+import { DonorCreatePage } from '@/features/donors/donor-create-page'
+import { DonorEditPage } from '@/features/donors/donor-edit-page'
+import { DonorsPage } from '@/features/donors/donors-page'
 import { AppLayout } from '@/layouts/app-layout'
 
 const queryClient = new QueryClient({
@@ -40,6 +43,9 @@ export default function App() {
                     path="/donations/:id/edit"
                     element={<DonationEditPage />}
                   />
+                  <Route path="/donors" element={<DonorsPage />} />
+                  <Route path="/donors/new" element={<DonorCreatePage />} />
+                  <Route path="/donors/:id/edit" element={<DonorEditPage />} />
                 </Route>
               </Route>
               <Route path="*" element={<Navigate to="/" replace />} />

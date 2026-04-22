@@ -183,11 +183,70 @@ export const handlers = [
           createdAt: '2026-01-01T10:00:00',
           updatedAt: '2026-01-01T10:00:00',
         },
+        {
+          id: 2,
+          fullName: 'María García',
+          dniNie: '87654321B',
+          email: null,
+          phone: '600123456',
+          address: 'Calle Mayor 1',
+          active: false,
+          createdAt: '2026-02-01T10:00:00',
+          updatedAt: '2026-02-01T10:00:00',
+        },
       ],
-      totalElements: 1,
+      totalElements: 2,
       totalPages: 1,
-      size: 100,
+      size: 10,
       number: 0,
+    })
+  }),
+
+  http.get(`${API}/donors/:id`, ({ params }) => {
+    const id = Number(params.id)
+    if (id === 1) {
+      return HttpResponse.json({
+        id: 1,
+        fullName: 'Juan Pérez',
+        dniNie: '12345678A',
+        email: 'juan@test.com',
+        phone: null,
+        address: null,
+        active: true,
+        createdAt: '2026-01-01T10:00:00',
+        updatedAt: '2026-01-01T10:00:00',
+      })
+    }
+    return new HttpResponse(null, { status: 404 })
+  }),
+
+  http.post(`${API}/donors`, async ({ request }) => {
+    const body = (await request.json()) as Record<string, unknown>
+    return HttpResponse.json({
+      id: 3,
+      fullName: body.fullName,
+      dniNie: body.dniNie,
+      email: body.email ?? null,
+      phone: body.phone ?? null,
+      address: body.address ?? null,
+      active: true,
+      createdAt: '2026-04-22T10:00:00',
+      updatedAt: '2026-04-22T10:00:00',
+    })
+  }),
+
+  http.put(`${API}/donors/:id`, async ({ request }) => {
+    const body = (await request.json()) as Record<string, unknown>
+    return HttpResponse.json({
+      id: 1,
+      fullName: body.fullName ?? 'Juan Pérez',
+      dniNie: body.dniNie ?? '12345678A',
+      email: body.email ?? null,
+      phone: body.phone ?? null,
+      address: body.address ?? null,
+      active: body.active ?? true,
+      createdAt: '2026-01-01T10:00:00',
+      updatedAt: '2026-04-22T10:00:00',
     })
   }),
 

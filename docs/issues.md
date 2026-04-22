@@ -116,3 +116,19 @@ Test assertions used different Spanish text than the i18n keys (e.g. test expect
 ### 3. base-ui Dialog renders via Portal in jsdom
 
 base-ui `Dialog` uses `DialogPrimitive.Portal` to render content outside the component tree. In jsdom this works correctly (unlike some other base-ui components), but required verifying that the portal target exists. No code fix needed — tests for the edit page confirmation dialog pass as-is once the i18n text was corrected.
+
+# Phase 5: Donors CRUD
+
+## Issues encountered
+
+### 1. Zod email validation rejects empty string
+
+Donor form has an optional email field with default value `''`. The initial schema `z.string().email().nullable().optional()` rejects empty strings as invalid emails. Fixed by adding a transform that converts empty strings to `null` before piping through the email validator: `z.string().transform(v => v === '' ? null : v).pipe(z.string().email().nullable())`.
+
+### 2. MSW handler change broke existing donation test
+
+Adding a second donor to the MSW `GET /donors` handler (needed for donors table tests) changed the response from 1 to 2 items. The existing `useDonors` hook test in `use-donations.test.tsx` asserted `toHaveLength(1)` and broke. Fixed by updating the assertion to `toHaveLength(2)`.
+
+### 3. No new component dependencies needed
+
+Phase 5 reuses all UI components from Phase 4 (table, badge, dialog, form inputs). No new shadcn components or npm packages required — the donors feature is structurally identical to donations but simpler (no Select dropdowns, no duplicate warning flow).
