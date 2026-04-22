@@ -23,6 +23,6 @@ describe('useUserStats', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    expect(result.current.data).toEqual({ totalUsers: 5 })
+    expect(result.current.data).toEqual({ totalUsers: 2 })
   })
 })

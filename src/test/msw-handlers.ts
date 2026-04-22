@@ -336,16 +336,63 @@ export const handlers = [
         {
           id: 1,
           username: 'admin',
-          fullName: 'Admin User',
-          email: 'admin@church.org',
           active: true,
           roles: ['ADMIN'],
+          createdAt: '2026-01-01T10:00:00',
+          updatedAt: '2026-01-01T10:00:00',
+        },
+        {
+          id: 2,
+          username: 'tesorero',
+          active: true,
+          roles: ['TREASURER', 'OPERATOR'],
+          createdAt: '2026-02-01T10:00:00',
+          updatedAt: '2026-02-01T10:00:00',
         },
       ],
-      totalElements: 5,
-      totalPages: 5,
-      size: 1,
+      totalElements: 2,
+      totalPages: 1,
+      size: 10,
       number: 0,
+    })
+  }),
+
+  http.get(`${API}/users/:id`, ({ params }) => {
+    const id = Number(params.id)
+    if (id === 1) {
+      return HttpResponse.json({
+        id: 1,
+        username: 'admin',
+        active: true,
+        roles: ['ADMIN'],
+        createdAt: '2026-01-01T10:00:00',
+        updatedAt: '2026-01-01T10:00:00',
+      })
+    }
+    return new HttpResponse(null, { status: 404 })
+  }),
+
+  http.post(`${API}/users`, async ({ request }) => {
+    const body = (await request.json()) as Record<string, unknown>
+    return HttpResponse.json({
+      id: 3,
+      username: body.username,
+      active: body.active ?? true,
+      roles: body.roles,
+      createdAt: '2026-04-22T10:00:00',
+      updatedAt: '2026-04-22T10:00:00',
+    })
+  }),
+
+  http.put(`${API}/users/:id`, async ({ request }) => {
+    const body = (await request.json()) as Record<string, unknown>
+    return HttpResponse.json({
+      id: 1,
+      username: body.username ?? 'admin',
+      active: body.active ?? true,
+      roles: body.roles ?? ['ADMIN'],
+      createdAt: '2026-01-01T10:00:00',
+      updatedAt: '2026-04-22T10:00:00',
     })
   }),
 ]

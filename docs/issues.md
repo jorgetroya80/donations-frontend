@@ -144,3 +144,19 @@ Empty number input with `valueAsNumber: true` sends `NaN` to Zod. Zod v4 reports
 ### 2. No new issues with base-ui Select in tests
 
 Reused the `fireEvent.click` pattern from Phase 4 for base-ui Select interactions (category and payment method dropdowns). No new pointer-events issues — the workaround is well-established.
+
+# Phase 7: Users Management (Admin)
+
+## Issues encountered
+
+### 1. MSW handler shape change broke dashboard tests
+
+Updated `GET /users` handler to return 2 users with correct `UserResponse` shape (removed `fullName`/`email` fields not in API spec, changed `totalElements` from 5 to 2). Two dashboard tests broke: `use-user-stats.test.tsx` asserted `totalUsers: 5` and `user-stats.test.tsx` asserted text `'5'`. Fixed both to assert `2`.
+
+### 2. Zod optional password on edit form
+
+Edit form needs password optional (empty = no change). Used same transform pattern as donors email: `z.string().transform(v => v === '' ? undefined : v).pipe(z.string().min(8).optional())`. Empty string transforms to `undefined` before min-length check runs.
+
+### 3. UserForm dual-mode typing
+
+Form component handles both create (password required) and edit (password optional) modes with discriminated union props. Used `zodResolver` with the appropriate schema per mode. The `onSubmit` handler type needed a cast to `Record<string, unknown>` to satisfy `handleSubmit` generic — acceptable tradeoff for sharing one component across both modes.

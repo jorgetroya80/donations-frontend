@@ -13,7 +13,7 @@ describe('UserStats', () => {
     renderWithProviders(<UserStats />)
 
     await waitFor(() => {
-      expect(screen.getByText('5')).toBeInTheDocument()
+      expect(screen.getByText('2')).toBeInTheDocument()
     })
   })
 

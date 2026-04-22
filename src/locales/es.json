@@ -143,6 +143,35 @@
     "previous": "Anterior",
     "next": "Siguiente"
   },
+  "users": {
+    "title": "Usuarios",
+    "new": "Nuevo usuario",
+    "edit": "Editar usuario",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "passwordOptional": "Contraseña (dejar vacío para no cambiar)",
+    "roles": "Roles",
+    "roleNames": {
+      "ADMIN": "Administrador",
+      "TREASURER": "Tesorero",
+      "PASTOR": "Pastor",
+      "OPERATOR": "Operador"
+    },
+    "status": "Estado",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "confirmEdit": "Confirmar cambios",
+    "confirmEditDescription": "Se actualizarán los datos de este usuario.",
+    "successCreated": "Usuario creado exitosamente",
+    "successUpdated": "Usuario actualizado exitosamente",
+    "errorSaving": "Error al guardar el usuario",
+    "errorLoading": "Error al cargar los usuarios",
+    "empty": "No hay usuarios registrados",
+    "page": "Página {{page}} de {{total}}",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "noAccess": "No tiene permisos para acceder a esta sección"
+  },
   "sidebar": {
     "collapse": "Colapsar men\u00fa",
     "expand": "Expandir men\u00fa"

@@ -15,6 +15,10 @@ import { DonorsPage } from '@/features/donors/donors-page'
 import { ExpenseCreatePage } from '@/features/expenses/expense-create-page'
 import { ExpenseEditPage } from '@/features/expenses/expense-edit-page'
 import { ExpensesPage } from '@/features/expenses/expenses-page'
+import { AdminRoute } from '@/features/users/admin-route'
+import { UserCreatePage } from '@/features/users/user-create-page'
+import { UserEditPage } from '@/features/users/user-edit-page'
+import { UsersPage } from '@/features/users/users-page'
 import { AppLayout } from '@/layouts/app-layout'
 
 const queryClient = new QueryClient({
@@ -55,6 +59,11 @@ export default function App() {
                     path="/expenses/:id/edit"
                     element={<ExpenseEditPage />}
                   />
+                  <Route element={<AdminRoute />}>
+                    <Route path="/users" element={<UsersPage />} />
+                    <Route path="/users/new" element={<UserCreatePage />} />
+                    <Route path="/users/:id/edit" element={<UserEditPage />} />
+                  </Route>
                 </Route>
               </Route>
               <Route path="*" element={<Navigate to="/" replace />} />

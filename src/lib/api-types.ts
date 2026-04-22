@@ -162,3 +162,19 @@ export interface UpdateExpenseRequest {
   vendor?: string | null
   paymentMethod?: PaymentMethod
 }
+
+export type UserRole = 'ADMIN' | 'TREASURER' | 'PASTOR' | 'OPERATOR'
+
+export interface CreateUserRequest {
+  username: string
+  password: string
+  roles: UserRole[]
+  active?: boolean
+}
+
+export interface UpdateUserRequest {
+  username?: string
+  password?: string
+  roles?: UserRole[]
+  active?: boolean
+}
