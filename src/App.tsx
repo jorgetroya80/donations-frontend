@@ -12,6 +12,9 @@ import { DonationsPage } from '@/features/donations/donations-page'
 import { DonorCreatePage } from '@/features/donors/donor-create-page'
 import { DonorEditPage } from '@/features/donors/donor-edit-page'
 import { DonorsPage } from '@/features/donors/donors-page'
+import { ExpenseCreatePage } from '@/features/expenses/expense-create-page'
+import { ExpenseEditPage } from '@/features/expenses/expense-edit-page'
+import { ExpensesPage } from '@/features/expenses/expenses-page'
 import { AppLayout } from '@/layouts/app-layout'
 
 const queryClient = new QueryClient({
@@ -46,6 +49,12 @@ export default function App() {
                   <Route path="/donors" element={<DonorsPage />} />
                   <Route path="/donors/new" element={<DonorCreatePage />} />
                   <Route path="/donors/:id/edit" element={<DonorEditPage />} />
+                  <Route path="/expenses" element={<ExpensesPage />} />
+                  <Route path="/expenses/new" element={<ExpenseCreatePage />} />
+                  <Route
+                    path="/expenses/:id/edit"
+                    element={<ExpenseEditPage />}
+                  />
                 </Route>
               </Route>
               <Route path="*" element={<Navigate to="/" replace />} />

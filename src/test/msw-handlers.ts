@@ -250,6 +250,86 @@ export const handlers = [
     })
   }),
 
+  http.get(`${API}/expenses`, () => {
+    return HttpResponse.json({
+      content: [
+        {
+          id: 1,
+          amount: 500,
+          expenseDate: '2026-04-10',
+          category: 'RENT',
+          description: 'Alquiler local abril',
+          vendor: 'Inmobiliaria López',
+          paymentMethod: 'BANK_TRANSFER',
+          createdAt: '2026-04-10T10:00:00',
+          updatedAt: '2026-04-10T10:00:00',
+        },
+        {
+          id: 2,
+          amount: 120,
+          expenseDate: '2026-04-12',
+          category: 'UTILITIES',
+          description: 'Factura electricidad',
+          vendor: null,
+          paymentMethod: 'BANK_TRANSFER',
+          createdAt: '2026-04-12T10:00:00',
+          updatedAt: '2026-04-12T10:00:00',
+        },
+      ],
+      totalElements: 2,
+      totalPages: 1,
+      size: 10,
+      number: 0,
+    })
+  }),
+
+  http.get(`${API}/expenses/:id`, ({ params }) => {
+    return HttpResponse.json({
+      id: Number(params.id),
+      amount: 500,
+      expenseDate: '2026-04-10',
+      category: 'RENT',
+      description: 'Alquiler local abril',
+      vendor: 'Inmobiliaria López',
+      paymentMethod: 'BANK_TRANSFER',
+      createdAt: '2026-04-10T10:00:00',
+      updatedAt: '2026-04-10T10:00:00',
+    })
+  }),
+
+  http.post(`${API}/expenses`, async ({ request }) => {
+    const body = (await request.json()) as Record<string, unknown>
+    return HttpResponse.json(
+      {
+        id: 3,
+        amount: body.amount,
+        expenseDate: body.expenseDate,
+        category: body.category,
+        description: body.description,
+        vendor: body.vendor ?? null,
+        paymentMethod: body.paymentMethod,
+        createdAt: '2026-04-22T10:00:00',
+        updatedAt: '2026-04-22T10:00:00',
+      },
+      { status: 201 }
+    )
+  }),
+
+  http.put(`${API}/expenses/:id`, async ({ request }) => {
+    const body = (await request.json()) as Record<string, unknown>
+    return HttpResponse.json({
+      id: 1,
+      amount: body.amount ?? 500,
+      expenseDate: body.expenseDate ?? '2026-04-10',
+      category: body.category ?? 'RENT',
+      description: body.description ?? 'Alquiler local abril',
+      vendor: body.vendor ?? null,
+      paymentMethod: body.paymentMethod ?? 'BANK_TRANSFER',
+      createdAt: '2026-04-10T10:00:00',
+      updatedAt: '2026-04-22T10:00:00',
+    })
+  }),
+
   http.get(`${API}/users`, () => {
     return HttpResponse.json({
       content: [

@@ -132,3 +132,15 @@ Adding a second donor to the MSW `GET /donors` handler (needed for donors table 
 ### 3. No new component dependencies needed
 
 Phase 5 reuses all UI components from Phase 4 (table, badge, dialog, form inputs). No new shadcn components or npm packages required — the donors feature is structurally identical to donations but simpler (no Select dropdowns, no duplicate warning flow).
+
+# Phase 6: Expenses CRUD
+
+## Issues encountered
+
+### 1. Zod NaN error on empty number field
+
+Empty number input with `valueAsNumber: true` sends `NaN` to Zod. Zod v4 reports `"Invalid input: expected number, received NaN"` instead of the custom `.min(0.01, ...)` message, because the type check fails before the min constraint runs. Test assertion updated to match actual Zod error text (`/expected number, received NaN/i`).
+
+### 2. No new issues with base-ui Select in tests
+
+Reused the `fireEvent.click` pattern from Phase 4 for base-ui Select interactions (category and payment method dropdowns). No new pointer-events issues — the workaround is well-established.

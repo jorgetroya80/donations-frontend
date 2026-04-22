@@ -123,3 +123,42 @@ export interface UpdateDonorRequest {
   address?: string | null
   active?: boolean
 }
+
+export type ExpenseCategory =
+  | 'RENT'
+  | 'UTILITIES'
+  | 'SALARIES'
+  | 'SUPPLIES'
+  | 'MISSIONS'
+  | 'MAINTENANCE'
+  | 'OTHER'
+
+export interface ExpenseResponse {
+  id: number
+  amount: number
+  expenseDate: string
+  category: ExpenseCategory
+  description: string
+  vendor: string | null
+  paymentMethod: PaymentMethod
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CreateExpenseRequest {
+  amount: number
+  expenseDate: string
+  category: ExpenseCategory
+  description: string
+  vendor?: string | null
+  paymentMethod: PaymentMethod
+}
+
+export interface UpdateExpenseRequest {
+  amount?: number
+  expenseDate?: string
+  category?: ExpenseCategory
+  description?: string
+  vendor?: string | null
+  paymentMethod?: PaymentMethod
+}

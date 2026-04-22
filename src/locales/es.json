@@ -106,6 +106,43 @@
     "previous": "Anterior",
     "next": "Siguiente"
   },
+  "expenses": {
+    "title": "Gastos",
+    "new": "Nuevo gasto",
+    "edit": "Editar gasto",
+    "amount": "Monto",
+    "date": "Fecha",
+    "category": "Categoría",
+    "description": "Descripción",
+    "paymentMethod": "Método de pago",
+    "vendor": "Proveedor",
+    "vendorOptional": "Proveedor (opcional)",
+    "categories": {
+      "RENT": "Alquiler",
+      "UTILITIES": "Servicios",
+      "SALARIES": "Salarios",
+      "SUPPLIES": "Suministros",
+      "MISSIONS": "Misiones",
+      "MAINTENANCE": "Mantenimiento",
+      "OTHER": "Otro"
+    },
+    "paymentMethods": {
+      "CASH": "Efectivo",
+      "BANK_TRANSFER": "Transferencia bancaria"
+    },
+    "selectCategory": "Seleccione categoría",
+    "selectPayment": "Seleccione método",
+    "confirmEdit": "Confirmar cambios",
+    "confirmEditDescription": "Se actualizarán los datos de este gasto.",
+    "successCreated": "Gasto creado exitosamente",
+    "successUpdated": "Gasto actualizado exitosamente",
+    "errorSaving": "Error al guardar el gasto",
+    "errorLoading": "Error al cargar los gastos",
+    "empty": "No hay gastos registrados",
+    "page": "Página {{page}} de {{total}}",
+    "previous": "Anterior",
+    "next": "Siguiente"
+  },
   "sidebar": {
     "collapse": "Colapsar men\u00fa",
     "expand": "Expandir men\u00fa"
