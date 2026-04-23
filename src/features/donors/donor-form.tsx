@@ -25,15 +25,14 @@ export function DonorForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateDonorFormData>({
+  } = useForm({
     resolver: zodResolver(createDonorSchema),
     defaultValues: {
-      fullName: '',
-      dniNie: '',
-      email: '',
-      phone: '',
-      address: '',
-      ...defaultValues,
+      fullName: defaultValues?.fullName ?? '',
+      dniNie: defaultValues?.dniNie ?? '',
+      email: defaultValues?.email ?? '',
+      phone: defaultValues?.phone ?? '',
+      address: defaultValues?.address ?? '',
     },
   })
 

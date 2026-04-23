@@ -1,6 +1,6 @@
 {
   "name": "donations-frontend",
-  "version": "0.0.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,7 +14,8 @@
     "start": "vite",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit -p tsconfig.app.json"
   },
   "lint-staged": {
     "**/*.{cjs,css,html,js,json,md,mjs,yml}": ["biome format --write --staged"],

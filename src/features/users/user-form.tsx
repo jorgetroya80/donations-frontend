@@ -51,7 +51,7 @@ export function UserForm({
     defaultValues: {
       username: '',
       password: '',
-      roles: [] as string[],
+      roles: [] as (typeof userRoles)[number][],
       active: true,
       ...defaultValues,
     },

@@ -117,7 +117,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
           if (collapsed) {
             return (
-              <Tooltip key={item.to} delayDuration={0}>
+              <Tooltip key={item.to}>
                 <TooltipTrigger>{link}</TooltipTrigger>
                 <TooltipContent side="right">{t(item.labelKey)}</TooltipContent>
               </Tooltip>
