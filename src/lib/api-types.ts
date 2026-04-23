@@ -179,6 +179,11 @@ export interface UpdateUserRequest {
   active?: boolean
 }
 
+export interface ChangePasswordRequest {
+  currentPassword: string
+  newPassword: string
+}
+
 export interface DonationEntry {
   id: number
   amount: number

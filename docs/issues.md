@@ -172,3 +172,19 @@ Selecting a donor in the `<select>` triggers a query that shows "Cargando..." wh
 ### 2. No new component dependencies needed
 
 Reports page reuses existing components: DateRangePicker, Table, Card, Alert. Donor selector uses a native `<select>` element — no base-ui Select needed, avoids the `pointer-events: none` test issue from Phase 4. Tabs are plain `<button>` elements with `role="tab"` and `aria-selected`.
+
+# Phase 9: User Account (Password + Logout)
+
+## Issues encountered
+
+### 1. Duplicate "Cambiar contraseña" text breaks getByText
+
+Page renders the title twice — as `<h1>` page heading and as `<CardTitle>`. `screen.getByText('Cambiar contraseña')` threw `getMultipleElementsFoundError`. Fixed by using `screen.getByRole('heading', { level: 1, name: 'Cambiar contraseña' })` in the test.
+
+### 2. No issues with Zod refine for password confirmation
+
+Used `z.refine()` to validate `newPassword === confirmPassword` with a custom error on the `confirmPassword` path. Unlike the transform-then-pipe pattern needed for optional fields (Phases 5, 7), refine works cleanly here because both fields are always required strings.
+
+### 3. Logout already implemented
+
+Logout was fully wired in Phase 2 (header dropdown → `logout()` → clears localStorage + auth context → navigates to `/login`). No additional work needed — Phase 9 only required the change password page.

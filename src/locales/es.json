@@ -189,6 +189,18 @@
     "errorLoading": "Error al cargar el reporte",
     "noDonorSelected": "Seleccione un donante para ver su estado de cuenta"
   },
+  "settings": {
+    "changePassword": "Cambiar contraseña",
+    "currentPassword": "Contraseña actual",
+    "newPassword": "Nueva contraseña",
+    "confirmPassword": "Confirmar nueva contraseña",
+    "passwordMismatch": "Las contraseñas no coinciden",
+    "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
+    "currentPasswordRequired": "La contraseña actual es obligatoria",
+    "successChanged": "Contraseña actualizada exitosamente",
+    "errorChanging": "Error al cambiar la contraseña",
+    "errorCurrentPassword": "La contraseña actual es incorrecta"
+  },
   "sidebar": {
     "collapse": "Colapsar men\u00fa",
     "expand": "Expandir men\u00fa"

@@ -31,7 +31,7 @@ describe('LoginPage', () => {
     renderWithProviders(<TestApp />, { route: '/login' })
 
     await user.type(screen.getByLabelText('Usuario'), 'admin')
-    await user.type(screen.getByLabelText('Contraseña'), 'admin')
+    await user.type(screen.getByLabelText('Contraseña'), 'random')
     await user.click(screen.getByRole('button', { name: 'Ingresar' }))
 
     await waitFor(() => {
@@ -59,7 +59,7 @@ describe('LoginPage', () => {
     renderWithProviders(<TestApp />, { route: '/login' })
 
     await user.type(screen.getByLabelText('Usuario'), 'admin')
-    await user.type(screen.getByLabelText('Contraseña'), 'admin')
+    await user.type(screen.getByLabelText('Contraseña'), 'random')
     await user.click(screen.getByRole('button', { name: 'Ingresar' }))
 
     await waitFor(() => {

@@ -8,7 +8,7 @@ export const handlers = [
       username: string
       password: string
     }
-    if (body.username === 'admin' && body.password === 'admin') {
+    if (body.username === 'admin' && body.password === 'random') {
       return HttpResponse.json({
         username: 'admin',
         roles: ['ADMIN'],
@@ -21,6 +21,17 @@ export const handlers = [
       })
     }
     return new HttpResponse(null, { status: 401 })
+  }),
+
+  http.put(`${API}/users/me/password`, async ({ request }) => {
+    const body = (await request.json()) as {
+      currentPassword: string
+      newPassword: string
+    }
+    if (body.currentPassword === 'wrongpassword') {
+      return new HttpResponse(null, { status: 400 })
+    }
+    return new HttpResponse(null, { status: 200 })
   }),
 
   http.get(`${API}/reports/balance`, ({ request }) => {

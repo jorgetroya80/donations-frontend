@@ -16,6 +16,7 @@ import { ExpenseCreatePage } from '@/features/expenses/expense-create-page'
 import { ExpenseEditPage } from '@/features/expenses/expense-edit-page'
 import { ExpensesPage } from '@/features/expenses/expenses-page'
 import { ReportsPage } from '@/features/reports/reports-page'
+import { ChangePasswordPage } from '@/features/settings/change-password-page'
 import { AdminRoute } from '@/features/users/admin-route'
 import { UserCreatePage } from '@/features/users/user-create-page'
 import { UserEditPage } from '@/features/users/user-edit-page'
@@ -61,6 +62,10 @@ export default function App() {
                     element={<ExpenseEditPage />}
                   />
                   <Route path="/reports" element={<ReportsPage />} />
+                  <Route
+                    path="/settings/password"
+                    element={<ChangePasswordPage />}
+                  />
                   <Route element={<AdminRoute />}>
                     <Route path="/users" element={<UsersPage />} />
                     <Route path="/users/new" element={<UserCreatePage />} />
