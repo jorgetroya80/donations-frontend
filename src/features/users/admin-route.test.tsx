@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
 import { Route, Routes } from 'react-router'
+import { describe, expect, it } from 'vitest'
 import { renderWithProviders } from '@/test/test-utils'
 import { AdminRoute } from './admin-route'
 

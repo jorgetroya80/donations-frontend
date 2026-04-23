@@ -178,3 +178,20 @@ export interface UpdateUserRequest {
   roles?: UserRole[]
   active?: boolean
 }
+
+export interface DonationEntry {
+  id: number
+  amount: number
+  date: string
+  type: DonationType
+  paymentMethod: PaymentMethod
+}
+
+export interface DonorStatementResponse {
+  donorId: number
+  donorName: string
+  from: string
+  to: string
+  donations: DonationEntry[]
+  total: number
+}

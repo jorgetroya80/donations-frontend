@@ -172,6 +172,23 @@
     "next": "Siguiente",
     "noAccess": "No tiene permisos para acceder a esta sección"
   },
+  "reports": {
+    "title": "Reportes",
+    "donationSummary": "Resumen de donaciones",
+    "expenseSummary": "Resumen de gastos",
+    "donorStatement": "Estado de cuenta del donante",
+    "type": "Tipo",
+    "category": "Categoría",
+    "total": "Total",
+    "grandTotal": "Total general",
+    "amount": "Monto",
+    "date": "Fecha",
+    "paymentMethod": "Método de pago",
+    "selectDonor": "Seleccione un donante",
+    "noData": "Sin datos para el período seleccionado",
+    "errorLoading": "Error al cargar el reporte",
+    "noDonorSelected": "Seleccione un donante para ver su estado de cuenta"
+  },
   "sidebar": {
     "collapse": "Colapsar men\u00fa",
     "expand": "Expandir men\u00fa"

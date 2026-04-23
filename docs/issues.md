@@ -160,3 +160,15 @@ Edit form needs password optional (empty = no change). Used same transform patte
 ### 3. UserForm dual-mode typing
 
 Form component handles both create (password required) and edit (password optional) modes with discriminated union props. Used `zodResolver` with the appropriate schema per mode. The `onSubmit` handler type needed a cast to `Record<string, unknown>` to satisfy `handleSubmit` generic — acceptable tradeoff for sharing one component across both modes.
+
+# Phase 8: Reports
+
+## Issues encountered
+
+### 1. Donor statement test — waitFor timing with select options
+
+Selecting a donor in the `<select>` triggers a query that shows "Cargando..." while fetching. Initial test waited for the donor name text, which matched the `<option>` text (already in DOM) rather than the statement card title. Fixed by waiting for statement-specific content (donation type labels like "Diezmo") that only appears after the API response loads.
+
+### 2. No new component dependencies needed
+
+Reports page reuses existing components: DateRangePicker, Table, Card, Alert. Donor selector uses a native `<select>` element — no base-ui Select needed, avoids the `pointer-events: none` test issue from Phase 4. Tabs are plain `<button>` elements with `role="tab"` and `aria-selected`.

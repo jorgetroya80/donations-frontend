@@ -66,6 +66,35 @@ export const handlers = [
     })
   }),
 
+  http.get(`${API}/reports/donors/:id/statement`, ({ params, request }) => {
+    const url = new URL(request.url)
+    const from = url.searchParams.get('from') ?? '2026-04-01'
+    const to = url.searchParams.get('to') ?? '2026-04-30'
+    return HttpResponse.json({
+      donorId: Number(params.id),
+      donorName: 'Juan Pérez',
+      from,
+      to,
+      donations: [
+        {
+          id: 1,
+          amount: 100,
+          date: '2026-04-15',
+          type: 'TITHE',
+          paymentMethod: 'CASH',
+        },
+        {
+          id: 2,
+          amount: 50,
+          date: '2026-04-20',
+          type: 'OFFERING',
+          paymentMethod: 'BANK_TRANSFER',
+        },
+      ],
+      total: 150,
+    })
+  }),
+
   http.get(`${API}/donations`, () => {
     return HttpResponse.json({
       content: [

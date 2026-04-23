@@ -15,6 +15,7 @@ import { DonorsPage } from '@/features/donors/donors-page'
 import { ExpenseCreatePage } from '@/features/expenses/expense-create-page'
 import { ExpenseEditPage } from '@/features/expenses/expense-edit-page'
 import { ExpensesPage } from '@/features/expenses/expenses-page'
+import { ReportsPage } from '@/features/reports/reports-page'
 import { AdminRoute } from '@/features/users/admin-route'
 import { UserCreatePage } from '@/features/users/user-create-page'
 import { UserEditPage } from '@/features/users/user-edit-page'
@@ -59,6 +60,7 @@ export default function App() {
                     path="/expenses/:id/edit"
                     element={<ExpenseEditPage />}
                   />
+                  <Route path="/reports" element={<ReportsPage />} />
                   <Route element={<AdminRoute />}>
                     <Route path="/users" element={<UsersPage />} />
                     <Route path="/users/new" element={<UserCreatePage />} />

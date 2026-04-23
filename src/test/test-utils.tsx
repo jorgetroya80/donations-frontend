@@ -37,4 +37,4 @@ export function renderWithProviders(
   })
 }
 
-export { render }
+export { createWrapper, render }
