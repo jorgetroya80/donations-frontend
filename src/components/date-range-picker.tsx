@@ -31,13 +31,15 @@ export function DateRangePicker({ from, to, onChange }: DateRangePickerProps) {
   return (
     <Popover>
       <PopoverTrigger>
-        <Button
-          variant="outline"
-          className={cn('justify-start text-left font-normal')}
+        <span
+          className={cn(
+            'inline-flex shrink-0 items-center gap-2 rounded-lg border bg-background px-3 py-1.5 text-sm font-normal justify-start text-left',
+            'hover:bg-accent hover:text-accent-foreground'
+          )}
         >
           <CalendarIcon size={16} />
           {label}
-        </Button>
+        </span>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar
