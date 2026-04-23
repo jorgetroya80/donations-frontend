@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "vite build",
     "check": "biome check --write src/",
+    "check:ci": "biome check src/",
     "dev": "vite",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "lint:biome": "biome lint --write src/",
