@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -44,8 +44,7 @@ export function UserForm({
   const {
     register,
     handleSubmit,
-    setValue,
-    watch,
+    control,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -57,16 +56,6 @@ export function UserForm({
       ...defaultValues,
     },
   })
-
-  const roles = watch('roles') as string[]
-
-  function toggleRole(role: string) {
-    const current = roles ?? []
-    const next = current.includes(role)
-      ? current.filter((r) => r !== role)
-      : [...current, role]
-    setValue('roles', next, { shouldValidate: true })
-  }
 
   return (
     <form
@@ -103,19 +92,34 @@ export function UserForm({
 
       <div className="space-y-2">
         <Label>{t('users.roles')}</Label>
-        <div className="flex flex-wrap gap-3">
-          {userRoles.map((role) => (
-            <label key={role} className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={roles.includes(role)}
-                onChange={() => toggleRole(role)}
-                className="size-4 rounded border-input"
-              />
-              {t(`users.roleNames.${role}`)}
-            </label>
-          ))}
-        </div>
+        <Controller
+          control={control}
+          name="roles"
+          render={({ field }) => {
+            const value = (field.value ?? []) as string[]
+            return (
+              <div className="flex flex-wrap gap-3">
+                {userRoles.map((role) => (
+                  <label key={role} className="flex items-center gap-2 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={value.includes(role)}
+                      onChange={() =>
+                        field.onChange(
+                          value.includes(role)
+                            ? value.filter((r) => r !== role)
+                            : [...value, role]
+                        )
+                      }
+                      className="size-4 rounded border-input"
+                    />
+                    {t(`users.roleNames.${role}`)}
+                  </label>
+                ))}
+              </div>
+            )
+          }}
+        />
         {errors.roles && (
           <p className="text-sm text-destructive">
             {errors.roles.message as string}

@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -37,8 +37,7 @@ export function ExpenseForm({
   const {
     register,
     handleSubmit,
-    setValue,
-    watch,
+    control,
     formState: { errors },
   } = useForm<CreateExpenseFormData>({
     resolver: zodResolver(createExpenseSchema),
@@ -52,9 +51,6 @@ export function ExpenseForm({
       ...defaultValues,
     },
   })
-
-  const category = watch('category')
-  const paymentMethod = watch('paymentMethod')
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -85,25 +81,24 @@ export function ExpenseForm({
 
         <div className="space-y-2">
           <Label>{t('expenses.category')}</Label>
-          <Select
-            value={category ?? ''}
-            onValueChange={(v) =>
-              setValue('category', v as CreateExpenseFormData['category'], {
-                shouldValidate: true,
-              })
-            }
-          >
-            <SelectTrigger>
-              <SelectValue placeholder={t('expenses.selectCategory')} />
-            </SelectTrigger>
-            <SelectContent>
-              {expenseCategories.map((cat) => (
-                <SelectItem key={cat} value={cat}>
-                  {t(`expenses.categories.${cat}`)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Controller
+            control={control}
+            name="category"
+            render={({ field }) => (
+              <Select value={field.value ?? ''} onValueChange={field.onChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t('expenses.selectCategory')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {expenseCategories.map((cat) => (
+                    <SelectItem key={cat} value={cat}>
+                      {t(`expenses.categories.${cat}`)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
           {errors.category && (
             <p className="text-sm text-destructive">
               {errors.category.message}
@@ -113,27 +108,24 @@ export function ExpenseForm({
 
         <div className="space-y-2">
           <Label>{t('expenses.paymentMethod')}</Label>
-          <Select
-            value={paymentMethod ?? ''}
-            onValueChange={(v) =>
-              setValue(
-                'paymentMethod',
-                v as CreateExpenseFormData['paymentMethod'],
-                { shouldValidate: true }
-              )
-            }
-          >
-            <SelectTrigger>
-              <SelectValue placeholder={t('expenses.selectPayment')} />
-            </SelectTrigger>
-            <SelectContent>
-              {paymentMethods.map((method) => (
-                <SelectItem key={method} value={method}>
-                  {t(`expenses.paymentMethods.${method}`)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Controller
+            control={control}
+            name="paymentMethod"
+            render={({ field }) => (
+              <Select value={field.value ?? ''} onValueChange={field.onChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t('expenses.selectPayment')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {paymentMethods.map((method) => (
+                    <SelectItem key={method} value={method}>
+                      {t(`expenses.paymentMethods.${method}`)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
           {errors.paymentMethod && (
             <p className="text-sm text-destructive">
               {errors.paymentMethod.message}

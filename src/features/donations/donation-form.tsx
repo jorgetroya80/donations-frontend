@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -40,8 +40,7 @@ export function DonationForm({
   const {
     register,
     handleSubmit,
-    setValue,
-    watch,
+    control,
     formState: { errors },
   } = useForm<CreateDonationFormData>({
     resolver: zodResolver(createDonationSchema),
@@ -55,10 +54,6 @@ export function DonationForm({
       ...defaultValues,
     },
   })
-
-  const donationType = watch('donationType')
-  const paymentMethod = watch('paymentMethod')
-  const donorId = watch('donorId')
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -89,29 +84,24 @@ export function DonationForm({
 
         <div className="space-y-2">
           <Label>{t('donations.type')}</Label>
-          <Select
-            value={donationType ?? ''}
-            onValueChange={(v) =>
-              setValue(
-                'donationType',
-                v as CreateDonationFormData['donationType'],
-                {
-                  shouldValidate: true,
-                }
-              )
-            }
-          >
-            <SelectTrigger>
-              <SelectValue placeholder={t('donations.selectType')} />
-            </SelectTrigger>
-            <SelectContent>
-              {donationTypes.map((type) => (
-                <SelectItem key={type} value={type}>
-                  {t(`donations.types.${type}`)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Controller
+            control={control}
+            name="donationType"
+            render={({ field }) => (
+              <Select value={field.value ?? ''} onValueChange={field.onChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t('donations.selectType')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {donationTypes.map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {t(`donations.types.${type}`)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
           {errors.donationType && (
             <p className="text-sm text-destructive">
               {errors.donationType.message}
@@ -121,27 +111,24 @@ export function DonationForm({
 
         <div className="space-y-2">
           <Label>{t('donations.paymentMethod')}</Label>
-          <Select
-            value={paymentMethod ?? ''}
-            onValueChange={(v) =>
-              setValue(
-                'paymentMethod',
-                v as CreateDonationFormData['paymentMethod'],
-                { shouldValidate: true }
-              )
-            }
-          >
-            <SelectTrigger>
-              <SelectValue placeholder={t('donations.selectPayment')} />
-            </SelectTrigger>
-            <SelectContent>
-              {paymentMethods.map((method) => (
-                <SelectItem key={method} value={method}>
-                  {t(`donations.paymentMethods.${method}`)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Controller
+            control={control}
+            name="paymentMethod"
+            render={({ field }) => (
+              <Select value={field.value ?? ''} onValueChange={field.onChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t('donations.selectPayment')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {paymentMethods.map((method) => (
+                    <SelectItem key={method} value={method}>
+                      {t(`donations.paymentMethods.${method}`)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
           {errors.paymentMethod && (
             <p className="text-sm text-destructive">
               {errors.paymentMethod.message}
@@ -152,23 +139,27 @@ export function DonationForm({
 
       <div className="space-y-2">
         <Label>{t('donations.donorOptional')}</Label>
-        <Select
-          value={donorId ? String(donorId) : ''}
-          onValueChange={(v) =>
-            setValue('donorId', v ? Number(v) : null, { shouldValidate: true })
-          }
-        >
-          <SelectTrigger>
-            <SelectValue placeholder={t('donations.selectDonor')} />
-          </SelectTrigger>
-          <SelectContent>
-            {donors.map((donor) => (
-              <SelectItem key={donor.id} value={String(donor.id)}>
-                {donor.fullName}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Controller
+          control={control}
+          name="donorId"
+          render={({ field }) => (
+            <Select
+              value={field.value ? String(field.value) : ''}
+              onValueChange={(v) => field.onChange(v ? Number(v) : null)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder={t('donations.selectDonor')} />
+              </SelectTrigger>
+              <SelectContent>
+                {donors.map((donor) => (
+                  <SelectItem key={donor.id} value={String(donor.id)}>
+                    {donor.fullName}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
       </div>
 
       <div className="space-y-2">

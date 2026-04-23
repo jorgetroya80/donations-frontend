@@ -188,3 +188,11 @@ Used `z.refine()` to validate `newPassword === confirmPassword` with a custom er
 ### 3. Logout already implemented
 
 Logout was fully wired in Phase 2 (header dropdown → `logout()` → clears localStorage + auth context → navigates to `/login`). No additional work needed — Phase 9 only required the change password page.
+
+# React Compiler bail-out on react-hook-form `watch`
+
+## Issues encountered
+
+### 1. `useForm().watch(name)` skips Compiler memoization
+
+React Compiler reported "Compilation Skipped: Use of incompatible library — This API returns functions which cannot be memoized without leading to stale UI" on every form using `const x = watch('field')`. The `watch` API is subscription-backed, so the Compiler bails out and skips memoizing the entire component. Affected: `donation-form.tsx`, `expense-form.tsx`, `user-form.tsx`. Fixed by migrating non-native inputs (Select, checkbox group) from the `watch` + `setValue` pattern to `<Controller>`, removing all `watch` calls and the manual `setValue(..., { shouldValidate: true })` boilerplate. Side benefits: per-field re-render scoping, drops `as CreateXFormData['field']` casts (typed by `Controller`), and validation triggers on change without explicit flags. `donor-form.tsx` had no `watch` calls — left untouched.
