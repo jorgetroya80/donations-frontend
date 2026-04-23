@@ -14,15 +14,12 @@
     "start": "vite",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit -p tsconfig.app.json"
   },
   "lint-staged": {
-    "**/*.{cjs,css,html,js,json,md,mjs,yml}": [
-      "biome format --write --staged"
-    ],
-    "src/**/*.{ts,tsx}": [
-      "biome lint --write --staged"
-    ]
+    "**/*.{cjs,css,html,js,json,md,mjs,yml}": ["biome format --write --staged"],
+    "src/**/*.{ts,tsx}": ["biome lint --write --staged"]
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
