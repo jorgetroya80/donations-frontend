@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.3...donations-frontend-v0.1.4) (2026-04-24)
+
+
+### Features
+
+* role-based sidebar and route access ([#9](https://github.com/jorgetroya80/donations-frontend/issues/9)) ([671b6f8](https://github.com/jorgetroya80/donations-frontend/commit/671b6f8760b954d2c6de013ebbeedeb45d419923))
+
 ## [0.1.3](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.2...donations-frontend-v0.1.3) (2026-04-24)
 
 
