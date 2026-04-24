@@ -1,6 +1,6 @@
 {
   "name": "donations-frontend",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -18,8 +18,12 @@
     "typecheck": "tsc --noEmit -p tsconfig.app.json"
   },
   "lint-staged": {
-    "**/*.{cjs,css,html,js,json,mjs}": ["biome format --write --staged"],
-    "src/**/*.{ts,tsx}": ["biome lint --write --staged"]
+    "**/*.{cjs,css,html,js,json,mjs}": [
+      "biome format --write --staged"
+    ],
+    "src/**/*.{ts,tsx}": [
+      "biome lint --write --staged"
+    ]
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",

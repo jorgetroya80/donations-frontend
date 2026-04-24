@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.1...donations-frontend-v0.1.2) (2026-04-24)
+
+
+### Bug Fixes
+
+* rmeove md and yml files to be formatted ([42c7f8e](https://github.com/jorgetroya80/donations-frontend/commit/42c7f8ef60948286ea05df422049a86d136b6b36))
+
 ## [0.1.1](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.0...donations-frontend-v0.1.1) (2026-04-23)
 
 
