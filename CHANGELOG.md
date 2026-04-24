@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.2...donations-frontend-v0.1.3) (2026-04-24)
+
+
+### Features
+
+* add readme and other things ([#5](https://github.com/jorgetroya80/donations-frontend/issues/5)) ([e4bc019](https://github.com/jorgetroya80/donations-frontend/commit/e4bc019d21aec55c20a2f9ad344c1cbb6a715b9b))
+
 ## [0.1.2](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.1...donations-frontend-v0.1.2) (2026-04-24)
 
 ### Bug Fixes
