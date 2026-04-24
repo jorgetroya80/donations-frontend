@@ -5,6 +5,7 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import { AuthProvider } from '@/features/auth/auth-context'
 import { LoginPage } from '@/features/auth/login-page'
 import { ProtectedRoute } from '@/features/auth/protected-route'
+import { RoleRoute } from '@/features/auth/role-route'
 import { DashboardPage } from '@/features/dashboard/dashboard-page'
 import { DonationCreatePage } from '@/features/donations/donation-create-page'
 import { DonationEditPage } from '@/features/donations/donation-edit-page'
@@ -17,16 +18,15 @@ import { ExpenseEditPage } from '@/features/expenses/expense-edit-page'
 import { ExpensesPage } from '@/features/expenses/expenses-page'
 import { ReportsPage } from '@/features/reports/reports-page'
 import { ChangePasswordPage } from '@/features/settings/change-password-page'
-import { RoleRoute } from '@/features/auth/role-route'
+import { UserCreatePage } from '@/features/users/user-create-page'
+import { UserEditPage } from '@/features/users/user-edit-page'
+import { UsersPage } from '@/features/users/users-page'
+import { AppLayout } from '@/layouts/app-layout'
 import {
   canManageUsers,
   canRecordData,
   canViewReports,
 } from '@/lib/permissions'
-import { UserCreatePage } from '@/features/users/user-create-page'
-import { UserEditPage } from '@/features/users/user-edit-page'
-import { UsersPage } from '@/features/users/users-page'
-import { AppLayout } from '@/layouts/app-layout'
 
 const queryClient = new QueryClient({
   defaultOptions: {
