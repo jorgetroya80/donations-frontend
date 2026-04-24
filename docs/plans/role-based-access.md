@@ -35,20 +35,20 @@ Update `canRecordData` to exclude ADMIN. Create a generic `RoleRoute` component 
 
 ### Acceptance criteria
 
-- [ ] `canRecordData` returns `false` for ADMIN-only users
-- [ ] `RoleRoute` component created, accepts `check` prop
-- [ ] `AdminRoute` replaced by `RoleRoute` with `canManageUsers`
-- [ ] `/donations`, `/donations/new`, `/donations/:id/edit` guarded by `canRecordData`
-- [ ] `/donors`, `/donors/new`, `/donors/:id/edit` guarded by `canRecordData`
-- [ ] `/expenses`, `/expenses/new`, `/expenses/:id/edit` guarded by `canRecordData`
-- [ ] `/reports` guarded by `canViewReports`
-- [ ] `/users`, `/users/new`, `/users/:id/edit` guarded by `canManageUsers`
-- [ ] Dashboard (`/`) and Settings (`/settings/password`) accessible to all authenticated users
-- [ ] Unauthorized route access redirects to `/`
-- [ ] Multi-role users (e.g., ADMIN + TREASURER) can access union of permitted routes
-- [ ] `RoleRoute` tests: authorized renders child, unauthorized redirects — for each permission function
-- [ ] Existing `AdminRoute` tests migrated or replaced
-- [ ] All existing tests pass
+- [x] `canRecordData` returns `false` for ADMIN-only users
+- [x] `RoleRoute` component created, accepts `check` prop
+- [x] `AdminRoute` replaced by `RoleRoute` with `canManageUsers`
+- [x] `/donations`, `/donations/new`, `/donations/:id/edit` guarded by `canRecordData`
+- [x] `/donors`, `/donors/new`, `/donors/:id/edit` guarded by `canRecordData`
+- [x] `/expenses`, `/expenses/new`, `/expenses/:id/edit` guarded by `canRecordData`
+- [x] `/reports` guarded by `canViewReports`
+- [x] `/users`, `/users/new`, `/users/:id/edit` guarded by `canManageUsers`
+- [x] Dashboard (`/`) and Settings (`/settings/password`) accessible to all authenticated users
+- [x] Unauthorized route access redirects to `/`
+- [x] Multi-role users (e.g., ADMIN + TREASURER) can access union of permitted routes
+- [x] `RoleRoute` tests: authorized renders child, unauthorized redirects — for each permission function
+- [x] Existing `AdminRoute` tests migrated or replaced
+- [x] All existing tests pass
 
 ---
 
@@ -62,16 +62,16 @@ Update the sidebar `NavItem` interface to replace `adminOnly` with a `visible` c
 
 ### Acceptance criteria
 
-- [ ] `NavItem` interface uses `visible?: (user) => boolean` instead of `adminOnly?: boolean`
-- [ ] Dashboard nav item has no `visible` (always shown)
-- [ ] Donations, Donors, Expenses nav items use `canRecordData`
-- [ ] Reports nav item uses `canViewReports`
-- [ ] Users nav item uses `canManageUsers`
-- [ ] Sidebar filter logic uses `item.visible?.(user)` pattern
-- [ ] ADMIN sees: Dashboard, Users
-- [ ] TREASURER sees: Dashboard, Donations, Donors, Expenses, Reports
-- [ ] PASTOR sees: Dashboard, Reports
-- [ ] OPERATOR sees: Dashboard, Donations, Donors, Expenses
-- [ ] ADMIN + TREASURER sees: Dashboard, Donations, Donors, Expenses, Reports, Users
-- [ ] Sidebar tests cover all 4 roles and one multi-role combination
-- [ ] All existing tests pass
+- [x] `NavItem` interface uses `visible?: (user) => boolean` instead of `adminOnly?: boolean`
+- [x] Dashboard nav item has no `visible` (always shown)
+- [x] Donations, Donors, Expenses nav items use `canRecordData`
+- [x] Reports nav item uses `canViewReports`
+- [x] Users nav item uses `canManageUsers`
+- [x] Sidebar filter logic uses `item.visible?.(user)` pattern
+- [x] ADMIN sees: Dashboard, Users
+- [x] TREASURER sees: Dashboard, Donations, Donors, Expenses, Reports
+- [x] PASTOR sees: Dashboard, Reports
+- [x] OPERATOR sees: Dashboard, Donations, Donors, Expenses
+- [x] ADMIN + TREASURER sees: Dashboard, Donations, Donors, Expenses, Reports, Users
+- [x] Sidebar tests cover all 4 roles and one multi-role combination
+- [x] All existing tests pass

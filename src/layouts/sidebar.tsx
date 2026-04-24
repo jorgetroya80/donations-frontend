@@ -18,6 +18,11 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useAuth } from '@/features/auth/auth-context'
+import {
+  canManageUsers,
+  canRecordData,
+  canViewReports,
+} from '@/lib/permissions'
 import { cn } from '@/lib/utils'
 
 const SIDEBAR_KEY = 'sidebar_collapsed'
@@ -35,7 +40,7 @@ interface NavItem {
   to: string
   labelKey: string
   icon: React.ReactNode
-  adminOnly?: boolean
+  visible?: (user: { username: string; roles: string[] } | null) => boolean
 }
 
 const navItems: NavItem[] = [
@@ -44,23 +49,31 @@ const navItems: NavItem[] = [
     to: '/donations',
     labelKey: 'nav.donations',
     icon: <HandCoins size={20} />,
+    visible: canRecordData,
   },
   {
     to: '/donors',
     labelKey: 'nav.donors',
     icon: <UsersRound size={20} />,
+    visible: canRecordData,
   },
-  { to: '/expenses', labelKey: 'nav.expenses', icon: <Receipt size={20} /> },
+  {
+    to: '/expenses',
+    labelKey: 'nav.expenses',
+    icon: <Receipt size={20} />,
+    visible: canRecordData,
+  },
   {
     to: '/reports',
     labelKey: 'nav.reports',
     icon: <LayoutDashboard size={20} />,
+    visible: canViewReports,
   },
   {
     to: '/users',
     labelKey: 'nav.users',
     icon: <Users size={20} />,
-    adminOnly: true,
+    visible: canManageUsers,
   },
 ]
 
@@ -69,7 +82,6 @@ export { getStoredCollapsed, SIDEBAR_KEY }
 export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const { t } = useTranslation()
   const { user } = useAuth()
-  const isAdmin = user?.roles.includes('ADMIN') ?? false
 
   return (
     <aside
@@ -92,7 +104,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
       <nav className="flex-1 space-y-1 p-2">
         {navItems.map((item) => {
-          if (item.adminOnly && !isAdmin) return null
+          if (item.visible && !item.visible(user)) return null
 
           const link = (
             <NavLink
