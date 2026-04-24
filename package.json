@@ -18,7 +18,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.app.json"
   },
   "lint-staged": {
-    "**/*.{cjs,css,html,js,json,md,mjs,yml}": ["biome format --write --staged"],
+    "**/*.{cjs,css,html,js,json,mjs}": ["biome format --write --staged"],
     "src/**/*.{ts,tsx}": ["biome lint --write --staged"]
   },
   "dependencies": {

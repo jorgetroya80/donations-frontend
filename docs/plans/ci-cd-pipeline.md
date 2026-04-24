@@ -51,11 +51,11 @@ Release-please workflow on every push to `main`. Uses `googleapis/release-please
 
 - [x] `.github/workflows/release-please.yml` exists, triggers on push to `main`
 - [x] release-please config: `node` package type, `0.1.0` starting version
-- [ ] After merging PR with `feat:` or `fix:` title, release-please creates/updates Release PR
-- [ ] Release PR contains updated `package.json` version
-- [ ] Release PR contains generated CHANGELOG.md
-- [ ] Merging Release PR creates GitHub Release with `v*` tag
-- [ ] Semver bumps: `fix:` → patch, `feat:` → minor
+- [x] After merging PR with `feat:` or `fix:` title, release-please creates/updates Release PR
+- [x] Release PR contains updated `package.json` version
+- [x] Release PR contains generated CHANGELOG.md
+- [x] Merging Release PR creates GitHub Release with `v*` tag
+- [x] Semver bumps: `fix:` → patch, `feat:` → minor
 
 ---
 
@@ -75,7 +75,7 @@ Multi-stage Dockerfile + Docker publish workflow. Dockerfile uses Node 24 alpine
 - [x] Custom Nginx config handles SPA routing with `try_files $uri $uri/ /index.html`
 - [x] `.dockerignore` excludes `node_modules`, `.git`, etc.
 - [x] Docker image builds locally (`docker build -t test .`)
-- [ ] Container serves app correctly (`docker run -p 8080:80 test`)
+- [x] Container serves app correctly (`docker run -p 8080:80 test`)
 - [x] `.github/workflows/docker-publish.yml` triggers on GitHub Release published
 - [x] Image pushed to `docker.io/[username]/donations-frontend`
 - [x] Image tagged with version (e.g., `0.1.0`) and `latest`
