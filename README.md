@@ -1,75 +1,64 @@
-# React + TypeScript + Vite
+# Donations Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Web app that helps small churches manage their finances — track tithes, offerings, and expenses, manage donor records, and view financial reports with charts and summaries. Supports role-based access so administrators, treasurers, and other staff see only what they need.
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Node.js >= 24
+- npm >= 11
 
-## React Compiler
+## Getting Started
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
-
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+App runs at http://localhost:3000
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Scripts
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Command                 | Description             |
+| ----------------------- | ----------------------- |
+| `npm run dev`           | Start dev server        |
+| `npm run build`         | Production build        |
+| `npm run test`          | Run tests               |
+| `npm run test:coverage` | Run tests with coverage |
+| `npm run check`         | Biome lint + format     |
+| `npm run typecheck`     | TypeScript type check   |
+
+## Docker
+
+```bash
+docker build -t donations-frontend .
+docker run -p 8080:80 donations-frontend
 ```
+
+## Architecture
+
+```
+src/
+├── assets/          # Static images and media
+├── components/      # Reusable UI components
+├── features/        # Feature modules (auth, donations, donors, expenses, reports, settings, users, dashboard)
+├── layouts/         # Layout wrappers
+├── lib/             # Shared utilities (API client, types, permissions)
+├── locales/         # i18n translations
+└── test/            # Test utilities and setup
+```
+
+- **Routing**: React Router with nested routes and role-based guards
+- **Server state**: TanStack Query
+- **API**: Ky HTTP client
+- **Forms**: React Hook Form + Zod validation
+- **i18n**: i18next (Spanish)
+
+## Tech Stack
+
+- React 19.2
+- TypeScript 6.0
+- Vite 8.0
+- Tailwind CSS 4.2
+- TanStack Query 5.x
+- Biome 2.4
+- Vitest 4.x
