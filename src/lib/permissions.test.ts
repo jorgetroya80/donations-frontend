@@ -73,8 +73,8 @@ describe('canRecordData', () => {
     expect(canRecordData(treasurer)).toBe(true)
   })
 
-  it('returns true for ADMIN', () => {
-    expect(canRecordData(admin)).toBe(true)
+  it('returns false for ADMIN', () => {
+    expect(canRecordData(admin)).toBe(false)
   })
 
   it('returns false for PASTOR', () => {

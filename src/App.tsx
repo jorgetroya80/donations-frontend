@@ -17,7 +17,12 @@ import { ExpenseEditPage } from '@/features/expenses/expense-edit-page'
 import { ExpensesPage } from '@/features/expenses/expenses-page'
 import { ReportsPage } from '@/features/reports/reports-page'
 import { ChangePasswordPage } from '@/features/settings/change-password-page'
-import { AdminRoute } from '@/features/users/admin-route'
+import { RoleRoute } from '@/features/auth/role-route'
+import {
+  canManageUsers,
+  canRecordData,
+  canViewReports,
+} from '@/lib/permissions'
 import { UserCreatePage } from '@/features/users/user-create-page'
 import { UserEditPage } from '@/features/users/user-edit-page'
 import { UsersPage } from '@/features/users/users-page'
@@ -43,30 +48,40 @@ export default function App() {
               <Route element={<ProtectedRoute />}>
                 <Route element={<AppLayout />}>
                   <Route path="/" element={<DashboardPage />} />
-                  <Route path="/donations" element={<DonationsPage />} />
-                  <Route
-                    path="/donations/new"
-                    element={<DonationCreatePage />}
-                  />
-                  <Route
-                    path="/donations/:id/edit"
-                    element={<DonationEditPage />}
-                  />
-                  <Route path="/donors" element={<DonorsPage />} />
-                  <Route path="/donors/new" element={<DonorCreatePage />} />
-                  <Route path="/donors/:id/edit" element={<DonorEditPage />} />
-                  <Route path="/expenses" element={<ExpensesPage />} />
-                  <Route path="/expenses/new" element={<ExpenseCreatePage />} />
-                  <Route
-                    path="/expenses/:id/edit"
-                    element={<ExpenseEditPage />}
-                  />
-                  <Route path="/reports" element={<ReportsPage />} />
                   <Route
                     path="/settings/password"
                     element={<ChangePasswordPage />}
                   />
-                  <Route element={<AdminRoute />}>
+                  <Route element={<RoleRoute check={canRecordData} />}>
+                    <Route path="/donations" element={<DonationsPage />} />
+                    <Route
+                      path="/donations/new"
+                      element={<DonationCreatePage />}
+                    />
+                    <Route
+                      path="/donations/:id/edit"
+                      element={<DonationEditPage />}
+                    />
+                    <Route path="/donors" element={<DonorsPage />} />
+                    <Route path="/donors/new" element={<DonorCreatePage />} />
+                    <Route
+                      path="/donors/:id/edit"
+                      element={<DonorEditPage />}
+                    />
+                    <Route path="/expenses" element={<ExpensesPage />} />
+                    <Route
+                      path="/expenses/new"
+                      element={<ExpenseCreatePage />}
+                    />
+                    <Route
+                      path="/expenses/:id/edit"
+                      element={<ExpenseEditPage />}
+                    />
+                  </Route>
+                  <Route element={<RoleRoute check={canViewReports} />}>
+                    <Route path="/reports" element={<ReportsPage />} />
+                  </Route>
+                  <Route element={<RoleRoute check={canManageUsers} />}>
                     <Route path="/users" element={<UsersPage />} />
                     <Route path="/users/new" element={<UserCreatePage />} />
                     <Route path="/users/:id/edit" element={<UserEditPage />} />
