@@ -42,12 +42,12 @@ describe('DashboardPage', () => {
     expect(screen.queryByTestId('quick-actions')).not.toBeInTheDocument()
   })
 
-  it('ADMIN sees user stats + quick actions', () => {
+  it('ADMIN sees user stats only', () => {
     loginAs(['ADMIN'])
     renderWithProviders(<DashboardPage />)
 
     expect(screen.getByTestId('user-stats')).toBeInTheDocument()
-    expect(screen.getByTestId('quick-actions')).toBeInTheDocument()
+    expect(screen.queryByTestId('quick-actions')).not.toBeInTheDocument()
     expect(screen.queryByTestId('financial-overview')).not.toBeInTheDocument()
   })
 

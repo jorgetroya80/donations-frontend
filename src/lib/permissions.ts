@@ -16,9 +16,5 @@ export function canManageUsers(user: AuthUser | null): boolean {
 }
 
 export function canRecordData(user: AuthUser | null): boolean {
-  return (
-    hasRole(user, 'OPERATOR') ||
-    hasRole(user, 'TREASURER') ||
-    hasRole(user, 'ADMIN')
-  )
+  return hasRole(user, 'OPERATOR') || hasRole(user, 'TREASURER')
 }
