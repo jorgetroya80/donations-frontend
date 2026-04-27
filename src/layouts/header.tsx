@@ -1,7 +1,7 @@
 import { KeyRound, LogOut, User } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { Button } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,11 +28,15 @@ export function Header() {
   return (
     <header className="bg-card flex h-14 items-center justify-end border-b px-4">
       <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Button variant="ghost" size="sm" className="gap-2">
-            <User size={16} />
-            <span>{user?.username}</span>
-          </Button>
+        <DropdownMenuTrigger
+          className={buttonVariants({
+            variant: 'ghost',
+            size: 'lg',
+            className: 'gap-2',
+          })}
+        >
+          <User size={16} />
+          <span>{user?.username}</span>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={handleChangePassword}>
