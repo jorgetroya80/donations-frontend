@@ -47,6 +47,7 @@
     "amount": "Monto",
     "date": "Fecha",
     "type": "Tipo",
+    "incomeMethod": "Método de ingreso",
     "paymentMethod": "M\u00e9todo de pago",
     "donor": "Donante",
     "donorOptional": "Donante (opcional)",
