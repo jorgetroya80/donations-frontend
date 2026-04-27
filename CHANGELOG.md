@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.7](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.6...donations-frontend-v0.1.7) (2026-04-27)
+
+
+### Features
+
+* move settings to release config ([#17](https://github.com/jorgetroya80/donations-frontend/issues/17)) ([4fa2774](https://github.com/jorgetroya80/donations-frontend/commit/4fa2774a95cc83d7eb2dafe5cc2286e01af51c7a))
+* update release-please manifest ([#15](https://github.com/jorgetroya80/donations-frontend/issues/15)) ([2ad78d7](https://github.com/jorgetroya80/donations-frontend/commit/2ad78d7e30c8edd035caf9170c097f17abcace08))
+
+
+### Bug Fixes
+
+* release-please unable to parse emoji ([#16](https://github.com/jorgetroya80/donations-frontend/issues/16)) ([95d5567](https://github.com/jorgetroya80/donations-frontend/commit/95d5567d5b1a80fad68c587d69387780f9804405))
+
 ## [0.1.6](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.5...donations-frontend-v0.1.6) (2026-04-27)
 
 
