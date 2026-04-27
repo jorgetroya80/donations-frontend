@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.5](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.4...donations-frontend-v0.1.5) (2026-04-27)
+
+
+### Bug Fixes
+
+* update donation and expense forms for localized select values ([#11](https://github.com/jorgetroya80/donations-frontend/issues/11)) ([dbc3fa5](https://github.com/jorgetroya80/donations-frontend/commit/dbc3fa5316c877c282881ecf3bc4402cc499cae3))
+
 ## [0.1.4](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.3...donations-frontend-v0.1.4) (2026-04-24)
 
 
