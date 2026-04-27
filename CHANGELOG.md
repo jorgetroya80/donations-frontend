@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.6](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.5...donations-frontend-v0.1.6) (2026-04-27)
+
+
+### Features
+
+* update payment method translation, refactor header component and reorder Tailwind classes names  ([#13](https://github.com/jorgetroya80/donations-frontend/issues/13)) ([8228fd5](https://github.com/jorgetroya80/donations-frontend/commit/8228fd582919fe778bccde02ca39735a1a95cb52))
+
 ## [0.1.5](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.4...donations-frontend-v0.1.5) (2026-04-27)
 
 
