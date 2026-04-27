@@ -85,7 +85,12 @@ export function ExpenseForm({
             control={control}
             name="category"
             render={({ field }) => (
-              <Select value={field.value ?? ''} onValueChange={field.onChange}>
+              <Select
+                value={
+                  field.value ? t(`expenses.categories.${field.value}`) : ''
+                }
+                onValueChange={field.onChange}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder={t('expenses.selectCategory')} />
                 </SelectTrigger>
@@ -112,7 +117,12 @@ export function ExpenseForm({
             control={control}
             name="paymentMethod"
             render={({ field }) => (
-              <Select value={field.value ?? ''} onValueChange={field.onChange}>
+              <Select
+                value={
+                  field.value ? t(`expenses.paymentMethods.${field.value}`) : ''
+                }
+                onValueChange={field.onChange}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder={t('expenses.selectPayment')} />
                 </SelectTrigger>

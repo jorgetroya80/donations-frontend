@@ -61,6 +61,8 @@ describe('ExpenseForm', () => {
 
     expect(screen.getByLabelText('Monto')).toHaveValue(500)
     expect(screen.getByLabelText('Fecha')).toHaveValue('2026-04-10')
+    expect(screen.getByText('Alquiler')).toBeInTheDocument()
+    expect(screen.getByText('Efectivo')).toBeInTheDocument()
     expect(screen.getByLabelText('Descripción')).toHaveValue('Test expense')
     expect(screen.getByLabelText('Proveedor (opcional)')).toHaveValue(
       'Test vendor'

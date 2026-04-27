@@ -70,5 +70,7 @@ describe('DonationForm', () => {
 
     expect(screen.getByLabelText('Monto')).toHaveValue(100)
     expect(screen.getByLabelText('Fecha')).toHaveValue('2026-04-15')
+    expect(screen.getByText('Diezmo')).toBeInTheDocument()
+    expect(screen.getByText('Efectivo')).toBeInTheDocument()
   })
 })
