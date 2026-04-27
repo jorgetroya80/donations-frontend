@@ -113,7 +113,7 @@ export function DonationForm({
         </div>
 
         <div className="space-y-2">
-          <Label>{t('donations.paymentMethod')}</Label>
+          <Label>{t('donations.incomeMethod')}</Label>
           <Controller
             control={control}
             name="paymentMethod"

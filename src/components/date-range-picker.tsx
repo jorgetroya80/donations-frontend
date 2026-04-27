@@ -32,7 +32,7 @@ export function DateRangePicker({ from, to, onChange }: DateRangePickerProps) {
       <PopoverTrigger>
         <span
           className={cn(
-            'inline-flex shrink-0 items-center gap-2 rounded-lg border bg-background px-3 py-1.5 text-sm font-normal justify-start text-left',
+            'bg-background inline-flex shrink-0 items-center justify-start gap-2 rounded-lg border px-3 py-1.5 text-left text-sm font-normal',
             'hover:bg-accent hover:text-accent-foreground'
           )}
         >
