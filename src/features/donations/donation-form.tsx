@@ -88,7 +88,10 @@ export function DonationForm({
             control={control}
             name="donationType"
             render={({ field }) => (
-              <Select value={field.value ?? ''} onValueChange={field.onChange}>
+              <Select
+                value={field.value ? t(`donations.types.${field.value}`) : ''}
+                onValueChange={field.onChange}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder={t('donations.selectType')} />
                 </SelectTrigger>
@@ -115,7 +118,14 @@ export function DonationForm({
             control={control}
             name="paymentMethod"
             render={({ field }) => (
-              <Select value={field.value ?? ''} onValueChange={field.onChange}>
+              <Select
+                value={
+                  field.value
+                    ? t(`donations.paymentMethods.${field.value}`)
+                    : ''
+                }
+                onValueChange={field.onChange}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder={t('donations.selectPayment')} />
                 </SelectTrigger>
@@ -144,7 +154,11 @@ export function DonationForm({
           name="donorId"
           render={({ field }) => (
             <Select
-              value={field.value ? String(field.value) : ''}
+              value={
+                field.value
+                  ? donors.find((d) => d.id === field.value)?.fullName
+                  : ''
+              }
               onValueChange={(v) => field.onChange(v ? Number(v) : null)}
             >
               <SelectTrigger>
