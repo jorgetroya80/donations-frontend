@@ -6,5 +6,7 @@
       "bump-minor-pre-major": true,
       "bump-patch-for-minor-pre-major": true
     }
-  }
+  },
+  "pull-request-header": ":rocket: New Release is coming",
+  "pull-request-footer": "This PR was generated with Release Please"
 }
