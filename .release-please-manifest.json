@@ -1,5 +1,5 @@
 {
   ".": "0.1.6",
-  "pull-request-header": "🚀 New Release is coming",
+  "pull-request-header": ":rocket: New Release is coming",
   "pull-request-footer": "This PR was generated with Release Please"
 }
