@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router'
 import { DateRangePicker } from '@/components/date-range-picker'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -62,6 +62,12 @@ export function ExpensesPage() {
     return currentDir === 'asc' ? ' ↑' : ' ↓'
   }
 
+  function ariaSort(field: string): 'ascending' | 'descending' | 'none' {
+    const [currentField, currentDir] = sort.split(',')
+    if (currentField !== field) return 'none'
+    return currentDir === 'asc' ? 'ascending' : 'descending'
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -108,16 +114,32 @@ export function ExpensesPage() {
                 <TableHead
                   className="cursor-pointer"
                   onClick={() => toggleSort('expenseDate')}
+                  tabIndex={0}
+                  aria-sort={ariaSort('expenseDate')}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      toggleSort('expenseDate')
+                    }
+                  }}
                 >
                   {t('expenses.date')}
-                  {sortIndicator('expenseDate')}
+                  <span aria-hidden="true">{sortIndicator('expenseDate')}</span>
                 </TableHead>
                 <TableHead
                   className="cursor-pointer"
                   onClick={() => toggleSort('amount')}
+                  tabIndex={0}
+                  aria-sort={ariaSort('amount')}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      toggleSort('amount')
+                    }
+                  }}
                 >
                   {t('expenses.amount')}
-                  {sortIndicator('amount')}
+                  <span aria-hidden="true">{sortIndicator('amount')}</span>
                 </TableHead>
                 <TableHead>{t('expenses.category')}</TableHead>
                 <TableHead>{t('expenses.description')}</TableHead>
@@ -144,10 +166,17 @@ export function ExpensesPage() {
                     {t(`expenses.paymentMethods.${e.paymentMethod}`)}
                   </TableCell>
                   <TableCell>
-                    <Link to={`/expenses/${e.id}/edit`}>
-                      <Button variant="ghost" size="icon">
-                        <Pencil size={14} />
-                      </Button>
+                    <Link
+                      to={`/expenses/${e.id}/edit`}
+                      className={buttonVariants({
+                        variant: 'ghost',
+                        size: 'icon',
+                      })}
+                      aria-label={t('expenses.editLabel', {
+                        date: dayjs(e.expenseDate).format('DD/MM/YYYY'),
+                      })}
+                    >
+                      <Pencil size={14} aria-hidden="true" />
                     </Link>
                   </TableCell>
                 </TableRow>

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -37,6 +37,12 @@ export function DonorsPage() {
     const [currentField, currentDir] = sort.split(',')
     if (currentField !== field) return ''
     return currentDir === 'asc' ? ' ↑' : ' ↓'
+  }
+
+  function ariaSort(field: string): 'ascending' | 'descending' | 'none' {
+    const [currentField, currentDir] = sort.split(',')
+    if (currentField !== field) return 'none'
+    return currentDir === 'asc' ? 'ascending' : 'descending'
   }
 
   return (
@@ -75,9 +81,17 @@ export function DonorsPage() {
                 <TableHead
                   className="cursor-pointer"
                   onClick={() => toggleSort('fullName')}
+                  tabIndex={0}
+                  aria-sort={ariaSort('fullName')}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      toggleSort('fullName')
+                    }
+                  }}
                 >
                   {t('donors.fullName')}
-                  {sortIndicator('fullName')}
+                  <span aria-hidden="true">{sortIndicator('fullName')}</span>
                 </TableHead>
                 <TableHead>{t('donors.dniNie')}</TableHead>
                 <TableHead>{t('donors.email')}</TableHead>
@@ -101,10 +115,17 @@ export function DonorsPage() {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Link to={`/donors/${donor.id}/edit`}>
-                      <Button variant="ghost" size="icon">
-                        <Pencil size={14} />
-                      </Button>
+                    <Link
+                      to={`/donors/${donor.id}/edit`}
+                      className={buttonVariants({
+                        variant: 'ghost',
+                        size: 'icon',
+                      })}
+                      aria-label={t('donors.editLabel', {
+                        name: donor.fullName,
+                      })}
+                    >
+                      <Pencil size={14} aria-hidden="true" />
                     </Link>
                   </TableCell>
                 </TableRow>
