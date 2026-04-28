@@ -62,25 +62,45 @@ export function ExpenseForm({
             type="number"
             step="0.01"
             min="0.01"
+            aria-invalid={!!errors.amount}
+            aria-describedby={errors.amount ? 'amount-error' : undefined}
             {...register('amount', { valueAsNumber: true })}
           />
           {errors.amount && (
-            <p className="text-sm text-destructive">{errors.amount.message}</p>
+            <p
+              id="amount-error"
+              role="alert"
+              className="text-sm text-destructive"
+            >
+              {errors.amount.message}
+            </p>
           )}
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="expenseDate">{t('expenses.date')}</Label>
-          <Input id="expenseDate" type="date" {...register('expenseDate')} />
+          <Input
+            id="expenseDate"
+            type="date"
+            aria-invalid={!!errors.expenseDate}
+            aria-describedby={
+              errors.expenseDate ? 'expenseDate-error' : undefined
+            }
+            {...register('expenseDate')}
+          />
           {errors.expenseDate && (
-            <p className="text-sm text-destructive">
+            <p
+              id="expenseDate-error"
+              role="alert"
+              className="text-sm text-destructive"
+            >
               {errors.expenseDate.message}
             </p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label>{t('expenses.category')}</Label>
+          <Label htmlFor="category">{t('expenses.category')}</Label>
           <Controller
             control={control}
             name="category"
@@ -91,7 +111,13 @@ export function ExpenseForm({
                 }
                 onValueChange={field.onChange}
               >
-                <SelectTrigger>
+                <SelectTrigger
+                  id="category"
+                  aria-invalid={!!errors.category}
+                  aria-describedby={
+                    errors.category ? 'category-error' : undefined
+                  }
+                >
                   <SelectValue placeholder={t('expenses.selectCategory')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -105,14 +131,18 @@ export function ExpenseForm({
             )}
           />
           {errors.category && (
-            <p className="text-sm text-destructive">
+            <p
+              id="category-error"
+              role="alert"
+              className="text-sm text-destructive"
+            >
               {errors.category.message}
             </p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label>{t('expenses.paymentMethod')}</Label>
+          <Label htmlFor="paymentMethod">{t('expenses.paymentMethod')}</Label>
           <Controller
             control={control}
             name="paymentMethod"
@@ -123,7 +153,13 @@ export function ExpenseForm({
                 }
                 onValueChange={field.onChange}
               >
-                <SelectTrigger>
+                <SelectTrigger
+                  id="paymentMethod"
+                  aria-invalid={!!errors.paymentMethod}
+                  aria-describedby={
+                    errors.paymentMethod ? 'paymentMethod-error' : undefined
+                  }
+                >
                   <SelectValue placeholder={t('expenses.selectPayment')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -137,7 +173,11 @@ export function ExpenseForm({
             )}
           />
           {errors.paymentMethod && (
-            <p className="text-sm text-destructive">
+            <p
+              id="paymentMethod-error"
+              role="alert"
+              className="text-sm text-destructive"
+            >
               {errors.paymentMethod.message}
             </p>
           )}
@@ -146,9 +186,20 @@ export function ExpenseForm({
 
       <div className="space-y-2">
         <Label htmlFor="description">{t('expenses.description')}</Label>
-        <Textarea id="description" {...register('description')} />
+        <Textarea
+          id="description"
+          aria-invalid={!!errors.description}
+          aria-describedby={
+            errors.description ? 'description-error' : undefined
+          }
+          {...register('description')}
+        />
         {errors.description && (
-          <p className="text-sm text-destructive">
+          <p
+            id="description-error"
+            role="alert"
+            className="text-sm text-destructive"
+          >
             {errors.description.message}
           </p>
         )}
