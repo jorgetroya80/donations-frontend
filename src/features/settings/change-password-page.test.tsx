@@ -79,6 +79,31 @@ describe('ChangePasswordPage', () => {
     })
   })
 
+  it('sets aria-invalid and aria-describedby on invalid fields after submit', async () => {
+    const user = userEvent.setup()
+    renderPage()
+    await user.click(screen.getByRole('button', { name: 'Guardar' }))
+    await waitFor(() => {
+      const input = screen.getByLabelText('Contraseña actual')
+      expect(input).toHaveAttribute('aria-invalid', 'true')
+      expect(input).toHaveAttribute(
+        'aria-describedby',
+        'currentPassword-error'
+      )
+      expect(document.getElementById('currentPassword-error')).toHaveAttribute(
+        'role',
+        'alert'
+      )
+    })
+  })
+
+  it('clears aria-invalid and aria-describedby when field has no error', () => {
+    renderPage()
+    const input = screen.getByLabelText('Contraseña actual')
+    expect(input).toHaveAttribute('aria-invalid', 'false')
+    expect(input).not.toHaveAttribute('aria-describedby')
+  })
+
   it('shows error alert when current password is wrong', async () => {
     const user = userEvent.setup()
     renderPage()

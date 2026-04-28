@@ -85,10 +85,18 @@ export function ChangePasswordPage() {
                 id="currentPassword"
                 type="password"
                 autoComplete="current-password"
+                aria-invalid={!!errors.currentPassword}
+                aria-describedby={
+                  errors.currentPassword ? 'currentPassword-error' : undefined
+                }
                 {...register('currentPassword')}
               />
               {errors.currentPassword && (
-                <p className="text-sm text-destructive">
+                <p
+                  id="currentPassword-error"
+                  role="alert"
+                  className="text-sm text-destructive"
+                >
                   {errors.currentPassword.message}
                 </p>
               )}
@@ -100,10 +108,18 @@ export function ChangePasswordPage() {
                 id="newPassword"
                 type="password"
                 autoComplete="new-password"
+                aria-invalid={!!errors.newPassword}
+                aria-describedby={
+                  errors.newPassword ? 'newPassword-error' : undefined
+                }
                 {...register('newPassword')}
               />
               {errors.newPassword && (
-                <p className="text-sm text-destructive">
+                <p
+                  id="newPassword-error"
+                  role="alert"
+                  className="text-sm text-destructive"
+                >
                   {errors.newPassword.message}
                 </p>
               )}
@@ -117,10 +133,18 @@ export function ChangePasswordPage() {
                 id="confirmPassword"
                 type="password"
                 autoComplete="new-password"
+                aria-invalid={!!errors.confirmPassword}
+                aria-describedby={
+                  errors.confirmPassword ? 'confirmPassword-error' : undefined
+                }
                 {...register('confirmPassword')}
               />
               {errors.confirmPassword && (
-                <p className="text-sm text-destructive">
+                <p
+                  id="confirmPassword-error"
+                  role="alert"
+                  className="text-sm text-destructive"
+                >
                   {errors.confirmPassword.message}
                 </p>
               )}
