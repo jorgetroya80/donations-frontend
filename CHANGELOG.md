@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.8](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.7...donations-frontend-v0.1.8) (2026-04-28)
+
+
+### Features
+
+* accessibility phase 1 - foundation fixes ([#23](https://github.com/jorgetroya80/donations-frontend/issues/23)) ([a344e3b](https://github.com/jorgetroya80/donations-frontend/commit/a344e3bdfbfec306b67170d2345cae752fc67555))
+
 ## [0.1.7](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.6...donations-frontend-v0.1.7) (2026-04-27)
 
 
