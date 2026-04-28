@@ -50,6 +50,46 @@ describe('DonorForm', () => {
     expect(screen.getByLabelText(/Email/)).toHaveValue('juan@test.com')
   })
 
+  it('sets aria-invalid and aria-describedby on invalid submit', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<DonorForm onSubmit={vi.fn()} submitLabel="Guardar" />)
+
+    await user.click(screen.getByRole('button', { name: 'Guardar' }))
+
+    await waitFor(() => {
+      const fullNameInput = screen.getByLabelText('Nombre completo')
+      expect(fullNameInput).toHaveAttribute('aria-invalid', 'true')
+      expect(fullNameInput).toHaveAttribute(
+        'aria-describedby',
+        'fullName-error'
+      )
+      expect(document.getElementById('fullName-error')).toHaveAttribute(
+        'role',
+        'alert'
+      )
+
+      const dniNieInput = screen.getByLabelText('DNI/NIE')
+      expect(dniNieInput).toHaveAttribute('aria-invalid', 'true')
+      expect(dniNieInput).toHaveAttribute('aria-describedby', 'dniNie-error')
+      expect(document.getElementById('dniNie-error')).toHaveAttribute(
+        'role',
+        'alert'
+      )
+    })
+  })
+
+  it('has no aria-invalid or aria-describedby before submit', () => {
+    renderWithProviders(<DonorForm onSubmit={vi.fn()} submitLabel="Guardar" />)
+
+    const fullNameInput = screen.getByLabelText('Nombre completo')
+    expect(fullNameInput).toHaveAttribute('aria-invalid', 'false')
+    expect(fullNameInput).not.toHaveAttribute('aria-describedby')
+
+    const dniNieInput = screen.getByLabelText('DNI/NIE')
+    expect(dniNieInput).toHaveAttribute('aria-invalid', 'false')
+    expect(dniNieInput).not.toHaveAttribute('aria-describedby')
+  })
+
   it('calls onSubmit with valid data', async () => {
     const user = userEvent.setup()
     const onSubmit = vi.fn()
