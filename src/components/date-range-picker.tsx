@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import { CalendarIcon } from 'lucide-react'
+import { useState } from 'react'
 import { type DateRange } from 'react-day-picker'
 import { useTranslation } from 'react-i18next'
 import { Calendar } from '@/components/ui/calendar'
@@ -18,6 +19,7 @@ interface DateRangePickerProps {
 
 export function DateRangePicker({ from, to, onChange }: DateRangePickerProps) {
   const { t } = useTranslation()
+  const [open, setOpen] = useState(false)
 
   const label = `${dayjs(from).format('DD/MM/YYYY')} - ${dayjs(to).format('DD/MM/YYYY')}`
 
@@ -28,17 +30,23 @@ export function DateRangePicker({ from, to, onChange }: DateRangePickerProps) {
   }
 
   return (
-    <Popover>
-      <PopoverTrigger>
-        <span
-          className={cn(
-            'bg-background inline-flex shrink-0 items-center justify-start gap-2 rounded-lg border px-3 py-1.5 text-left text-sm font-normal',
-            'hover:bg-accent hover:text-accent-foreground'
-          )}
-        >
-          <CalendarIcon size={16} />
-          {label}
-        </span>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger
+        render={
+          <button
+            type="button"
+            aria-expanded={open}
+            aria-haspopup="dialog"
+            className={cn(
+              'bg-background inline-flex shrink-0 items-center justify-start gap-2 rounded-lg border px-3 py-1.5 text-left text-sm font-normal',
+              'hover:bg-accent hover:text-accent-foreground',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+            )}
+          />
+        }
+      >
+        <CalendarIcon size={16} aria-hidden="true" />
+        {label}
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar

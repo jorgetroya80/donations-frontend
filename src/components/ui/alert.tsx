@@ -20,6 +20,7 @@ const alertVariants = cva(
 )
 
 function Alert({
+  role = 'alert',
   className,
   variant,
   ...props
@@ -27,7 +28,9 @@ function Alert({
   return (
     <div
       data-slot="alert"
-      role="alert"
+      role={role}
+      aria-live={role === 'alert' ? 'assertive' : 'polite'}
+      aria-atomic="true"
       className={cn(alertVariants({ variant }), className)}
       {...props}
     />
