@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react'
+import { fireEvent, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { renderWithProviders } from '@/test/test-utils'
@@ -90,5 +90,46 @@ describe('UsersPage', () => {
 
     const editLinks = screen.getAllByRole('link')
     expect(editLinks.length).toBeGreaterThanOrEqual(2)
+  })
+
+  it('toggles sort with Enter key on sortable header', async () => {
+    renderWithProviders(<UsersPage />)
+    await waitFor(() => {
+      expect(screen.getByText('admin')).toBeInTheDocument()
+    })
+    fireEvent.keyDown(
+      screen.getByRole('columnheader', { name: /Nombre de usuario/ }),
+      { key: 'Enter' }
+    )
+    await waitFor(() => {
+      expect(
+        screen.getByRole('columnheader', { name: /Nombre de usuario/ })
+      ).toHaveAttribute('aria-sort', 'descending')
+    })
+  })
+
+  it('toggles sort with Space key on sortable header', async () => {
+    renderWithProviders(<UsersPage />)
+    await waitFor(() => {
+      expect(screen.getByText('admin')).toBeInTheDocument()
+    })
+    fireEvent.keyDown(
+      screen.getByRole('columnheader', { name: /Nombre de usuario/ }),
+      { key: ' ' }
+    )
+    await waitFor(() => {
+      expect(
+        screen.getByRole('columnheader', { name: /Nombre de usuario/ })
+      ).toHaveAttribute('aria-sort', 'descending')
+    })
+  })
+
+  it('edit links have descriptive aria-labels', async () => {
+    renderWithProviders(<UsersPage />)
+    await waitFor(() => {
+      expect(screen.getByText('admin')).toBeInTheDocument()
+    })
+    const editLink = screen.getAllByRole('link', { name: /Editar usuario/ })
+    expect(editLink[0]).toBeInTheDocument()
   })
 })

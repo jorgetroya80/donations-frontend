@@ -79,7 +79,8 @@
     "next": "Siguiente",
     "selectType": "Seleccione tipo",
     "selectPayment": "Seleccione m\u00e9todo",
-    "selectDonor": "Seleccione donante"
+    "selectDonor": "Seleccione donante",
+    "editLabel": "Editar donación del {{date}}"
   },
   "donors": {
     "title": "Donantes",
@@ -105,7 +106,8 @@
     "empty": "No hay donantes registrados",
     "page": "Página {{page}} de {{total}}",
     "previous": "Anterior",
-    "next": "Siguiente"
+    "next": "Siguiente",
+    "editLabel": "Editar donante {{name}}"
   },
   "expenses": {
     "title": "Gastos",
@@ -142,7 +144,8 @@
     "empty": "No hay gastos registrados",
     "page": "Página {{page}} de {{total}}",
     "previous": "Anterior",
-    "next": "Siguiente"
+    "next": "Siguiente",
+    "editLabel": "Editar gasto del {{date}}"
   },
   "users": {
     "title": "Usuarios",
@@ -171,7 +174,8 @@
     "page": "Página {{page}} de {{total}}",
     "previous": "Anterior",
     "next": "Siguiente",
-    "noAccess": "No tiene permisos para acceder a esta sección"
+    "noAccess": "No tiene permisos para acceder a esta sección",
+    "editLabel": "Editar usuario {{username}}"
   },
   "reports": {
     "title": "Reportes",

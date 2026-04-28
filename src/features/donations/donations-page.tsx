@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router'
 import { DateRangePicker } from '@/components/date-range-picker'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -62,6 +62,12 @@ export function DonationsPage() {
     return currentDir === 'asc' ? ' ↑' : ' ↓'
   }
 
+  function ariaSort(field: string): 'ascending' | 'descending' | 'none' {
+    const [currentField, currentDir] = sort.split(',')
+    if (currentField !== field) return 'none'
+    return currentDir === 'asc' ? 'ascending' : 'descending'
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -108,16 +114,34 @@ export function DonationsPage() {
                 <TableHead
                   className="cursor-pointer"
                   onClick={() => toggleSort('donationDate')}
+                  tabIndex={0}
+                  aria-sort={ariaSort('donationDate')}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      toggleSort('donationDate')
+                    }
+                  }}
                 >
                   {t('donations.date')}
-                  {sortIndicator('donationDate')}
+                  <span aria-hidden="true">
+                    {sortIndicator('donationDate')}
+                  </span>
                 </TableHead>
                 <TableHead
                   className="cursor-pointer"
                   onClick={() => toggleSort('amount')}
+                  tabIndex={0}
+                  aria-sort={ariaSort('amount')}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      toggleSort('amount')
+                    }
+                  }}
                 >
                   {t('donations.amount')}
-                  {sortIndicator('amount')}
+                  <span aria-hidden="true">{sortIndicator('amount')}</span>
                 </TableHead>
                 <TableHead>{t('donations.type')}</TableHead>
                 <TableHead>{t('donations.paymentMethod')}</TableHead>
@@ -142,10 +166,17 @@ export function DonationsPage() {
                   </TableCell>
                   <TableCell>{d.donorName ?? t('donations.noDonor')}</TableCell>
                   <TableCell>
-                    <Link to={`/donations/${d.id}/edit`}>
-                      <Button variant="ghost" size="icon">
-                        <Pencil size={14} />
-                      </Button>
+                    <Link
+                      to={`/donations/${d.id}/edit`}
+                      className={buttonVariants({
+                        variant: 'ghost',
+                        size: 'icon',
+                      })}
+                      aria-label={t('donations.editLabel', {
+                        date: dayjs(d.donationDate).format('DD/MM/YYYY'),
+                      })}
+                    >
+                      <Pencil size={14} aria-hidden="true" />
                     </Link>
                   </TableCell>
                 </TableRow>

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -43,6 +43,12 @@ export function UsersPage() {
     return currentDir === 'asc' ? ' ↑' : ' ↓'
   }
 
+  function ariaSort(field: string): 'ascending' | 'descending' | 'none' {
+    const [currentField, currentDir] = sort.split(',')
+    if (currentField !== field) return 'none'
+    return currentDir === 'asc' ? 'ascending' : 'descending'
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -79,9 +85,17 @@ export function UsersPage() {
                 <TableHead
                   className="cursor-pointer"
                   onClick={() => toggleSort('username')}
+                  tabIndex={0}
+                  aria-sort={ariaSort('username')}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      toggleSort('username')
+                    }
+                  }}
                 >
                   {t('users.username')}
-                  {sortIndicator('username')}
+                  <span aria-hidden="true">{sortIndicator('username')}</span>
                 </TableHead>
                 <TableHead>{t('users.roles')}</TableHead>
                 <TableHead>{t('users.status')}</TableHead>
@@ -107,10 +121,17 @@ export function UsersPage() {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Link to={`/users/${u.id}/edit`}>
-                      <Button variant="ghost" size="icon">
-                        <Pencil size={14} />
-                      </Button>
+                    <Link
+                      to={`/users/${u.id}/edit`}
+                      className={buttonVariants({
+                        variant: 'ghost',
+                        size: 'icon',
+                      })}
+                      aria-label={t('users.editLabel', {
+                        username: u.username,
+                      })}
+                    >
+                      <Pencil size={14} aria-hidden="true" />
                     </Link>
                   </TableCell>
                 </TableRow>
