@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.9](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.8...donations-frontend-v0.1.9) (2026-04-28)
+
+
+### Features
+
+* **a11y:** Phase 2 — form ARIA wiring across all five forms ([#25](https://github.com/jorgetroya80/donations-frontend/issues/25)) ([900a3ee](https://github.com/jorgetroya80/donations-frontend/commit/900a3ee6fc82cde4e5a0169efb3f205ec1ba95b1))
+
 ## [0.1.8](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.7...donations-frontend-v0.1.8) (2026-04-28)
 
 
