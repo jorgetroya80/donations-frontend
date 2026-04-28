@@ -57,15 +57,30 @@ describe('UserForm — create mode', () => {
     await waitFor(() => {
       const usernameInput = screen.getByLabelText('Nombre de usuario')
       expect(usernameInput).toHaveAttribute('aria-invalid', 'true')
-      expect(usernameInput).toHaveAttribute('aria-describedby', 'username-error')
-      expect(document.getElementById('username-error')).toHaveAttribute('role', 'alert')
+      expect(usernameInput).toHaveAttribute(
+        'aria-describedby',
+        'username-error'
+      )
+      expect(document.getElementById('username-error')).toHaveAttribute(
+        'role',
+        'alert'
+      )
 
       const passwordInput = screen.getByLabelText('Contraseña')
       expect(passwordInput).toHaveAttribute('aria-invalid', 'true')
-      expect(passwordInput).toHaveAttribute('aria-describedby', 'password-error')
-      expect(document.getElementById('password-error')).toHaveAttribute('role', 'alert')
+      expect(passwordInput).toHaveAttribute(
+        'aria-describedby',
+        'password-error'
+      )
+      expect(document.getElementById('password-error')).toHaveAttribute(
+        'role',
+        'alert'
+      )
 
-      expect(document.getElementById('roles-error')).toHaveAttribute('role', 'alert')
+      expect(document.getElementById('roles-error')).toHaveAttribute(
+        'role',
+        'alert'
+      )
     })
   })
 

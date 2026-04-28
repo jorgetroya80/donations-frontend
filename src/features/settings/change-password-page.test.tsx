@@ -86,10 +86,7 @@ describe('ChangePasswordPage', () => {
     await waitFor(() => {
       const input = screen.getByLabelText('Contraseña actual')
       expect(input).toHaveAttribute('aria-invalid', 'true')
-      expect(input).toHaveAttribute(
-        'aria-describedby',
-        'currentPassword-error'
-      )
+      expect(input).toHaveAttribute('aria-describedby', 'currentPassword-error')
       expect(document.getElementById('currentPassword-error')).toHaveAttribute(
         'role',
         'alert'

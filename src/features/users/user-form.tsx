@@ -74,7 +74,11 @@ export function UserForm({
             {...register('username')}
           />
           {errors.username && (
-            <p id="username-error" role="alert" className="text-sm text-destructive">
+            <p
+              id="username-error"
+              role="alert"
+              className="text-sm text-destructive"
+            >
               {errors.username.message as string}
             </p>
           )}
@@ -94,7 +98,11 @@ export function UserForm({
             {...register('password')}
           />
           {errors.password && (
-            <p id="password-error" role="alert" className="text-sm text-destructive">
+            <p
+              id="password-error"
+              role="alert"
+              className="text-sm text-destructive"
+            >
               {errors.password.message as string}
             </p>
           )}
