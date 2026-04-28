@@ -41,9 +41,18 @@ export function DonorForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="fullName">{t('donors.fullName')}</Label>
-          <Input id="fullName" {...register('fullName')} />
+          <Input
+            id="fullName"
+            aria-invalid={!!errors.fullName}
+            aria-describedby={errors.fullName ? 'fullName-error' : undefined}
+            {...register('fullName')}
+          />
           {errors.fullName && (
-            <p className="text-sm text-destructive">
+            <p
+              id="fullName-error"
+              role="alert"
+              className="text-sm text-destructive"
+            >
               {errors.fullName.message}
             </p>
           )}
@@ -51,17 +60,40 @@ export function DonorForm({
 
         <div className="space-y-2">
           <Label htmlFor="dniNie">{t('donors.dniNie')}</Label>
-          <Input id="dniNie" {...register('dniNie')} />
+          <Input
+            id="dniNie"
+            aria-invalid={!!errors.dniNie}
+            aria-describedby={errors.dniNie ? 'dniNie-error' : undefined}
+            {...register('dniNie')}
+          />
           {errors.dniNie && (
-            <p className="text-sm text-destructive">{errors.dniNie.message}</p>
+            <p
+              id="dniNie-error"
+              role="alert"
+              className="text-sm text-destructive"
+            >
+              {errors.dniNie.message}
+            </p>
           )}
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="email">{t('donors.emailOptional')}</Label>
-          <Input id="email" type="email" {...register('email')} />
+          <Input
+            id="email"
+            type="email"
+            aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? 'email-error' : undefined}
+            {...register('email')}
+          />
           {errors.email && (
-            <p className="text-sm text-destructive">{errors.email.message}</p>
+            <p
+              id="email-error"
+              role="alert"
+              className="text-sm text-destructive"
+            >
+              {errors.email.message}
+            </p>
           )}
         </div>
 

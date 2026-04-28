@@ -76,4 +76,66 @@ describe('ExpenseForm', () => {
 
     expect(screen.getByRole('button', { name: 'Cargando...' })).toBeDisabled()
   })
+
+  it('sets aria-invalid and aria-describedby on invalid submit', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <ExpenseForm onSubmit={onSubmit} submitLabel="Guardar" />
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Guardar' }))
+
+    const amountInput = screen.getByLabelText('Monto')
+    expect(amountInput).toHaveAttribute('aria-invalid', 'true')
+    expect(amountInput).toHaveAttribute('aria-describedby', 'amount-error')
+    expect(document.getElementById('amount-error')).toHaveAttribute(
+      'role',
+      'alert'
+    )
+
+    const dateInput = screen.getByLabelText('Fecha')
+    expect(dateInput).toHaveAttribute('aria-invalid', 'true')
+    expect(dateInput).toHaveAttribute('aria-describedby', 'expenseDate-error')
+    expect(document.getElementById('expenseDate-error')).toHaveAttribute(
+      'role',
+      'alert'
+    )
+
+    const descriptionInput = screen.getByLabelText('Descripción')
+    expect(descriptionInput).toHaveAttribute('aria-invalid', 'true')
+    expect(descriptionInput).toHaveAttribute(
+      'aria-describedby',
+      'description-error'
+    )
+    expect(document.getElementById('description-error')).toHaveAttribute(
+      'role',
+      'alert'
+    )
+  })
+
+  it('has no aria-invalid or aria-describedby when no errors', () => {
+    renderWithProviders(
+      <ExpenseForm
+        defaultValues={{
+          amount: 100,
+          expenseDate: '2026-04-10',
+          description: 'Test',
+        }}
+        onSubmit={onSubmit}
+        submitLabel="Guardar"
+      />
+    )
+
+    const amountInput = screen.getByLabelText('Monto')
+    expect(amountInput).toHaveAttribute('aria-invalid', 'false')
+    expect(amountInput).not.toHaveAttribute('aria-describedby')
+
+    const dateInput = screen.getByLabelText('Fecha')
+    expect(dateInput).toHaveAttribute('aria-invalid', 'false')
+    expect(dateInput).not.toHaveAttribute('aria-describedby')
+
+    const descriptionInput = screen.getByLabelText('Descripción')
+    expect(descriptionInput).toHaveAttribute('aria-invalid', 'false')
+    expect(descriptionInput).not.toHaveAttribute('aria-describedby')
+  })
 })

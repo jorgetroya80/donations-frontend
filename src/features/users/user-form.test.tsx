@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { renderWithProviders } from '@/test/test-utils'
@@ -44,6 +44,58 @@ describe('UserForm — create mode', () => {
       screen.getByText('La contraseña debe tener al menos 8 caracteres')
     ).toBeInTheDocument()
     expect(screen.getByText('Seleccione al menos un rol')).toBeInTheDocument()
+  })
+
+  it('sets aria-invalid and aria-describedby on invalid submit', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <UserForm mode="create" onSubmit={vi.fn()} submitLabel="Guardar" />
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Guardar' }))
+
+    await waitFor(() => {
+      const usernameInput = screen.getByLabelText('Nombre de usuario')
+      expect(usernameInput).toHaveAttribute('aria-invalid', 'true')
+      expect(usernameInput).toHaveAttribute(
+        'aria-describedby',
+        'username-error'
+      )
+      expect(document.getElementById('username-error')).toHaveAttribute(
+        'role',
+        'alert'
+      )
+
+      const passwordInput = screen.getByLabelText('Contraseña')
+      expect(passwordInput).toHaveAttribute('aria-invalid', 'true')
+      expect(passwordInput).toHaveAttribute(
+        'aria-describedby',
+        'password-error'
+      )
+      expect(document.getElementById('password-error')).toHaveAttribute(
+        'role',
+        'alert'
+      )
+
+      expect(document.getElementById('roles-error')).toHaveAttribute(
+        'role',
+        'alert'
+      )
+    })
+  })
+
+  it('has no aria-describedby before submit', () => {
+    renderWithProviders(
+      <UserForm mode="create" onSubmit={vi.fn()} submitLabel="Guardar" />
+    )
+
+    const usernameInput = screen.getByLabelText('Nombre de usuario')
+    expect(usernameInput).toHaveAttribute('aria-invalid', 'false')
+    expect(usernameInput).not.toHaveAttribute('aria-describedby')
+
+    const passwordInput = screen.getByLabelText('Contraseña')
+    expect(passwordInput).toHaveAttribute('aria-invalid', 'false')
+    expect(passwordInput).not.toHaveAttribute('aria-describedby')
   })
 
   it('shows loading state when submitting', () => {

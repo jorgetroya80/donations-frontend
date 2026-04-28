@@ -65,25 +65,45 @@ export function DonationForm({
             type="number"
             step="0.01"
             min="0.01"
+            aria-invalid={!!errors.amount}
+            aria-describedby={errors.amount ? 'amount-error' : undefined}
             {...register('amount', { valueAsNumber: true })}
           />
           {errors.amount && (
-            <p className="text-sm text-destructive">{errors.amount.message}</p>
+            <p
+              id="amount-error"
+              role="alert"
+              className="text-sm text-destructive"
+            >
+              {errors.amount.message}
+            </p>
           )}
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="donationDate">{t('donations.date')}</Label>
-          <Input id="donationDate" type="date" {...register('donationDate')} />
+          <Input
+            id="donationDate"
+            type="date"
+            aria-invalid={!!errors.donationDate}
+            aria-describedby={
+              errors.donationDate ? 'donationDate-error' : undefined
+            }
+            {...register('donationDate')}
+          />
           {errors.donationDate && (
-            <p className="text-sm text-destructive">
+            <p
+              id="donationDate-error"
+              role="alert"
+              className="text-sm text-destructive"
+            >
               {errors.donationDate.message}
             </p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label>{t('donations.type')}</Label>
+          <Label htmlFor="donationType">{t('donations.type')}</Label>
           <Controller
             control={control}
             name="donationType"
@@ -92,7 +112,13 @@ export function DonationForm({
                 value={field.value ? t(`donations.types.${field.value}`) : ''}
                 onValueChange={field.onChange}
               >
-                <SelectTrigger>
+                <SelectTrigger
+                  id="donationType"
+                  aria-invalid={!!errors.donationType}
+                  aria-describedby={
+                    errors.donationType ? 'donationType-error' : undefined
+                  }
+                >
                   <SelectValue placeholder={t('donations.selectType')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -106,14 +132,18 @@ export function DonationForm({
             )}
           />
           {errors.donationType && (
-            <p className="text-sm text-destructive">
+            <p
+              id="donationType-error"
+              role="alert"
+              className="text-sm text-destructive"
+            >
               {errors.donationType.message}
             </p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label>{t('donations.incomeMethod')}</Label>
+          <Label htmlFor="paymentMethod">{t('donations.incomeMethod')}</Label>
           <Controller
             control={control}
             name="paymentMethod"
@@ -126,7 +156,13 @@ export function DonationForm({
                 }
                 onValueChange={field.onChange}
               >
-                <SelectTrigger>
+                <SelectTrigger
+                  id="paymentMethod"
+                  aria-invalid={!!errors.paymentMethod}
+                  aria-describedby={
+                    errors.paymentMethod ? 'paymentMethod-error' : undefined
+                  }
+                >
                   <SelectValue placeholder={t('donations.selectPayment')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -140,7 +176,11 @@ export function DonationForm({
             )}
           />
           {errors.paymentMethod && (
-            <p className="text-sm text-destructive">
+            <p
+              id="paymentMethod-error"
+              role="alert"
+              className="text-sm text-destructive"
+            >
               {errors.paymentMethod.message}
             </p>
           )}

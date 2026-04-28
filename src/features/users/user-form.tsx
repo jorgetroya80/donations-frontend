@@ -67,9 +67,18 @@ export function UserForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="username">{t('users.username')}</Label>
-          <Input id="username" {...register('username')} />
+          <Input
+            id="username"
+            aria-invalid={!!errors.username}
+            aria-describedby={errors.username ? 'username-error' : undefined}
+            {...register('username')}
+          />
           {errors.username && (
-            <p className="text-sm text-destructive">
+            <p
+              id="username-error"
+              role="alert"
+              className="text-sm text-destructive"
+            >
               {errors.username.message as string}
             </p>
           )}
@@ -81,9 +90,19 @@ export function UserForm({
               ? t('users.password')
               : t('users.passwordOptional')}
           </Label>
-          <Input id="password" type="password" {...register('password')} />
+          <Input
+            id="password"
+            type="password"
+            aria-invalid={!!errors.password}
+            aria-describedby={errors.password ? 'password-error' : undefined}
+            {...register('password')}
+          />
           {errors.password && (
-            <p className="text-sm text-destructive">
+            <p
+              id="password-error"
+              role="alert"
+              className="text-sm text-destructive"
+            >
               {errors.password.message as string}
             </p>
           )}
@@ -98,7 +117,10 @@ export function UserForm({
           render={({ field }) => {
             const value = (field.value ?? []) as string[]
             return (
-              <div className="flex flex-wrap gap-3">
+              <div
+                className="flex flex-wrap gap-3"
+                aria-describedby={errors.roles ? 'roles-error' : undefined}
+              >
                 {userRoles.map((role) => (
                   <label key={role} className="flex items-center gap-2 text-sm">
                     <input
@@ -111,6 +133,7 @@ export function UserForm({
                             : [...value, role]
                         )
                       }
+                      aria-invalid={!!errors.roles}
                       className="size-4 rounded border-input"
                     />
                     {t(`users.roleNames.${role}`)}
@@ -121,7 +144,7 @@ export function UserForm({
           }}
         />
         {errors.roles && (
-          <p className="text-sm text-destructive">
+          <p id="roles-error" role="alert" className="text-sm text-destructive">
             {errors.roles.message as string}
           </p>
         )}
