@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.10](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.9...donations-frontend-v0.1.10) (2026-04-28)
+
+
+### Features
+
+* **a11y:** Phase 3 — list page edit links and sortable header keyboard support ([#27](https://github.com/jorgetroya80/donations-frontend/issues/27)) ([95ffc0a](https://github.com/jorgetroya80/donations-frontend/commit/95ffc0aeb663d14f2a6998f93eb07036e9be7dcd))
+
 ## [0.1.9](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.8...donations-frontend-v0.1.9) (2026-04-28)
 
 
