@@ -1,0 +1,22 @@
+services:
+  frontend:
+    build: .
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+    networks:
+      - app
+
+  api:
+    image: jorgetroya/donations-api:latest
+    expose:
+      - "8080"
+    restart: unless-stopped
+    networks:
+      - app
+
+networks:
+  app:
+    driver: bridge
