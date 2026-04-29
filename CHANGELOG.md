@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.17](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.16...donations-frontend-v0.1.17) (2026-04-29)
+
+
+### Features
+
+* **formatters:** implement currency formatting and current month range functions ([#47](https://github.com/jorgetroya80/donations-frontend/issues/47)) ([781e1ed](https://github.com/jorgetroya80/donations-frontend/commit/781e1ede389406cbdd97e9414c6d0f4a952f69e5))
+
 ## [0.1.16](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.15...donations-frontend-v0.1.16) (2026-04-29)
 
 
