@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.15](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.14...donations-frontend-v0.1.15) (2026-04-29)
+
+
+### Features
+
+* **ux:** add Cancel button to all forms and navigate immediately on save ([#43](https://github.com/jorgetroya80/donations-frontend/issues/43)) ([0b6d47a](https://github.com/jorgetroya80/donations-frontend/commit/0b6d47a630f2304a4a08dc56b77142b88baa4930))
+
 ## [0.1.14](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.13...donations-frontend-v0.1.14) (2026-04-29)
 
 
