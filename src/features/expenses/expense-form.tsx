@@ -113,6 +113,7 @@ export function ExpenseForm({
               >
                 <SelectTrigger
                   id="category"
+                  className="w-full"
                   aria-invalid={!!errors.category}
                   aria-describedby={
                     errors.category ? 'category-error' : undefined
@@ -155,6 +156,7 @@ export function ExpenseForm({
               >
                 <SelectTrigger
                   id="paymentMethod"
+                  className="w-full"
                   aria-invalid={!!errors.paymentMethod}
                   aria-describedby={
                     errors.paymentMethod ? 'paymentMethod-error' : undefined
