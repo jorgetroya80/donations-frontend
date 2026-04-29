@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
 import { DateRangePicker } from '@/components/date-range-picker'
+import { EmptyState } from '@/components/empty-state'
+import { Skeleton } from '@/components/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -95,15 +97,28 @@ export function DonationsPage() {
       )}
 
       {isLoading && (
-        <Alert>
-          <AlertDescription>{t('common.loading')}</AlertDescription>
-        </Alert>
+        <div
+          aria-busy="true"
+          aria-label={t('common.loading')}
+          className="space-y-2"
+        >
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+        </div>
       )}
 
       {data && data.content.length === 0 && (
-        <p className="py-8 text-center text-muted-foreground">
-          {t('donations.empty')}
-        </p>
+        <EmptyState
+          icon={<Plus size={40} />}
+          message={t('donations.empty')}
+          cta={{
+            label: t('donations.new'),
+            onClick: () => navigate('/donations/new'),
+          }}
+        />
       )}
 
       {data && data.content.length > 0 && (
