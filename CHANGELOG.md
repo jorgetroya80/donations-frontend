@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.11](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.10...donations-frontend-v0.1.11) (2026-04-29)
+
+
+### Features
+
+* **a11y:** enhance accessibility for ReportsPage and Sidebar components ([#29](https://github.com/jorgetroya80/donations-frontend/issues/29)) ([306230e](https://github.com/jorgetroya80/donations-frontend/commit/306230ea7dee13632ef7b577ec16fa5f8c92a553))
+
 ## [0.1.10](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.9...donations-frontend-v0.1.10) (2026-04-28)
 
 
