@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.16](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.15...donations-frontend-v0.1.16) (2026-04-29)
+
+
+### Features
+
+* **ux:** add page title to header bar (Phase 4) ([#45](https://github.com/jorgetroya80/donations-frontend/issues/45)) ([a091905](https://github.com/jorgetroya80/donations-frontend/commit/a091905a8c70dbee63d1b1675f00a4cc0b5b9ec3))
+
 ## [0.1.15](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.14...donations-frontend-v0.1.15) (2026-04-29)
 
 
