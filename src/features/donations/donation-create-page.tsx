@@ -18,11 +18,9 @@ export function DonationCreatePage() {
   const [pendingData, setPendingData] = useState<CreateDonationFormData | null>(
     null
   )
-  const [success, setSuccess] = useState(false)
 
   async function handleSubmit(data: CreateDonationFormData) {
     setDuplicateWarning(false)
-    setSuccess(false)
 
     const result = await createMutation.mutateAsync({
       amount: data.amount,
@@ -39,8 +37,7 @@ export function DonationCreatePage() {
       return
     }
 
-    setSuccess(true)
-    setTimeout(() => navigate('/donations'), 1500)
+    navigate('/donations')
   }
 
   async function handleConfirmDuplicate() {
@@ -57,19 +54,12 @@ export function DonationCreatePage() {
       confirmDuplicate: true,
     })
 
-    setSuccess(true)
-    setTimeout(() => navigate('/donations'), 1500)
+    navigate('/donations')
   }
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
       <h1 className="text-2xl font-bold">{t('donations.new')}</h1>
-
-      {success && (
-        <Alert>
-          <AlertDescription>{t('donations.successCreated')}</AlertDescription>
-        </Alert>
-      )}
 
       {createMutation.error && !duplicateWarning && (
         <Alert variant="destructive">
@@ -91,13 +81,10 @@ export function DonationCreatePage() {
       <DonationForm
         donors={donors}
         onSubmit={handleSubmit}
+        onCancel={() => navigate('/donations')}
         submitting={createMutation.isPending}
         submitLabel={t('common.save')}
       />
-
-      <Button variant="outline" onClick={() => navigate('/donations')}>
-        {t('common.back')}
-      </Button>
     </div>
   )
 }

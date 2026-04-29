@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { renderWithProviders } from '@/test/test-utils'
@@ -38,11 +38,13 @@ describe('UserEditPage', () => {
     expect(screen.getByLabelText('Activo')).toBeChecked()
   })
 
-  it('renders back button', async () => {
+  it('renders Cancel button', async () => {
     renderWithProviders(<UserEditPage />)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Volver' })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: 'Cancelar' })
+      ).toBeInTheDocument()
     })
   })
 
@@ -69,11 +71,8 @@ describe('UserEditPage', () => {
     // Click confirm
     await user.click(screen.getByRole('button', { name: /Confirmar/i }))
 
-    // Success alert appears
     await waitFor(() => {
-      expect(
-        screen.getByText('Usuario actualizado exitosamente')
-      ).toBeInTheDocument()
+      expect(screen.queryByText(/Confirmar cambios/i)).not.toBeInTheDocument()
     })
   })
 
@@ -91,7 +90,12 @@ describe('UserEditPage', () => {
       expect(screen.getByText(/Confirmar cambios/i)).toBeInTheDocument()
     })
 
-    await user.click(screen.getByRole('button', { name: /Cancelar/i }))
+    await waitFor(() => {
+      const dialog = screen.getByRole('dialog')
+      within(dialog)
+        .getByRole('button', { name: /Cancelar/i })
+        .click()
+    })
 
     await waitFor(() => {
       expect(screen.queryByText(/Confirmar cambios/i)).not.toBeInTheDocument()

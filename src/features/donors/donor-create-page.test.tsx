@@ -18,23 +18,8 @@ describe('DonorCreatePage', () => {
     expect(screen.getByLabelText('Nombre completo')).toBeInTheDocument()
   })
 
-  it('renders back button', () => {
+  it('renders Cancel button', () => {
     renderWithProviders(<DonorCreatePage />)
-    expect(screen.getByRole('button', { name: 'Volver' })).toBeInTheDocument()
-  })
-
-  it('shows success alert after successful creation', async () => {
-    const user = userEvent.setup()
-    renderWithProviders(<DonorCreatePage />)
-
-    await user.type(screen.getByLabelText('Nombre completo'), 'Test Donor')
-    await user.type(screen.getByLabelText('DNI/NIE'), '99999999Z')
-    await user.click(screen.getByRole('button', { name: 'Guardar' }))
-
-    await waitFor(() => {
-      expect(
-        screen.getByText('Donante creado exitosamente')
-      ).toBeInTheDocument()
-    })
+    expect(screen.getByRole('button', { name: 'Cancelar' })).toBeInTheDocument()
   })
 })

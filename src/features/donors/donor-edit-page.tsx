@@ -26,7 +26,6 @@ export function DonorEditPage() {
   const [pendingData, setPendingData] = useState<CreateDonorFormData | null>(
     null
   )
-  const [success, setSuccess] = useState(false)
 
   function handleFormSubmit(data: CreateDonorFormData) {
     setPendingData(data)
@@ -43,9 +42,8 @@ export function DonorEditPage() {
       address: pendingData.address || undefined,
     })
 
-    setSuccess(true)
     setPendingData(null)
-    setTimeout(() => navigate('/donors'), 1500)
+    navigate('/donors')
   }
 
   if (isLoading) {
@@ -68,12 +66,6 @@ export function DonorEditPage() {
     <div className="mx-auto max-w-2xl space-y-4">
       <h1 className="text-2xl font-bold">{t('donors.edit')}</h1>
 
-      {success && (
-        <Alert>
-          <AlertDescription>{t('donors.successUpdated')}</AlertDescription>
-        </Alert>
-      )}
-
       {updateMutation.error && (
         <Alert variant="destructive">
           <AlertDescription>{t('donors.errorSaving')}</AlertDescription>
@@ -89,6 +81,7 @@ export function DonorEditPage() {
           address: donor.address,
         }}
         onSubmit={handleFormSubmit}
+        onCancel={() => navigate('/donors')}
         submitting={updateMutation.isPending}
         submitLabel={t('common.save')}
       />
@@ -107,10 +100,6 @@ export function DonorEditPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      <Button variant="outline" onClick={() => navigate('/donors')}>
-        {t('common.back')}
-      </Button>
     </div>
   )
 }

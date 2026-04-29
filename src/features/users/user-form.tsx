@@ -16,6 +16,7 @@ interface UserFormCreateProps {
   mode: 'create'
   defaultValues?: Partial<CreateUserFormData>
   onSubmit: (data: CreateUserFormData) => void
+  onCancel?: () => void
   submitting?: boolean
   submitLabel: string
 }
@@ -24,6 +25,7 @@ interface UserFormEditProps {
   mode: 'edit'
   defaultValues?: Partial<UpdateUserFormData>
   onSubmit: (data: UpdateUserFormData) => void
+  onCancel?: () => void
   submitting?: boolean
   submitLabel: string
 }
@@ -34,6 +36,7 @@ export function UserForm({
   mode,
   defaultValues,
   onSubmit,
+  onCancel,
   submitting,
   submitLabel,
 }: UserFormProps) {
@@ -164,6 +167,11 @@ export function UserForm({
         <Button type="submit" disabled={submitting}>
           {submitting ? t('common.loading') : submitLabel}
         </Button>
+        {onCancel && (
+          <Button type="button" variant="outline" onClick={onCancel}>
+            {t('common.cancel')}
+          </Button>
+        )}
       </div>
     </form>
   )
