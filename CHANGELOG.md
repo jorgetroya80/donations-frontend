@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.12](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.11...donations-frontend-v0.1.12) (2026-04-29)
+
+
+### Features
+
+* **styles:** update chart color variables for improved accessibility ([#32](https://github.com/jorgetroya80/donations-frontend/issues/32)) ([4009ad0](https://github.com/jorgetroya80/donations-frontend/commit/4009ad0f8157b3ea014794f8147ad56009427b90))
+
 ## [0.1.11](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.10...donations-frontend-v0.1.11) (2026-04-29)
 
 
