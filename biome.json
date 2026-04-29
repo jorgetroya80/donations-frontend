@@ -79,6 +79,7 @@
             "noUnsafeOptionalChaining": "error",
             "noUnusedLabels": "error",
             "noUnusedPrivateClassMembers": "error",
+            "noUnusedImports": "error",
             "noUnusedVariables": "error",
             "useIsNan": "error",
             "useValidForDirection": "error",
