@@ -14,27 +14,15 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart'
+import { currentMonthRange, formatCurrency } from '@/lib/formatters'
 import {
   useBalance,
   useDonationSummary,
   useExpenseSummary,
 } from './use-dashboard-data'
 
-function currentMonthRange() {
-  const from = dayjs().startOf('month').toDate()
-  const to = dayjs().endOf('month').toDate()
-  return { from, to }
-}
-
 function formatDate(d: Date) {
   return dayjs(d).format('YYYY-MM-DD')
-}
-
-function formatCurrency(amount: number) {
-  return new Intl.NumberFormat('es-ES', {
-    style: 'currency',
-    currency: 'EUR',
-  }).format(amount)
 }
 
 const donationChartConfig: ChartConfig = {
@@ -163,7 +151,7 @@ export function FinancialOverview() {
             {donationChartData.length > 0 ? (
               <ChartContainer
                 config={donationChartConfig}
-                className="mx-auto aspect-square max-h-[300px]"
+                className="mx-auto aspect-square max-h-75"
               >
                 <PieChart>
                   <ChartTooltip

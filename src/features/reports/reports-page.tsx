@@ -13,6 +13,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useDonors } from '@/features/donations/use-donations'
+import { currentMonthRange, formatCurrency } from '@/lib/formatters'
 import {
   useDonationReport,
   useDonorStatement,
@@ -21,22 +22,8 @@ import {
 
 type Tab = 'donations' | 'expenses' | 'donor-statement'
 
-function currentMonthRange() {
-  return {
-    from: dayjs().startOf('month').toDate(),
-    to: dayjs().endOf('month').toDate(),
-  }
-}
-
 function formatDate(d: Date) {
   return dayjs(d).format('YYYY-MM-DD')
-}
-
-function formatCurrency(amount: number) {
-  return new Intl.NumberFormat('es-ES', {
-    style: 'currency',
-    currency: 'EUR',
-  }).format(amount)
 }
 
 function DonationSummaryTab() {
