@@ -114,6 +114,7 @@ export function DonationForm({
               >
                 <SelectTrigger
                   id="donationType"
+                  className="w-full"
                   aria-invalid={!!errors.donationType}
                   aria-describedby={
                     errors.donationType ? 'donationType-error' : undefined
@@ -158,6 +159,7 @@ export function DonationForm({
               >
                 <SelectTrigger
                   id="paymentMethod"
+                  className="w-full"
                   aria-invalid={!!errors.paymentMethod}
                   aria-describedby={
                     errors.paymentMethod ? 'paymentMethod-error' : undefined
@@ -201,7 +203,7 @@ export function DonationForm({
               }
               onValueChange={(v) => field.onChange(v ? Number(v) : null)}
             >
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder={t('donations.selectDonor')} />
               </SelectTrigger>
               <SelectContent>
