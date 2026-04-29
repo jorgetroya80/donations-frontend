@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.20](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.19...donations-frontend-v0.1.20) (2026-04-29)
+
+
+### Bug Fixes
+
+* **ci:** use workflow_run trigger so docker-publish fires after release-please ([#60](https://github.com/jorgetroya80/donations-frontend/issues/60)) ([0ef0885](https://github.com/jorgetroya80/donations-frontend/commit/0ef0885402242c0663789d3dc2c79d746cf49e61)), closes [#59](https://github.com/jorgetroya80/donations-frontend/issues/59)
+
 ## [0.1.19](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.18...donations-frontend-v0.1.19) (2026-04-29)
 
 
