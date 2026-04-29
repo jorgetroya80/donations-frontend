@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.13](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.12...donations-frontend-v0.1.13) (2026-04-29)
+
+
+### Features
+
+* **ui:** enhance form components with full-width styling for better layout ([#39](https://github.com/jorgetroya80/donations-frontend/issues/39)) ([e7d8aa0](https://github.com/jorgetroya80/donations-frontend/commit/e7d8aa070a201acae0dc44d6e6d4ab3ed465e7ed))
+
 ## [0.1.12](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.11...donations-frontend-v0.1.12) (2026-04-29)
 
 
