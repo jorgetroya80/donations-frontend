@@ -77,3 +77,21 @@ describe('Sidebar role-based visibility', () => {
     ])
   })
 })
+
+describe('Sidebar landmark labels', () => {
+  it('aside has aria-label for main navigation', () => {
+    setUser('admin', ['ADMIN'])
+    renderSidebar()
+
+    const aside = screen.getByRole('complementary')
+    expect(aside).toHaveAttribute('aria-label', 'Navegación principal')
+  })
+
+  it('nav has aria-label for main navigation', () => {
+    setUser('admin', ['ADMIN'])
+    renderSidebar()
+
+    const nav = screen.getByRole('navigation', { name: 'Navegación principal' })
+    expect(nav).toBeInTheDocument()
+  })
+})

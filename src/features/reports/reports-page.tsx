@@ -300,9 +300,11 @@ export function ReportsPage() {
           {tabs.map((tab) => (
             <button
               key={tab.key}
+              id={`tab-${tab.key}`}
               type="button"
               role="tab"
               aria-selected={activeTab === tab.key}
+              aria-controls={`panel-${tab.key}`}
               onClick={() => setActiveTab(tab.key)}
               className={`border-b-2 px-1 py-2 text-sm font-medium transition-colors ${
                 activeTab === tab.key
@@ -316,9 +318,16 @@ export function ReportsPage() {
         </nav>
       </div>
 
-      {activeTab === 'donations' && <DonationSummaryTab />}
-      {activeTab === 'expenses' && <ExpenseSummaryTab />}
-      {activeTab === 'donor-statement' && <DonorStatementTab />}
+      <div
+        role="tabpanel"
+        id={`panel-${activeTab}`}
+        aria-labelledby={`tab-${activeTab}`}
+        tabIndex={0}
+      >
+        {activeTab === 'donations' && <DonationSummaryTab />}
+        {activeTab === 'expenses' && <ExpenseSummaryTab />}
+        {activeTab === 'donor-statement' && <DonorStatementTab />}
+      </div>
     </div>
   )
 }

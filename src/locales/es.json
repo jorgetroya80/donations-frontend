@@ -11,15 +11,15 @@
     "users": "Usuarios"
   },
   "auth": {
-    "login": "Iniciar sesi\u00f3n",
-    "logout": "Cerrar sesi\u00f3n",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
     "username": "Usuario",
-    "password": "Contrase\u00f1a",
+    "password": "Contraseña",
     "submit": "Ingresar",
     "submitting": "Ingresando...",
-    "changePassword": "Cambiar contrase\u00f1a",
-    "errorInvalidCredentials": "Usuario o contrase\u00f1a incorrectos",
-    "errorConnection": "Error de conexi\u00f3n. Intente nuevamente."
+    "changePassword": "Cambiar contraseña",
+    "errorInvalidCredentials": "Usuario o contraseña incorrectos",
+    "errorConnection": "Error de conexión. Intente nuevamente."
   },
   "dashboard": {
     "welcome": "Bienvenido, {{username}}",
@@ -27,34 +27,34 @@
     "totalIncome": "Ingresos totales",
     "totalExpenses": "Gastos totales",
     "netBalance": "Balance neto",
-    "newDonation": "Nueva donaci\u00f3n",
+    "newDonation": "Nueva donación",
     "newExpense": "Nuevo gasto",
     "donationsByType": "Donaciones por tipo",
-    "expensesByCategory": "Gastos por categor\u00eda",
+    "expensesByCategory": "Gastos por categoría",
     "selectRange": "Seleccione un rango de fechas",
     "errorLoading": "Error al cargar los datos del panel",
-    "noData": "Sin datos para el per\u00edodo seleccionado",
+    "noData": "Sin datos para el período seleccionado",
     "viewDonors": "Ver donantes",
-    "userManagement": "Gesti\u00f3n de usuarios",
+    "userManagement": "Gestión de usuarios",
     "totalUsers": "Usuarios registrados",
     "manageUsers": "Administrar usuarios",
     "financialOverview": "Resumen financiero"
   },
   "donations": {
     "title": "Donaciones",
-    "new": "Nueva donaci\u00f3n",
-    "edit": "Editar donaci\u00f3n",
+    "new": "Nueva donación",
+    "edit": "Editar donación",
     "amount": "Monto",
     "date": "Fecha",
     "type": "Tipo",
     "incomeMethod": "Método de ingreso",
-    "paymentMethod": "M\u00e9todo de pago",
+    "paymentMethod": "Método de pago",
     "donor": "Donante",
     "donorOptional": "Donante (opcional)",
     "notes": "Notas",
     "notesOptional": "Notas (opcional)",
-    "noDonor": "An\u00f3nimo",
-    "noNotes": "\u2014",
+    "noDonor": "Anónimo",
+    "noNotes": "—",
     "types": {
       "TITHE": "Diezmo",
       "OFFERING": "Ofrenda",
@@ -69,16 +69,16 @@
     "confirmSave": "Confirmar y guardar",
     "confirmEdit": "Confirmar cambios",
     "confirmEditDescription": "Se actualizarán los datos de esta donación.",
-    "successCreated": "Donaci\u00f3n creada exitosamente",
-    "successUpdated": "Donaci\u00f3n actualizada exitosamente",
-    "errorSaving": "Error al guardar la donaci\u00f3n",
+    "successCreated": "Donación creada exitosamente",
+    "successUpdated": "Donación actualizada exitosamente",
+    "errorSaving": "Error al guardar la donación",
     "errorLoading": "Error al cargar las donaciones",
     "empty": "No hay donaciones registradas",
-    "page": "P\u00e1gina {{page}} de {{total}}",
+    "page": "Página {{page}} de {{total}}",
     "previous": "Anterior",
     "next": "Siguiente",
     "selectType": "Seleccione tipo",
-    "selectPayment": "Seleccione m\u00e9todo",
+    "selectPayment": "Seleccione método",
     "selectDonor": "Seleccione donante",
     "editLabel": "Editar donación del {{date}}"
   },
@@ -207,8 +207,9 @@
     "errorCurrentPassword": "La contraseña actual es incorrecta"
   },
   "sidebar": {
-    "collapse": "Colapsar men\u00fa",
-    "expand": "Expandir men\u00fa"
+    "collapse": "Colapsar menú",
+    "expand": "Expandir menú",
+    "mainNavigation": "Navegación principal"
   },
   "common": {
     "loading": "Cargando...",
@@ -222,7 +223,7 @@
     "back": "Volver",
     "search": "Buscar",
     "actions": "Acciones",
-    "yes": "S\u00ed",
+    "yes": "Sí",
     "no": "No"
   }
 }
