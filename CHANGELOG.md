@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.18](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.17...donations-frontend-v0.1.18) (2026-04-29)
+
+
+### Bug Fixes
+
+* **pre-commit:** add typecheck command to pre-commit hook and enforce unused imports ([#51](https://github.com/jorgetroya80/donations-frontend/issues/51)) ([091215c](https://github.com/jorgetroya80/donations-frontend/commit/091215cbfb51f4c6d8624dd7d8e6377d7323e2ac))
+
 ## [0.1.17](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.16...donations-frontend-v0.1.17) (2026-04-29)
 
 
