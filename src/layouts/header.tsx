@@ -10,11 +10,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useAuth } from '@/features/auth/auth-context'
+import { usePageTitle } from './use-page-title'
 
 export function Header() {
   const { t } = useTranslation()
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const pageTitle = usePageTitle()
 
   function handleLogout() {
     logout()
@@ -26,7 +28,8 @@ export function Header() {
   }
 
   return (
-    <header className="bg-card flex h-14 items-center justify-end border-b px-4">
+    <header className="bg-card flex h-14 items-center justify-between border-b px-4">
+      <span className="text-sm font-medium">{pageTitle}</span>
       <DropdownMenu>
         <DropdownMenuTrigger
           className={buttonVariants({
