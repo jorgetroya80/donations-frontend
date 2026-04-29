@@ -83,8 +83,11 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const { t } = useTranslation()
   const { user } = useAuth()
 
+  const navLabel = t('sidebar.mainNavigation')
+
   return (
     <aside
+      aria-label={navLabel}
       className={cn(
         'bg-card flex h-screen flex-col border-r transition-[width] duration-200',
         collapsed ? 'w-16' : 'w-56'
@@ -102,7 +105,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
         )}
       </div>
 
-      <nav className="flex-1 space-y-1 p-2">
+      <nav aria-label={navLabel} className="flex-1 space-y-1 p-2">
         {navItems.map((item) => {
           if (item.visible && !item.visible(user)) return null
 

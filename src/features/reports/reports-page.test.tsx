@@ -82,4 +82,35 @@ describe('ReportsPage', () => {
     })
     expect(expensesTab.getAttribute('aria-selected')).toBe('false')
   })
+
+  it('tab buttons have id and aria-controls pointing to panel', () => {
+    renderPage()
+    const donationsTab = screen.getByRole('tab', {
+      name: 'Resumen de donaciones',
+    })
+    expect(donationsTab).toHaveAttribute('id', 'tab-donations')
+    expect(donationsTab).toHaveAttribute('aria-controls', 'panel-donations')
+
+    const expensesTab = screen.getByRole('tab', { name: 'Resumen de gastos' })
+    expect(expensesTab).toHaveAttribute('id', 'tab-expenses')
+    expect(expensesTab).toHaveAttribute('aria-controls', 'panel-expenses')
+  })
+
+  it('active panel has tabpanel role wired to its tab', () => {
+    renderPage()
+    const panel = screen.getByRole('tabpanel')
+    expect(panel).toHaveAttribute('id', 'panel-donations')
+    expect(panel).toHaveAttribute('aria-labelledby', 'tab-donations')
+    expect(panel).toHaveAttribute('tabindex', '0')
+  })
+
+  it('switching tabs updates panel id and aria-labelledby', async () => {
+    const user = userEvent.setup()
+    renderPage()
+    await user.click(screen.getByText('Resumen de gastos'))
+
+    const panel = screen.getByRole('tabpanel')
+    expect(panel).toHaveAttribute('id', 'panel-expenses')
+    expect(panel).toHaveAttribute('aria-labelledby', 'tab-expenses')
+  })
 })
