@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.14](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.13...donations-frontend-v0.1.14) (2026-04-29)
+
+
+### Features
+
+* **ui:** implement EmptyState and Skeleton components for improved loading and empty states ([#41](https://github.com/jorgetroya80/donations-frontend/issues/41)) ([b314ffb](https://github.com/jorgetroya80/donations-frontend/commit/b314ffbca5f999413e4a4b4bf7c2a10c8901d65c))
+
 ## [0.1.13](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.12...donations-frontend-v0.1.13) (2026-04-29)
 
 
