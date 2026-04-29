@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.19](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.18...donations-frontend-v0.1.19) (2026-04-29)
+
+
+### Features
+
+* **docker:** harden Dockerfile, add compose, improve CI publish ([#54](https://github.com/jorgetroya80/donations-frontend/issues/54)) ([effa7c6](https://github.com/jorgetroya80/donations-frontend/commit/effa7c67e9ba4a0a3a961285b82b49127eb43685))
+
 ## [0.1.18](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.17...donations-frontend-v0.1.18) (2026-04-29)
 
 
