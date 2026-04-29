@@ -58,22 +58,9 @@ describe('DonationCreatePage', () => {
     expect(screen.getByLabelText('Monto')).toBeInTheDocument()
   })
 
-  it('renders back button', () => {
+  it('renders Cancel button', () => {
     renderWithProviders(<DonationCreatePage />)
-    expect(screen.getByRole('button', { name: 'Volver' })).toBeInTheDocument()
-  })
-
-  it('shows success alert after successful creation', async () => {
-    const user = userEvent.setup()
-    renderWithProviders(<DonationCreatePage />)
-
-    await fillAndSubmitForm(user)
-
-    await waitFor(() => {
-      expect(
-        screen.getByText('Donación creada exitosamente')
-      ).toBeInTheDocument()
-    })
+    expect(screen.getByRole('button', { name: 'Cancelar' })).toBeInTheDocument()
   })
 
   it('shows duplicate warning and allows confirm', async () => {
@@ -109,9 +96,7 @@ describe('DonationCreatePage', () => {
     )
 
     await waitFor(() => {
-      expect(
-        screen.getByText('Donación creada exitosamente')
-      ).toBeInTheDocument()
+      expect(screen.queryByText(/posible duplicado/i)).not.toBeInTheDocument()
     })
   })
 })

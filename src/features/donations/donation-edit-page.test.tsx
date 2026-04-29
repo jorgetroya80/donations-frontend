@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { renderWithProviders } from '@/test/test-utils'
@@ -39,11 +39,13 @@ describe('DonationEditPage', () => {
     expect(screen.getByLabelText('Fecha')).toHaveValue('2026-04-15')
   })
 
-  it('renders back button', async () => {
+  it('renders Cancel button', async () => {
     renderWithProviders(<DonationEditPage />)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Volver' })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: 'Cancelar' })
+      ).toBeInTheDocument()
     })
   })
 
@@ -71,11 +73,8 @@ describe('DonationEditPage', () => {
     // Click confirm
     await user.click(screen.getByRole('button', { name: /Confirmar/i }))
 
-    // Success alert appears
     await waitFor(() => {
-      expect(
-        screen.getByText('Donación actualizada exitosamente')
-      ).toBeInTheDocument()
+      expect(screen.queryByText(/Confirmar cambios/i)).not.toBeInTheDocument()
     })
   })
 
@@ -93,7 +92,12 @@ describe('DonationEditPage', () => {
       expect(screen.getByText(/Confirmar cambios/i)).toBeInTheDocument()
     })
 
-    await user.click(screen.getByRole('button', { name: /Cancelar/i }))
+    await waitFor(() => {
+      const dialog = screen.getByRole('dialog')
+      within(dialog)
+        .getByRole('button', { name: /Cancelar/i })
+        .click()
+    })
 
     await waitFor(() => {
       expect(screen.queryByText(/Confirmar cambios/i)).not.toBeInTheDocument()

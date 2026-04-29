@@ -22,6 +22,7 @@ import {
 interface ExpenseFormProps {
   defaultValues?: Partial<CreateExpenseFormData>
   onSubmit: (data: CreateExpenseFormData) => void
+  onCancel?: () => void
   submitting?: boolean
   submitLabel: string
 }
@@ -29,6 +30,7 @@ interface ExpenseFormProps {
 export function ExpenseForm({
   defaultValues,
   onSubmit,
+  onCancel,
   submitting,
   submitLabel,
 }: ExpenseFormProps) {
@@ -216,6 +218,11 @@ export function ExpenseForm({
         <Button type="submit" disabled={submitting}>
           {submitting ? t('common.loading') : submitLabel}
         </Button>
+        {onCancel && (
+          <Button type="button" variant="outline" onClick={onCancel}>
+            {t('common.cancel')}
+          </Button>
+        )}
       </div>
     </form>
   )

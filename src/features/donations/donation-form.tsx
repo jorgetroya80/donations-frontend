@@ -24,6 +24,7 @@ interface DonationFormProps {
   defaultValues?: Partial<CreateDonationFormData>
   donors: DonorResponse[]
   onSubmit: (data: CreateDonationFormData) => void
+  onCancel?: () => void
   submitting?: boolean
   submitLabel: string
 }
@@ -32,6 +33,7 @@ export function DonationForm({
   defaultValues,
   donors,
   onSubmit,
+  onCancel,
   submitting,
   submitLabel,
 }: DonationFormProps) {
@@ -227,6 +229,11 @@ export function DonationForm({
         <Button type="submit" disabled={submitting}>
           {submitting ? t('common.loading') : submitLabel}
         </Button>
+        {onCancel && (
+          <Button type="button" variant="outline" onClick={onCancel}>
+            {t('common.cancel')}
+          </Button>
+        )}
       </div>
     </form>
   )

@@ -27,7 +27,6 @@ export function UserEditPage() {
   const [pendingData, setPendingData] = useState<UpdateUserFormData | null>(
     null
   )
-  const [success, setSuccess] = useState(false)
 
   function handleFormSubmit(data: UpdateUserFormData) {
     setPendingData(data)
@@ -43,9 +42,8 @@ export function UserEditPage() {
       active: pendingData.active,
     })
 
-    setSuccess(true)
     setPendingData(null)
-    setTimeout(() => navigate('/users'), 1500)
+    navigate('/users')
   }
 
   if (isLoading) {
@@ -68,12 +66,6 @@ export function UserEditPage() {
     <div className="mx-auto max-w-2xl space-y-4">
       <h1 className="text-2xl font-bold">{t('users.edit')}</h1>
 
-      {success && (
-        <Alert>
-          <AlertDescription>{t('users.successUpdated')}</AlertDescription>
-        </Alert>
-      )}
-
       {updateMutation.error && (
         <Alert variant="destructive">
           <AlertDescription>{t('users.errorSaving')}</AlertDescription>
@@ -89,6 +81,7 @@ export function UserEditPage() {
           active: user.active,
         }}
         onSubmit={handleFormSubmit}
+        onCancel={() => navigate('/users')}
         submitting={updateMutation.isPending}
         submitLabel={t('common.save')}
       />
@@ -107,10 +100,6 @@ export function UserEditPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      <Button variant="outline" onClick={() => navigate('/users')}>
-        {t('common.back')}
-      </Button>
     </div>
   )
 }

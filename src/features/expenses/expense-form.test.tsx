@@ -69,6 +69,45 @@ describe('ExpenseForm', () => {
     )
   })
 
+  it('renders Cancel button when onCancel is provided', () => {
+    renderWithProviders(
+      <ExpenseForm
+        onSubmit={onSubmit}
+        onCancel={vi.fn()}
+        submitLabel="Guardar"
+      />
+    )
+    expect(screen.getByRole('button', { name: 'Cancelar' })).toBeInTheDocument()
+  })
+
+  it('Cancel button has type="button"', () => {
+    renderWithProviders(
+      <ExpenseForm
+        onSubmit={onSubmit}
+        onCancel={vi.fn()}
+        submitLabel="Guardar"
+      />
+    )
+    expect(screen.getByRole('button', { name: 'Cancelar' })).toHaveAttribute(
+      'type',
+      'button'
+    )
+  })
+
+  it('clicking Cancel calls onCancel', async () => {
+    const user = userEvent.setup()
+    const onCancel = vi.fn()
+    renderWithProviders(
+      <ExpenseForm
+        onSubmit={onSubmit}
+        onCancel={onCancel}
+        submitLabel="Guardar"
+      />
+    )
+    await user.click(screen.getByRole('button', { name: 'Cancelar' }))
+    expect(onCancel).toHaveBeenCalledOnce()
+  })
+
   it('shows loading state when submitting', () => {
     renderWithProviders(
       <ExpenseForm onSubmit={onSubmit} submitting submitLabel="Guardar" />

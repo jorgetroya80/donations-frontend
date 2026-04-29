@@ -98,6 +98,48 @@ describe('UserForm — create mode', () => {
     expect(passwordInput).not.toHaveAttribute('aria-describedby')
   })
 
+  it('renders Cancel button when onCancel is provided', () => {
+    renderWithProviders(
+      <UserForm
+        mode="create"
+        onSubmit={onSubmit}
+        onCancel={vi.fn()}
+        submitLabel="Guardar"
+      />
+    )
+    expect(screen.getByRole('button', { name: 'Cancelar' })).toBeInTheDocument()
+  })
+
+  it('Cancel button has type="button"', () => {
+    renderWithProviders(
+      <UserForm
+        mode="create"
+        onSubmit={onSubmit}
+        onCancel={vi.fn()}
+        submitLabel="Guardar"
+      />
+    )
+    expect(screen.getByRole('button', { name: 'Cancelar' })).toHaveAttribute(
+      'type',
+      'button'
+    )
+  })
+
+  it('clicking Cancel calls onCancel', async () => {
+    const user = userEvent.setup()
+    const onCancel = vi.fn()
+    renderWithProviders(
+      <UserForm
+        mode="create"
+        onSubmit={onSubmit}
+        onCancel={onCancel}
+        submitLabel="Guardar"
+      />
+    )
+    await user.click(screen.getByRole('button', { name: 'Cancelar' }))
+    expect(onCancel).toHaveBeenCalledOnce()
+  })
+
   it('shows loading state when submitting', () => {
     renderWithProviders(
       <UserForm

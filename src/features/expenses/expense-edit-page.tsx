@@ -26,7 +26,6 @@ export function ExpenseEditPage() {
   const [pendingData, setPendingData] = useState<CreateExpenseFormData | null>(
     null
   )
-  const [success, setSuccess] = useState(false)
 
   function handleFormSubmit(data: CreateExpenseFormData) {
     setPendingData(data)
@@ -44,9 +43,8 @@ export function ExpenseEditPage() {
       paymentMethod: pendingData.paymentMethod,
     })
 
-    setSuccess(true)
     setPendingData(null)
-    setTimeout(() => navigate('/expenses'), 1500)
+    navigate('/expenses')
   }
 
   if (isLoading) {
@@ -69,12 +67,6 @@ export function ExpenseEditPage() {
     <div className="mx-auto max-w-2xl space-y-4">
       <h1 className="text-2xl font-bold">{t('expenses.edit')}</h1>
 
-      {success && (
-        <Alert>
-          <AlertDescription>{t('expenses.successUpdated')}</AlertDescription>
-        </Alert>
-      )}
-
       {updateMutation.error && (
         <Alert variant="destructive">
           <AlertDescription>{t('expenses.errorSaving')}</AlertDescription>
@@ -91,6 +83,7 @@ export function ExpenseEditPage() {
           paymentMethod: expense.paymentMethod,
         }}
         onSubmit={handleFormSubmit}
+        onCancel={() => navigate('/expenses')}
         submitting={updateMutation.isPending}
         submitLabel={t('common.save')}
       />
@@ -109,10 +102,6 @@ export function ExpenseEditPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      <Button variant="outline" onClick={() => navigate('/expenses')}>
-        {t('common.back')}
-      </Button>
     </div>
   )
 }

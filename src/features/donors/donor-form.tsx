@@ -9,6 +9,7 @@ import { type CreateDonorFormData, createDonorSchema } from './donor-schema'
 interface DonorFormProps {
   defaultValues?: Partial<CreateDonorFormData>
   onSubmit: (data: CreateDonorFormData) => void
+  onCancel?: () => void
   submitting?: boolean
   submitLabel: string
 }
@@ -16,6 +17,7 @@ interface DonorFormProps {
 export function DonorForm({
   defaultValues,
   onSubmit,
+  onCancel,
   submitting,
   submitLabel,
 }: DonorFormProps) {
@@ -112,6 +114,11 @@ export function DonorForm({
         <Button type="submit" disabled={submitting}>
           {submitting ? t('common.loading') : submitLabel}
         </Button>
+        {onCancel && (
+          <Button type="button" variant="outline" onClick={onCancel}>
+            {t('common.cancel')}
+          </Button>
+        )}
       </div>
     </form>
   )
