@@ -17,21 +17,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { currentMonthRange, formatCurrency } from '@/lib/formatters'
 import { useExpenses } from './use-expenses'
-
-function currentMonthRange() {
-  return {
-    from: dayjs().startOf('month').toDate(),
-    to: dayjs().endOf('month').toDate(),
-  }
-}
-
-function formatCurrency(amount: number) {
-  return new Intl.NumberFormat('es-ES', {
-    style: 'currency',
-    currency: 'EUR',
-  }).format(amount)
-}
 
 export function ExpensesPage() {
   const { t } = useTranslation()
