@@ -7,3 +7,7 @@ dist
 .env*
 .dockerignore
 Dockerfile
+coverage/
+plans/
+.claude/
+*.log
