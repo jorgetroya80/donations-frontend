@@ -27,7 +27,33 @@ App runs at http://localhost:3000
 | `npm run check`         | Biome lint + format     |
 | `npm run typecheck`     | TypeScript type check   |
 
-## Docker
+## Running Locally (Full Stack)
+
+**Prerequisites:** Docker
+
+Start both API and frontend with a single command:
+
+```bash
+docker compose up --build
+```
+
+App runs at http://localhost:8080
+
+To stop:
+
+```bash
+docker compose down
+```
+
+To rebuild after frontend changes:
+
+```bash
+docker compose up --build
+```
+
+The API image is always pulled fresh from Docker Hub on each `up`. No environment variables required.
+
+## Docker (frontend only)
 
 ```bash
 docker build -t donations-frontend .

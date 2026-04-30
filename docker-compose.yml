@@ -5,7 +5,7 @@ services:
       args:
         VITE_API_URL: ${VITE_API_URL:-}
     ports:
-      - "80:80"
+      - "8080:80"
     depends_on:
       api:
         condition: service_healthy
@@ -21,13 +21,14 @@ services:
 
   api:
     image: jorgetroya/donations-api:latest
+    pull_policy: always
     expose:
       - "8080"
     restart: unless-stopped
     networks:
       - app
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health"]
       interval: 10s
       timeout: 5s
       start_period: 10s
