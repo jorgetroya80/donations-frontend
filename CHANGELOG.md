@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.2...donations-frontend-v0.2.3) (2026-04-30)
+
+
+### Features
+
+* update README and docker-compose for full-stack local setup ([#77](https://github.com/jorgetroya80/donations-frontend/issues/77)) ([5503137](https://github.com/jorgetroya80/donations-frontend/commit/550313761e778035e41b945b5ebe5347e19fc489))
+
 ## [0.2.2](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.1...donations-frontend-v0.2.2) (2026-04-30)
 
 
