@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.20...donations-frontend-v0.2.0) (2026-04-30)
+
+
+### Features
+
+* **release:** add release configuration and update workflow for automated releases ([#65](https://github.com/jorgetroya80/donations-frontend/issues/65)) ([f9fbbbb](https://github.com/jorgetroya80/donations-frontend/commit/f9fbbbba2a63b8bb34afba8b54e1db3c42e2ae0e))
+
 ## [0.1.20](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.19...donations-frontend-v0.1.20) (2026-04-29)
 
 
