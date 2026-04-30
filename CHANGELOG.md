@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.2.1](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.0...donations-frontend-v0.2.1) (2026-04-30)
+
+
+### Bug Fixes
+
+* **release:** ensure GitHub pull request is skipped during release process ([#67](https://github.com/jorgetroya80/donations-frontend/issues/67)) ([1ec5e74](https://github.com/jorgetroya80/donations-frontend/commit/1ec5e74d54b263156cec369fb792abbacce35293))
+* **release:** remove unnecessary release configuration files and skip GitHub pull request setting ([#68](https://github.com/jorgetroya80/donations-frontend/issues/68)) ([4023444](https://github.com/jorgetroya80/donations-frontend/commit/4023444a548e562c78b187a3ee3864df381043d2))
+* **release:** restore manifest file ([#69](https://github.com/jorgetroya80/donations-frontend/issues/69)) ([6e11c61](https://github.com/jorgetroya80/donations-frontend/commit/6e11c615aa618cf7a0419a54e725be987a7890ed))
+
 ## [0.2.0](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.1.20...donations-frontend-v0.2.0) (2026-04-30)
 
 
