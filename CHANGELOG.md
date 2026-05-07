@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.5](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.4...donations-frontend-v0.2.5) (2026-05-07)
+
+
+### Features
+
+* **docker:** add postgres and wire full local prod stack ([#84](https://github.com/jorgetroya80/donations-frontend/issues/84)) ([2b90ff9](https://github.com/jorgetroya80/donations-frontend/commit/2b90ff929e076fc34ddab5c33a7062797fdb0267))
+
 ## [0.2.4](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.3...donations-frontend-v0.2.4) (2026-05-07)
 
 
