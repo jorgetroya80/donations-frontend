@@ -55,10 +55,14 @@ The API image is always pulled fresh from Docker Hub on each `up`. No environmen
 
 ## Docker (frontend only)
 
+Requires the API already running on port 8081.
+
 ```bash
 docker build -t donations-frontend .
-docker run -p 8080:80 donations-frontend
+docker run --name donations-frontend --rm -p 8080:80 --add-host=api:host-gateway donations-frontend
 ```
+
+`--add-host=api:host-gateway` maps the `api` hostname inside the container to your host machine, so nginx can proxy `/api/` to the running API.
 
 ## Architecture
 
