@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.4](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.3...donations-frontend-v0.2.4) (2026-05-07)
+
+
+### Features
+
+* add dark mode with system preference detection ([#80](https://github.com/jorgetroya80/donations-frontend/issues/80)) ([0b8ded4](https://github.com/jorgetroya80/donations-frontend/commit/0b8ded4e0f697f69682d32ac0aed23dd6bb4ec97))
+
 ## [0.2.3](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.2...donations-frontend-v0.2.3) (2026-04-30)
 
 
