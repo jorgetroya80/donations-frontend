@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.6](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.5...donations-frontend-v0.2.6) (2026-05-07)
+
+
+### Features
+
+* add end-user setup scripts and update README ([#87](https://github.com/jorgetroya80/donations-frontend/issues/87)) ([8786136](https://github.com/jorgetroya80/donations-frontend/commit/878613617707598c6758d69d619fd5cd4428b14d))
+
 ## [0.2.5](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.4...donations-frontend-v0.2.5) (2026-05-07)
 
 
