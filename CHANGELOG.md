@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.7](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.6...donations-frontend-v0.2.7) (2026-05-07)
+
+
+### Bug Fixes
+
+* **docker:** add image tag to frontend service for end-user pull ([#90](https://github.com/jorgetroya80/donations-frontend/issues/90)) ([1bb8681](https://github.com/jorgetroya80/donations-frontend/commit/1bb868159ffd3ec6dd6d6dfd084cde8386a01bca))
+
 ## [0.2.6](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.5...donations-frontend-v0.2.6) (2026-05-07)
 
 
