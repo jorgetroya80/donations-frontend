@@ -225,5 +225,9 @@
     "actions": "Acciones",
     "yes": "Sí",
     "no": "No"
+  },
+  "theme": {
+    "switchToLight": "Cambiar a modo claro",
+    "switchToDark": "Cambiar a modo oscuro"
   }
 }
