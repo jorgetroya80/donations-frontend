@@ -1,4 +1,4 @@
-import { KeyRound, LogOut, User } from 'lucide-react'
+import { KeyRound, LogOut, Moon, Sun, User } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { buttonVariants } from '@/components/ui/button'
@@ -10,11 +10,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useAuth } from '@/features/auth/auth-context'
+import { useTheme } from '@/features/theme/theme-context'
 import { usePageTitle } from './use-page-title'
 
 export function Header() {
   const { t } = useTranslation()
   const { user, logout } = useAuth()
+  const { theme, toggleTheme } = useTheme()
   const navigate = useNavigate()
   const pageTitle = usePageTitle()
 
@@ -30,29 +32,42 @@ export function Header() {
   return (
     <header className="bg-card flex h-14 items-center justify-between border-b px-4">
       <span className="text-sm font-medium">{pageTitle}</span>
-      <DropdownMenu>
-        <DropdownMenuTrigger
-          className={buttonVariants({
-            variant: 'ghost',
-            size: 'lg',
-            className: 'gap-2',
-          })}
+      <div className="flex items-center gap-1">
+        <button
+          onClick={toggleTheme}
+          aria-label={
+            theme === 'dark'
+              ? t('theme.switchToLight')
+              : t('theme.switchToDark')
+          }
+          className={buttonVariants({ variant: 'ghost', size: 'icon' })}
         >
-          <User size={16} />
-          <span>{user?.username}</span>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={handleChangePassword}>
-            <KeyRound size={16} />
-            {t('auth.changePassword')}
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleLogout}>
-            <LogOut size={16} />
-            {t('auth.logout')}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+          {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+        </button>
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            className={buttonVariants({
+              variant: 'ghost',
+              size: 'lg',
+              className: 'gap-2',
+            })}
+          >
+            <User size={16} />
+            <span>{user?.username}</span>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={handleChangePassword}>
+              <KeyRound size={16} />
+              {t('auth.changePassword')}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout}>
+              <LogOut size={16} />
+              {t('auth.logout')}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </header>
   )
 }

@@ -3,6 +3,7 @@ import { type RenderOptions, render } from '@testing-library/react'
 import type { ReactElement, ReactNode } from 'react'
 import { MemoryRouter } from 'react-router'
 import { AuthProvider } from '@/features/auth/auth-context'
+import { ThemeProvider } from '@/features/theme/theme-context'
 
 interface WrapperOptions {
   route?: string
@@ -18,9 +19,11 @@ function createWrapper({ route = '/' }: WrapperOptions = {}) {
   return function Wrapper({ children }: { children: ReactNode }) {
     return (
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>
+          </AuthProvider>
+        </ThemeProvider>
       </QueryClientProvider>
     )
   }

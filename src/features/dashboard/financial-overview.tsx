@@ -104,7 +104,10 @@ export function FinancialOverview() {
             <CardTitle className="text-sm font-medium">
               {t('dashboard.totalIncome')}
             </CardTitle>
-            <ArrowUpRight size={16} className="text-green-600" />
+            <ArrowUpRight
+              size={16}
+              className="text-green-600 dark:text-green-400"
+            />
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">
@@ -118,7 +121,7 @@ export function FinancialOverview() {
             <CardTitle className="text-sm font-medium">
               {t('dashboard.totalExpenses')}
             </CardTitle>
-            <ArrowDownRight size={16} className="text-red-600" />
+            <ArrowDownRight size={16} className="text-destructive" />
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">
