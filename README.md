@@ -31,27 +31,28 @@ App runs at http://localhost:3000
 
 **Prerequisites:** Docker
 
-Start both API and frontend with a single command:
+1. Copy environment file:
 
-```bash
-docker compose up --build
-```
+   ```bash
+   cp .env.example .env
+   ```
+
+   Defaults work out of the box — no edits needed for local development.
+
+2. Start API and frontend:
+
+   ```bash
+   docker compose up --build
+   ```
 
 App runs at http://localhost:8080
 
-To stop:
-
-```bash
-docker compose down
-```
-
-To rebuild after frontend changes:
-
-```bash
-docker compose up --build
-```
-
-The API image is always pulled fresh from Docker Hub on each `up`. No environment variables required.
+| Command | Effect |
+|---|---|
+| `docker compose up --build` | Start + rebuild frontend image |
+| `docker compose down` | Stop (data persists) |
+| `docker compose down -v` | Stop + wipe database |
+| `docker compose pull` | Pull latest API image |
 
 ## Docker (frontend only)
 
