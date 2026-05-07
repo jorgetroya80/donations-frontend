@@ -2,6 +2,37 @@
 
 Web app that helps small churches manage their finances — track tithes, offerings, and expenses, manage donor records, and view financial reports with charts and summaries. Supports role-based access so administrators, treasurers, and other staff see only what they need.
 
+## Running the App (End Users)
+
+**Prerequisite:** [Docker](https://www.docker.com/get-started)
+
+**First-time setup — run this once:**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/jorgetroya80/donations-frontend/main/scripts/setup.sh | bash
+```
+
+> Verify the URL matches the [official repository](https://github.com/jorgetroya80/donations-frontend) before running.
+
+This downloads the app, creates your settings file, and pulls the Docker images into `~/donations/`.
+
+**Start the app:**
+
+```bash
+cd ~/donations && ./scripts/start.sh
+```
+
+Open **http://localhost:8080** in your browser.
+
+| Script | What it does |
+|---|---|
+| `./scripts/start.sh` | Start the app |
+| `./scripts/stop.sh` | Stop the app (data is kept) |
+| `./scripts/update.sh` | Update to the latest version |
+| `./scripts/reset.sh` | Wipe database and start fresh |
+
+---
+
 ## Prerequisites
 
 - Node.js >= 24
@@ -31,27 +62,28 @@ App runs at http://localhost:3000
 
 **Prerequisites:** Docker
 
-Start both API and frontend with a single command:
+1. Copy environment file:
 
-```bash
-docker compose up --build
-```
+   ```bash
+   cp .env.example .env
+   ```
+
+   Defaults work out of the box — no edits needed for local development.
+
+2. Start API and frontend:
+
+   ```bash
+   docker compose up --build
+   ```
 
 App runs at http://localhost:8080
 
-To stop:
-
-```bash
-docker compose down
-```
-
-To rebuild after frontend changes:
-
-```bash
-docker compose up --build
-```
-
-The API image is always pulled fresh from Docker Hub on each `up`. No environment variables required.
+| Command | Effect |
+|---|---|
+| `docker compose up --build` | Start + rebuild frontend image |
+| `docker compose down` | Stop (data persists) |
+| `docker compose down -v` | Stop + wipe database |
+| `docker compose pull` | Pull latest API image |
 
 ## Docker (frontend only)
 

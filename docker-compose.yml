@@ -21,6 +21,7 @@ services:
 
   api:
     image: jorgetroya/donations-api:main
+    platform: linux/amd64
     pull_policy: always
     expose:
       - '8081'
@@ -51,7 +52,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - postgres-data-prod:/var/lib/postgresql/data
+      - postgres-data-prod:/var/lib/postgresql
     restart: unless-stopped
     networks:
       - app
