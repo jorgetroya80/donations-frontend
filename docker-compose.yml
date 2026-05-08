@@ -1,6 +1,7 @@
 services:
   frontend:
     image: jorgetroya/donations-frontend:latest
+    platform: linux/amd64
     build:
       context: .
       args:
