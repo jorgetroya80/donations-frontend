@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.8](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.7...donations-frontend-v0.2.8) (2026-05-08)
+
+
+### Bug Fixes
+
+* **docker:** add ARM64/multi-arch support ([#93](https://github.com/jorgetroya80/donations-frontend/issues/93)) ([dc33d7a](https://github.com/jorgetroya80/donations-frontend/commit/dc33d7aa3189de9f6c630f754860e74caeaecc46))
+
 ## [0.2.7](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.6...donations-frontend-v0.2.7) (2026-05-07)
 
 
