@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.9](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.8...donations-frontend-v0.2.9) (2026-05-12)
+
+
+### Features
+
+* **deps:** remove date-fns and @rolldown/plugin-babel ([#97](https://github.com/jorgetroya80/donations-frontend/issues/97)) ([b613b21](https://github.com/jorgetroya80/donations-frontend/commit/b613b211b88a95c98da25a85e9adb305884dd0fd))
+
 ## [0.2.8](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.7...donations-frontend-v0.2.8) (2026-05-08)
 
 
