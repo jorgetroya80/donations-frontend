@@ -36,13 +36,13 @@ Open **http://localhost:8080** in your browser.
 ## Prerequisites
 
 - Node.js >= 24
-- npm >= 11
+- pnpm >= 11.1.1
 
 ## Getting Started
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 App runs at http://localhost:3000
@@ -51,12 +51,12 @@ App runs at http://localhost:3000
 
 | Command                 | Description             |
 | ----------------------- | ----------------------- |
-| `npm run dev`           | Start dev server        |
-| `npm run build`         | Production build        |
-| `npm run test`          | Run tests               |
-| `npm run test:coverage` | Run tests with coverage |
-| `npm run check`         | Biome lint + format     |
-| `npm run typecheck`     | TypeScript type check   |
+| `pnpm run dev`           | Start dev server        |
+| `pnpm run build`         | Production build        |
+| `pnpm run test`          | Run tests               |
+| `pnpm run test:coverage` | Run tests with coverage |
+| `pnpm run check`         | Biome lint + format     |
+| `pnpm run typecheck`     | TypeScript type check   |
 
 ## Running Locally (Full Stack)
 

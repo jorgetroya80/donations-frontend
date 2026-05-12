@@ -73,14 +73,14 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ## Commands
 
-- `npm run build` — Build application
-- `npm run dev` / `npm start` — Start dev server (port 3000)
-- `npm run check` — Biome lint + format with auto-fix (`src/**/*.{ts,tsx}`)
-- `npm run lint` — Biome lint with auto-fix (`src/**/*.{ts,tsx}`)
-- `npm run preview` — Preview production build
-- `npm run test` — Run unit tests,
-- `npm run test:watch` — Run unit tests in watch mode,
-- `npm run test:coveragee` — Run test coveragee,
+- `pnpm run build` — Build application
+- `pnpm run dev` / `pnpm start` — Start dev server (port 3000)
+- `pnpm run check` — Biome lint + format with auto-fix (`src/**/*.{ts,tsx}`)
+- `pnpm run lint` — Biome lint with auto-fix (`src/**/*.{ts,tsx}`)
+- `pnpm run preview` — Preview production build
+- `pnpm run test` — Run unit tests,
+- `pnpm run test:watch` — Run unit tests in watch mode,
+- `pnpm run test:coveragee` — Run test coveragee,
 
 ## Architecture
 
