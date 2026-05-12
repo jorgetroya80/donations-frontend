@@ -2,16 +2,21 @@ FROM node:24-alpine AS build
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN --mount=type=cache,target=/root/.npm \
-    npm ci
+RUN corepack enable && corepack prepare pnpm@11.1.1 --activate
+
+COPY pnpm-lock.yaml ./
+RUN --mount=type=cache,target=/root/.local/share/pnpm/store \
+    pnpm fetch
+
+COPY package.json pnpm-workspace.yaml ./
+RUN pnpm install --frozen-lockfile --offline
 
 COPY . .
 
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 
-RUN npm run build
+RUN pnpm run build
 
 FROM nginx:1.27-alpine
 
