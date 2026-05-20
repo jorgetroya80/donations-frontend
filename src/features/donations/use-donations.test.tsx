@@ -1,7 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { renderHook, waitFor } from '@testing-library/react'
+import { HttpResponse, http } from 'msw'
 import type { ReactNode } from 'react'
 import { describe, expect, it } from 'vitest'
+import { server } from '@/test/msw-server'
 import {
   useCreateDonation,
   useDonation,
@@ -87,5 +89,29 @@ describe('useDonors', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(result.current.data?.content).toHaveLength(2)
     expect(result.current.data?.content[0].fullName).toBe('Juan Pérez')
+  })
+})
+
+describe('useDonations - cancellation', () => {
+  it('passes abort signal to request', async () => {
+    let capturedSignal: AbortSignal | undefined
+    server.use(
+      http.get('*/api/v1/donations', ({ request }) => {
+        capturedSignal = request.signal
+        return HttpResponse.json({
+          content: [],
+          totalElements: 0,
+          totalPages: 0,
+          size: 10,
+          number: 0,
+        })
+      })
+    )
+
+    const { result } = renderHook(() => useDonations({ page: 0, size: 10 }), {
+      wrapper: createWrapper(),
+    })
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+    expect(capturedSignal).toBeInstanceOf(AbortSignal)
   })
 })
