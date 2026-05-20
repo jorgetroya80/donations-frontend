@@ -16,14 +16,14 @@ interface DonorListParams {
 export function useDonors(params: DonorListParams) {
   return useQuery({
     queryKey: ['donors', params],
-    queryFn: () => {
+    queryFn: ({ signal }) => {
       const searchParams: Record<string, string | number> = {
         page: params.page,
         size: params.size,
       }
       if (params.sort) searchParams.sort = params.sort
       return api
-        .get('donors', { searchParams })
+        .get('donors', { searchParams, signal })
         .json<PageResponse<DonorResponse>>()
     },
   })
@@ -32,7 +32,8 @@ export function useDonors(params: DonorListParams) {
 export function useDonor(id: number) {
   return useQuery({
     queryKey: ['donors', id],
-    queryFn: () => api.get(`donors/${id}`).json<DonorResponse>(),
+    queryFn: ({ signal }) =>
+      api.get(`donors/${id}`, { signal }).json<DonorResponse>(),
     enabled: id > 0,
   })
 }

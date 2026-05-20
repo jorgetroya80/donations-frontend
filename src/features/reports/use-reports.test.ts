@@ -1,5 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react'
+import { HttpResponse, http } from 'msw'
 import { describe, expect, it } from 'vitest'
+import { server } from '@/test/msw-server'
 import { createWrapper } from '@/test/test-utils'
 import {
   useDonationReport,
@@ -49,5 +51,29 @@ describe('useDonorStatement', () => {
       { wrapper: createWrapper() }
     )
     expect(result.current.fetchStatus).toBe('idle')
+  })
+})
+
+describe('useDonationReport - cancellation', () => {
+  it('passes abort signal to request', async () => {
+    let capturedSignal: AbortSignal | undefined
+    server.use(
+      http.get('*/api/v1/reports/donations', ({ request }) => {
+        capturedSignal = request.signal
+        return HttpResponse.json({
+          from: '2026-04-01',
+          to: '2026-04-30',
+          totalsByType: [],
+          grandTotal: 0,
+        })
+      })
+    )
+
+    const { result } = renderHook(
+      () => useDonationReport({ from: '2026-04-01', to: '2026-04-30' }),
+      { wrapper: createWrapper() }
+    )
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+    expect(capturedSignal).toBeInstanceOf(AbortSignal)
   })
 })

@@ -18,7 +18,7 @@ interface ExpenseListParams {
 export function useExpenses(params: ExpenseListParams) {
   return useQuery({
     queryKey: ['expenses', params],
-    queryFn: () => {
+    queryFn: ({ signal }) => {
       const searchParams: Record<string, string | number> = {
         page: params.page,
         size: params.size,
@@ -27,7 +27,7 @@ export function useExpenses(params: ExpenseListParams) {
       if (params.from) searchParams.from = params.from
       if (params.to) searchParams.to = params.to
       return api
-        .get('expenses', { searchParams })
+        .get('expenses', { searchParams, signal })
         .json<PageResponse<ExpenseResponse>>()
     },
   })
@@ -36,7 +36,8 @@ export function useExpenses(params: ExpenseListParams) {
 export function useExpense(id: number) {
   return useQuery({
     queryKey: ['expenses', id],
-    queryFn: () => api.get(`expenses/${id}`).json<ExpenseResponse>(),
+    queryFn: ({ signal }) =>
+      api.get(`expenses/${id}`, { signal }).json<ExpenseResponse>(),
     enabled: id > 0,
   })
 }

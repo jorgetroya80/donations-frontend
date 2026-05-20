@@ -20,7 +20,7 @@ interface DonationListParams {
 export function useDonations(params: DonationListParams) {
   return useQuery({
     queryKey: ['donations', params],
-    queryFn: () => {
+    queryFn: ({ signal }) => {
       const searchParams: Record<string, string | number> = {
         page: params.page,
         size: params.size,
@@ -29,7 +29,7 @@ export function useDonations(params: DonationListParams) {
       if (params.from) searchParams.from = params.from
       if (params.to) searchParams.to = params.to
       return api
-        .get('donations', { searchParams })
+        .get('donations', { searchParams, signal })
         .json<PageResponse<DonationResponse>>()
     },
   })
@@ -38,7 +38,8 @@ export function useDonations(params: DonationListParams) {
 export function useDonation(id: number) {
   return useQuery({
     queryKey: ['donations', id],
-    queryFn: () => api.get(`donations/${id}`).json<DonationResponse>(),
+    queryFn: ({ signal }) =>
+      api.get(`donations/${id}`, { signal }).json<DonationResponse>(),
     enabled: id > 0,
   })
 }
@@ -68,10 +69,11 @@ export function useUpdateDonation(id: number) {
 export function useDonors() {
   return useQuery({
     queryKey: ['donors'],
-    queryFn: () =>
+    queryFn: ({ signal }) =>
       api
         .get('donors', {
           searchParams: { page: 0, size: 100, sort: 'fullName,asc' },
+          signal,
         })
         .json<PageResponse<DonorResponse>>(),
   })

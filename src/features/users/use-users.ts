@@ -16,14 +16,14 @@ interface UserListParams {
 export function useUsers(params: UserListParams) {
   return useQuery({
     queryKey: ['users', params],
-    queryFn: () => {
+    queryFn: ({ signal }) => {
       const searchParams: Record<string, string | number> = {
         page: params.page,
         size: params.size,
       }
       if (params.sort) searchParams.sort = params.sort
       return api
-        .get('users', { searchParams })
+        .get('users', { searchParams, signal })
         .json<PageResponse<UserResponse>>()
     },
   })
@@ -32,7 +32,8 @@ export function useUsers(params: UserListParams) {
 export function useUser(id: number) {
   return useQuery({
     queryKey: ['users', id],
-    queryFn: () => api.get(`users/${id}`).json<UserResponse>(),
+    queryFn: ({ signal }) =>
+      api.get(`users/${id}`, { signal }).json<UserResponse>(),
     enabled: id > 0,
   })
 }
