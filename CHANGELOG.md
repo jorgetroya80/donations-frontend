@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.11](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.10...donations-frontend-v0.2.11) (2026-05-20)
+
+
+### Bug Fixes
+
+* collapsed sidebar icons wrap instead of stacking in single column ([#103](https://github.com/jorgetroya80/donations-frontend/issues/103)) ([f2b3d7f](https://github.com/jorgetroya80/donations-frontend/commit/f2b3d7f22d801766f3e7cab3836f2e101ff1342c))
+
 ## [0.2.10](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.9...donations-frontend-v0.2.10) (2026-05-20)
 
 
