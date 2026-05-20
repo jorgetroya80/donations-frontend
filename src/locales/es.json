@@ -224,7 +224,9 @@
     "search": "Buscar",
     "actions": "Acciones",
     "yes": "Sí",
-    "no": "No"
+    "no": "No",
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña"
   },
   "theme": {
     "switchToLight": "Cambiar a modo claro",
