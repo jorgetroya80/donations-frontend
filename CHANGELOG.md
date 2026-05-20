@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.10](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.9...donations-frontend-v0.2.10) (2026-05-20)
+
+
+### Features
+
+* password visibility toggle on Input component ([#100](https://github.com/jorgetroya80/donations-frontend/issues/100)) ([9b63805](https://github.com/jorgetroya80/donations-frontend/commit/9b63805846c0efcaef7dae9bc47d3bb327798404))
+
 ## [0.2.9](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.8...donations-frontend-v0.2.9) (2026-05-12)
 
 
