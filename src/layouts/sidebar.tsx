@@ -105,7 +105,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
         )}
       </div>
 
-      <nav aria-label={navLabel} className="flex-1 space-y-1 p-2">
+      <nav aria-label={navLabel} className="flex-1 flex flex-col gap-1 p-2">
         {navItems.map((item) => {
           if (item.visible && !item.visible(user)) return null
 
@@ -133,7 +133,25 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           if (collapsed) {
             return (
               <Tooltip key={item.to}>
-                <TooltipTrigger>{link}</TooltipTrigger>
+                <TooltipTrigger
+                  render={
+                    <NavLink
+                      to={item.to}
+                      end={item.to === '/'}
+                      className={({ isActive }) =>
+                        cn(
+                          'flex w-full items-center justify-center rounded-md py-2 text-sm font-medium transition-colors',
+                          'hover:bg-accent hover:text-accent-foreground',
+                          isActive
+                            ? 'bg-accent text-accent-foreground'
+                            : 'text-muted-foreground'
+                        )
+                      }
+                    />
+                  }
+                >
+                  {item.icon}
+                </TooltipTrigger>
                 <TooltipContent side="right">{t(item.labelKey)}</TooltipContent>
               </Tooltip>
             )
