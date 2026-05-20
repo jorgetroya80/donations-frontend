@@ -78,6 +78,32 @@ describe('Sidebar role-based visibility', () => {
   })
 })
 
+function renderCollapsedSidebar() {
+  return renderWithProviders(
+    <TooltipProvider>
+      <Sidebar collapsed={true} onToggle={() => undefined} />
+    </TooltipProvider>
+  )
+}
+
+describe('Sidebar collapsed state', () => {
+  it('renders nav links when collapsed', () => {
+    setUser('tesorero', ['TREASURER'])
+    const { container } = renderCollapsedSidebar()
+
+    const links = container.querySelectorAll('nav a')
+    expect(links).toHaveLength(5)
+  })
+
+  it('collapsed nav items are not nested inside a button', () => {
+    setUser('admin', ['ADMIN'])
+    const { container } = renderCollapsedSidebar()
+
+    const nestedLinks = container.querySelectorAll('button a')
+    expect(nestedLinks).toHaveLength(0)
+  })
+})
+
 describe('Sidebar landmark labels', () => {
   it('aside has aria-label for main navigation', () => {
     setUser('admin', ['ADMIN'])
