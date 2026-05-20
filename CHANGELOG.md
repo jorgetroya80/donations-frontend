@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.12](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.11...donations-frontend-v0.2.12) (2026-05-20)
+
+
+### Features
+
+* cancel in-flight GET requests on route change ([#107](https://github.com/jorgetroya80/donations-frontend/issues/107)) ([90d02c3](https://github.com/jorgetroya80/donations-frontend/commit/90d02c380da3c6aa5a77b3504135bf10f1f5fba7))
+
 ## [0.2.11](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.10...donations-frontend-v0.2.11) (2026-05-20)
 
 
