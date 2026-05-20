@@ -14,9 +14,9 @@ interface DateRange {
 export function useDonationReport({ from, to }: DateRange) {
   return useQuery({
     queryKey: ['reports', 'donations', from, to],
-    queryFn: () =>
+    queryFn: ({ signal }) =>
       api
-        .get('reports/donations', { searchParams: { from, to } })
+        .get('reports/donations', { searchParams: { from, to }, signal })
         .json<DonationSummaryResponse>(),
   })
 }
@@ -24,9 +24,9 @@ export function useDonationReport({ from, to }: DateRange) {
 export function useExpenseReport({ from, to }: DateRange) {
   return useQuery({
     queryKey: ['reports', 'expenses', from, to],
-    queryFn: () =>
+    queryFn: ({ signal }) =>
       api
-        .get('reports/expenses', { searchParams: { from, to } })
+        .get('reports/expenses', { searchParams: { from, to }, signal })
         .json<ExpenseSummaryResponse>(),
   })
 }
@@ -37,10 +37,11 @@ export function useDonorStatement(
 ) {
   return useQuery({
     queryKey: ['reports', 'donor-statement', donorId, from, to],
-    queryFn: () =>
+    queryFn: ({ signal }) =>
       api
         .get(`reports/donors/${donorId}/statement`, {
           searchParams: { from, to },
+          signal,
         })
         .json<DonorStatementResponse>(),
     enabled: donorId !== null,
