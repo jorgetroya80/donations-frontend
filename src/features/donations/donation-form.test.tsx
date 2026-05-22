@@ -8,7 +8,7 @@ const mockDonors = [
   {
     id: 1,
     fullName: 'Juan Pérez',
-    dniNie: '12345678A',
+    nationalId: '12345678A',
     email: null,
     phone: null,
     address: null,

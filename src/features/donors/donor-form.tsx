@@ -4,14 +4,14 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { parseApiFieldErrors } from '@/lib/parse-api-field-errors'
 import { type CreateDonorFormData, createDonorSchema } from './donor-schema'
 
 interface DonorFormProps {
   defaultValues?: Partial<CreateDonorFormData>
-  onSubmit: (data: CreateDonorFormData) => void
+  onSubmit: (data: CreateDonorFormData) => void | Promise<void>
   onCancel?: () => void
   submitting?: boolean
-  submitLabel: string
 }
 
 export function DonorForm({
@@ -19,27 +19,38 @@ export function DonorForm({
   onSubmit,
   onCancel,
   submitting,
-  submitLabel,
 }: DonorFormProps) {
   const { t } = useTranslation()
 
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(createDonorSchema),
     defaultValues: {
       fullName: defaultValues?.fullName ?? '',
-      dniNie: defaultValues?.dniNie ?? '',
+      nationalId: defaultValues?.nationalId ?? '',
       email: defaultValues?.email ?? '',
       phone: defaultValues?.phone ?? '',
       address: defaultValues?.address ?? '',
     },
   })
 
+  async function submitHandler(data: CreateDonorFormData) {
+    try {
+      await onSubmit(data)
+    } catch (err) {
+      const fields = parseApiFieldErrors(err)
+      for (const [field, message] of Object.entries(fields)) {
+        setError(field as keyof CreateDonorFormData, { message })
+      }
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(submitHandler)} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="fullName">{t('donors.fullName')}</Label>
@@ -61,20 +72,22 @@ export function DonorForm({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="dniNie">{t('donors.dniNie')}</Label>
+          <Label htmlFor="nationalId">{t('donors.nationalId')}</Label>
           <Input
-            id="dniNie"
-            aria-invalid={!!errors.dniNie}
-            aria-describedby={errors.dniNie ? 'dniNie-error' : undefined}
-            {...register('dniNie')}
+            id="nationalId"
+            aria-invalid={!!errors.nationalId}
+            aria-describedby={
+              errors.nationalId ? 'nationalId-error' : undefined
+            }
+            {...register('nationalId')}
           />
-          {errors.dniNie && (
+          {errors.nationalId && (
             <p
-              id="dniNie-error"
+              id="nationalId-error"
               role="alert"
               className="text-sm text-destructive"
             >
-              {errors.dniNie.message}
+              {errors.nationalId.message}
             </p>
           )}
         </div>
@@ -112,7 +125,7 @@ export function DonorForm({
 
       <div className="flex gap-2">
         <Button type="submit" disabled={submitting}>
-          {submitting ? t('common.loading') : submitLabel}
+          {submitting ? t('common.loading') : t('common.save')}
         </Button>
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel}>
