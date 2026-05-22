@@ -42,7 +42,7 @@ describe('useDonor', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(result.current.data?.id).toBe(1)
     expect(result.current.data?.fullName).toBe('Juan Pérez')
-    expect(result.current.data?.dniNie).toBe('12345678A')
+    expect(result.current.data?.nationalId).toBe('12345678A')
   })
 })
 
@@ -56,7 +56,7 @@ describe('useCreateDonor', () => {
     await waitFor(async () => {
       response = await result.current.mutateAsync({
         fullName: 'Test Donor',
-        dniNie: '99999999Z',
+        nationalId: '99999999Z',
       })
     })
 

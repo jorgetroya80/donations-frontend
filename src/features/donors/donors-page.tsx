@@ -108,7 +108,7 @@ export function DonorsPage() {
                   {t('donors.fullName')}
                   <span aria-hidden="true">{sortIndicator('fullName')}</span>
                 </TableHead>
-                <TableHead>{t('donors.dniNie')}</TableHead>
+                <TableHead>{t('donors.nationalId')}</TableHead>
                 <TableHead>{t('donors.email')}</TableHead>
                 <TableHead>{t('donors.phone')}</TableHead>
                 <TableHead>{t('donors.status')}</TableHead>
@@ -121,7 +121,7 @@ export function DonorsPage() {
                   <TableCell className="font-medium">
                     {donor.fullName}
                   </TableCell>
-                  <TableCell>{donor.dniNie}</TableCell>
+                  <TableCell>{donor.nationalId}</TableCell>
                   <TableCell>{donor.email ?? '—'}</TableCell>
                   <TableCell>{donor.phone ?? '—'}</TableCell>
                   <TableCell>

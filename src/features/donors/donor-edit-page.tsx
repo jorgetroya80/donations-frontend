@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -23,26 +23,28 @@ export function DonorEditPage() {
   const { data: donor, isLoading, error } = useDonor(donorId)
   const updateMutation = useUpdateDonor(donorId)
 
-  const [pendingData, setPendingData] = useState<CreateDonorFormData | null>(
-    null
-  )
+  const [showConfirm, setShowConfirm] = useState(false)
+  const confirmResolveRef = useRef<((value: boolean) => void) | null>(null)
 
-  function handleFormSubmit(data: CreateDonorFormData) {
-    setPendingData(data)
+  function waitForConfirmation(): Promise<boolean> {
+    return new Promise((resolve) => {
+      confirmResolveRef.current = resolve
+      setShowConfirm(true)
+    })
   }
 
-  async function handleConfirmSave() {
-    if (!pendingData) return
+  async function handleFormSubmit(data: CreateDonorFormData) {
+    const confirmed = await waitForConfirmation()
+    if (!confirmed) return
 
     await updateMutation.mutateAsync({
-      fullName: pendingData.fullName,
-      dniNie: pendingData.dniNie,
-      email: pendingData.email || undefined,
-      phone: pendingData.phone || undefined,
-      address: pendingData.address || undefined,
+      fullName: data.fullName,
+      nationalId: data.nationalId,
+      email: data.email || undefined,
+      phone: data.phone || undefined,
+      address: data.address || undefined,
     })
 
-    setPendingData(null)
     navigate('/donors')
   }
 
@@ -75,7 +77,7 @@ export function DonorEditPage() {
       <DonorForm
         defaultValues={{
           fullName: donor.fullName,
-          dniNie: donor.dniNie,
+          nationalId: donor.nationalId,
           email: donor.email,
           phone: donor.phone,
           address: donor.address,
@@ -83,20 +85,40 @@ export function DonorEditPage() {
         onSubmit={handleFormSubmit}
         onCancel={() => navigate('/donors')}
         submitting={updateMutation.isPending}
-        submitLabel={t('common.save')}
       />
 
-      <Dialog open={!!pendingData} onOpenChange={() => setPendingData(null)}>
+      <Dialog
+        open={showConfirm}
+        onOpenChange={(open) => {
+          if (!open) {
+            setShowConfirm(false)
+            confirmResolveRef.current?.(false)
+          }
+        }}
+      >
         <DialogContent>
           <DialogTitle>{t('donors.confirmEdit')}</DialogTitle>
           <DialogDescription>
             {t('donors.confirmEditDescription')}
           </DialogDescription>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setPendingData(null)}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowConfirm(false)
+                confirmResolveRef.current?.(false)
+              }}
+            >
               {t('common.cancel')}
             </Button>
-            <Button onClick={handleConfirmSave}>{t('common.confirm')}</Button>
+            <Button
+              onClick={() => {
+                setShowConfirm(false)
+                confirmResolveRef.current?.(true)
+              }}
+            >
+              {t('common.confirm')}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

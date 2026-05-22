@@ -1,12 +1,13 @@
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { HTTPError } from 'ky'
 import { describe, expect, it, vi } from 'vitest'
 import { renderWithProviders } from '@/test/test-utils'
 import { DonorForm } from './donor-form'
 
 describe('DonorForm', () => {
   it('renders all form fields', () => {
-    renderWithProviders(<DonorForm onSubmit={vi.fn()} submitLabel="Guardar" />)
+    renderWithProviders(<DonorForm onSubmit={vi.fn()} />)
 
     expect(screen.getByLabelText('Nombre completo')).toBeInTheDocument()
     expect(screen.getByLabelText('DNI/NIE')).toBeInTheDocument()
@@ -20,7 +21,7 @@ describe('DonorForm', () => {
     const user = userEvent.setup()
     const onSubmit = vi.fn()
 
-    renderWithProviders(<DonorForm onSubmit={onSubmit} submitLabel="Guardar" />)
+    renderWithProviders(<DonorForm onSubmit={onSubmit} />)
 
     await user.click(screen.getByRole('button', { name: 'Guardar' }))
 
@@ -37,11 +38,10 @@ describe('DonorForm', () => {
       <DonorForm
         defaultValues={{
           fullName: 'Juan Pérez',
-          dniNie: '12345678A',
+          nationalId: '12345678A',
           email: 'juan@test.com',
         }}
         onSubmit={vi.fn()}
-        submitLabel="Guardar"
       />
     )
 
@@ -51,16 +51,12 @@ describe('DonorForm', () => {
   })
 
   it('renders Cancel button when onCancel is provided', () => {
-    renderWithProviders(
-      <DonorForm onSubmit={vi.fn()} onCancel={vi.fn()} submitLabel="Guardar" />
-    )
+    renderWithProviders(<DonorForm onSubmit={vi.fn()} onCancel={vi.fn()} />)
     expect(screen.getByRole('button', { name: 'Cancelar' })).toBeInTheDocument()
   })
 
   it('Cancel button has type="button"', () => {
-    renderWithProviders(
-      <DonorForm onSubmit={vi.fn()} onCancel={vi.fn()} submitLabel="Guardar" />
-    )
+    renderWithProviders(<DonorForm onSubmit={vi.fn()} onCancel={vi.fn()} />)
     expect(screen.getByRole('button', { name: 'Cancelar' })).toHaveAttribute(
       'type',
       'button'
@@ -70,16 +66,14 @@ describe('DonorForm', () => {
   it('clicking Cancel calls onCancel', async () => {
     const user = userEvent.setup()
     const onCancel = vi.fn()
-    renderWithProviders(
-      <DonorForm onSubmit={vi.fn()} onCancel={onCancel} submitLabel="Guardar" />
-    )
+    renderWithProviders(<DonorForm onSubmit={vi.fn()} onCancel={onCancel} />)
     await user.click(screen.getByRole('button', { name: 'Cancelar' }))
     expect(onCancel).toHaveBeenCalledOnce()
   })
 
   it('sets aria-invalid and aria-describedby on invalid submit', async () => {
     const user = userEvent.setup()
-    renderWithProviders(<DonorForm onSubmit={vi.fn()} submitLabel="Guardar" />)
+    renderWithProviders(<DonorForm onSubmit={vi.fn()} />)
 
     await user.click(screen.getByRole('button', { name: 'Guardar' }))
 
@@ -97,8 +91,11 @@ describe('DonorForm', () => {
 
       const dniNieInput = screen.getByLabelText('DNI/NIE')
       expect(dniNieInput).toHaveAttribute('aria-invalid', 'true')
-      expect(dniNieInput).toHaveAttribute('aria-describedby', 'dniNie-error')
-      expect(document.getElementById('dniNie-error')).toHaveAttribute(
+      expect(dniNieInput).toHaveAttribute(
+        'aria-describedby',
+        'nationalId-error'
+      )
+      expect(document.getElementById('nationalId-error')).toHaveAttribute(
         'role',
         'alert'
       )
@@ -106,22 +103,46 @@ describe('DonorForm', () => {
   })
 
   it('has no aria-invalid or aria-describedby before submit', () => {
-    renderWithProviders(<DonorForm onSubmit={vi.fn()} submitLabel="Guardar" />)
+    renderWithProviders(<DonorForm onSubmit={vi.fn()} />)
 
     const fullNameInput = screen.getByLabelText('Nombre completo')
     expect(fullNameInput).toHaveAttribute('aria-invalid', 'false')
     expect(fullNameInput).not.toHaveAttribute('aria-describedby')
 
-    const dniNieInput = screen.getByLabelText('DNI/NIE')
-    expect(dniNieInput).toHaveAttribute('aria-invalid', 'false')
-    expect(dniNieInput).not.toHaveAttribute('aria-describedby')
+    const nationalIdInput = screen.getByLabelText('DNI/NIE')
+    expect(nationalIdInput).toHaveAttribute('aria-invalid', 'false')
+    expect(nationalIdInput).not.toHaveAttribute('aria-describedby')
+  })
+
+  it('displays server field errors when onSubmit rejects with HTTPError', async () => {
+    const user = userEvent.setup()
+    // ky v2 pre-parses the response body into error.data before throwing
+    const serverError = new HTTPError(
+      new Response(null, { status: 400 }),
+      new Request('http://localhost'),
+      {} as never
+    )
+    serverError.data = { fields: { nationalId: 'Formato de DNI/NIE inválido' } }
+    const onSubmit = vi.fn().mockRejectedValue(serverError)
+
+    renderWithProviders(<DonorForm onSubmit={onSubmit} />)
+
+    await user.type(screen.getByLabelText('Nombre completo'), 'Juan Pérez')
+    await user.type(screen.getByLabelText('DNI/NIE'), '99999999Z')
+    await user.click(screen.getByRole('button', { name: 'Guardar' }))
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('Formato de DNI/NIE inválido')
+      ).toBeInTheDocument()
+    })
   })
 
   it('calls onSubmit with valid data', async () => {
     const user = userEvent.setup()
     const onSubmit = vi.fn()
 
-    renderWithProviders(<DonorForm onSubmit={onSubmit} submitLabel="Guardar" />)
+    renderWithProviders(<DonorForm onSubmit={onSubmit} />)
 
     await user.type(screen.getByLabelText('Nombre completo'), 'Test Donor')
     await user.type(screen.getByLabelText('DNI/NIE'), '99999999Z')
@@ -132,9 +153,8 @@ describe('DonorForm', () => {
       expect(onSubmit).toHaveBeenCalledWith(
         expect.objectContaining({
           fullName: 'Test Donor',
-          dniNie: '99999999Z',
-        }),
-        expect.anything()
+          nationalId: '99999999Z',
+        })
       )
     })
   })

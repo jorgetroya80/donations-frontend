@@ -87,7 +87,7 @@
     "new": "Nuevo donante",
     "edit": "Editar donante",
     "fullName": "Nombre completo",
-    "dniNie": "DNI/NIE",
+    "nationalId": "DNI/NIE",
     "email": "Email",
     "emailOptional": "Email (opcional)",
     "phone": "Teléfono",

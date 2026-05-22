@@ -215,7 +215,7 @@ export const handlers = [
         {
           id: 1,
           fullName: 'Juan Pérez',
-          dniNie: '12345678A',
+          nationalId: '12345678A',
           email: 'juan@test.com',
           phone: null,
           address: null,
@@ -226,7 +226,7 @@ export const handlers = [
         {
           id: 2,
           fullName: 'María García',
-          dniNie: '87654321B',
+          nationalId: '87654321B',
           email: null,
           phone: '600123456',
           address: 'Calle Mayor 1',
@@ -248,7 +248,7 @@ export const handlers = [
       return HttpResponse.json({
         id: 1,
         fullName: 'Juan Pérez',
-        dniNie: '12345678A',
+        nationalId: '12345678A',
         email: 'juan@test.com',
         phone: null,
         address: null,
@@ -265,7 +265,7 @@ export const handlers = [
     return HttpResponse.json({
       id: 3,
       fullName: body.fullName,
-      dniNie: body.dniNie,
+      nationalId: body.nationalId,
       email: body.email ?? null,
       phone: body.phone ?? null,
       address: body.address ?? null,
@@ -280,7 +280,7 @@ export const handlers = [
     return HttpResponse.json({
       id: 1,
       fullName: body.fullName ?? 'Juan Pérez',
-      dniNie: body.dniNie ?? '12345678A',
+      nationalId: body.nationalId ?? '12345678A',
       email: body.email ?? null,
       phone: body.phone ?? null,
       address: body.address ?? null,
