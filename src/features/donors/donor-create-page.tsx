@@ -13,7 +13,7 @@ export function DonorCreatePage() {
   async function handleSubmit(data: CreateDonorFormData) {
     await createMutation.mutateAsync({
       fullName: data.fullName,
-      dniNie: data.dniNie,
+      nationalId: data.nationalId,
       email: data.email || undefined,
       phone: data.phone || undefined,
       address: data.address || undefined,
@@ -36,7 +36,6 @@ export function DonorCreatePage() {
         onSubmit={handleSubmit}
         onCancel={() => navigate('/donors')}
         submitting={createMutation.isPending}
-        submitLabel={t('common.save')}
       />
     </div>
   )
