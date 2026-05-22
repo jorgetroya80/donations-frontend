@@ -98,7 +98,7 @@ export interface DonationCreateResponse {
 export interface DonorResponse {
   id: number
   fullName: string
-  dniNie: string
+  nationalId: string
   email: string | null
   phone: string | null
   address: string | null
@@ -109,7 +109,7 @@ export interface DonorResponse {
 
 export interface CreateDonorRequest {
   fullName: string
-  dniNie: string
+  nationalId: string
   email?: string | null
   phone?: string | null
   address?: string | null
@@ -117,7 +117,7 @@ export interface CreateDonorRequest {
 
 export interface UpdateDonorRequest {
   fullName?: string
-  dniNie?: string
+  nationalId?: string
   email?: string | null
   phone?: string | null
   address?: string | null
