@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.13](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.12...donations-frontend-v0.2.13) (2026-05-22)
+
+
+### Features
+
+* display server validation errors inline in donor form ([#111](https://github.com/jorgetroya80/donations-frontend/issues/111)) ([2ad622d](https://github.com/jorgetroya80/donations-frontend/commit/2ad622dbf4dda28b8bf74a0e4030b1cae469995c))
+
 ## [0.2.12](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.11...donations-frontend-v0.2.12) (2026-05-20)
 
 
