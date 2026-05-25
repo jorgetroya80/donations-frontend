@@ -81,6 +81,9 @@ importers:
       '@biomejs/biome':
         specifier: 2.4.12
         version: 2.4.12
+      '@jorgetroya80/donations-api-client':
+        specifier: 1.6.0
+        version: 1.6.0
       '@tailwindcss/vite':
         specifier: 4.2.2
         version: 4.2.2(vite@8.0.9(@types/node@24.12.2)(jiti@2.7.0)(yaml@2.9.0))
@@ -436,6 +439,9 @@ packages:
     peerDependenciesMeta:
       '@types/node':
         optional: true
+
+  '@jorgetroya80/donations-api-client@1.6.0':
+    resolution: {integrity: sha512-RPJc9bwIAHbxANIf1nYmg//cpmCsTnolvp+qHTEypVE46/GO4Q+VrsqHVEHfA+YmF4HXcP6q+bHWdG8R7w5oTQ==, tarball: https://npm.pkg.github.com/download/@jorgetroya80/donations-api-client/1.6.0/faa380f996b1f140102f0d8c29f3f60de386e2a1}
 
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
@@ -2235,6 +2241,8 @@ snapshots:
   '@inquirer/type@4.0.5(@types/node@24.12.2)':
     optionalDependencies:
       '@types/node': 24.12.2
+
+  '@jorgetroya80/donations-api-client@1.6.0': {}
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
