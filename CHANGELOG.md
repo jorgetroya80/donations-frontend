@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.14](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.13...donations-frontend-v0.2.14) (2026-05-25)
+
+
+### Features
+
+* add architecture documentation ([#113](https://github.com/jorgetroya80/donations-frontend/issues/113)) ([3cdf979](https://github.com/jorgetroya80/donations-frontend/commit/3cdf9792a94917feebc89a285568b957872bfe0c))
+
 ## [0.2.13](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.12...donations-frontend-v0.2.13) (2026-05-22)
 
 
