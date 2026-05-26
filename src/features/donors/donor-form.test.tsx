@@ -115,7 +115,9 @@ describe('DonorForm', () => {
 
   it('displays server field errors when onSubmit rejects', async () => {
     const user = userEvent.setup()
-    const serverError = { fields: { nationalId: 'Formato de DNI/NIE inválido' } }
+    const serverError = {
+      fields: { nationalId: 'Formato de DNI/NIE inválido' },
+    }
     const onSubmit = vi.fn().mockRejectedValue(serverError)
 
     renderWithProviders(<DonorForm onSubmit={onSubmit} />)

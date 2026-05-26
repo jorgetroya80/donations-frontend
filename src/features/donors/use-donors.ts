@@ -1,12 +1,12 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
+  type CreateDonorRequest,
   createDonor,
   getDonor,
   listDonors,
-  updateDonor,
-  type CreateDonorRequest,
   type UpdateDonorRequest,
+  updateDonor,
 } from '@jorgetroya80/donations-api-client'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { client, pageableQuerySerializer } from '@/lib/api'
 
 interface DonorListParams {
@@ -20,7 +20,13 @@ export function useDonors(params: DonorListParams) {
     queryKey: ['donors', params],
     queryFn: ({ signal }) =>
       listDonors({
-        query: { pageable: { page: params.page, size: params.size, sort: params.sort ? [params.sort] : undefined } },
+        query: {
+          pageable: {
+            page: params.page,
+            size: params.size,
+            sort: params.sort ? [params.sort] : undefined,
+          },
+        },
         client,
         throwOnError: true,
         signal,
@@ -33,7 +39,9 @@ export function useDonor(id: number) {
   return useQuery({
     queryKey: ['donors', id],
     queryFn: ({ signal }) =>
-      getDonor({ path: { id }, client, throwOnError: true, signal }).then(({ data }) => data),
+      getDonor({ path: { id }, client, throwOnError: true, signal }).then(
+        ({ data }) => data
+      ),
     enabled: id > 0,
   })
 }
@@ -42,7 +50,9 @@ export function useCreateDonor() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (body: CreateDonorRequest) =>
-      createDonor({ body, client, throwOnError: true }).then(({ data }) => data),
+      createDonor({ body, client, throwOnError: true }).then(
+        ({ data }) => data
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['donors'] })
     },
@@ -53,7 +63,9 @@ export function useUpdateDonor(id: number) {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (body: UpdateDonorRequest) =>
-      updateDonor({ path: { id }, body, client, throwOnError: true }).then(({ data }) => data),
+      updateDonor({ path: { id }, body, client, throwOnError: true }).then(
+        ({ data }) => data
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['donors'] })
     },

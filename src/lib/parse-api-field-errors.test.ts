@@ -3,7 +3,9 @@ import { parseApiFieldErrors } from './parse-api-field-errors'
 
 describe('parseApiFieldErrors', () => {
   it('returns fields from a validation error', () => {
-    expect(parseApiFieldErrors({ fields: { nationalId: 'Invalid format' } })).toEqual({
+    expect(
+      parseApiFieldErrors({ fields: { nationalId: 'Invalid format' } })
+    ).toEqual({
       nationalId: 'Invalid format',
     })
   })
@@ -13,7 +15,9 @@ describe('parseApiFieldErrors', () => {
   })
 
   it('returns empty object when data has no fields property', () => {
-    expect(parseApiFieldErrors({ message: 'Internal server error' })).toEqual({})
+    expect(parseApiFieldErrors({ message: 'Internal server error' })).toEqual(
+      {}
+    )
   })
 
   it('returns empty object when error is undefined', () => {
@@ -22,7 +26,9 @@ describe('parseApiFieldErrors', () => {
 
   it('handles multiple field errors', () => {
     expect(
-      parseApiFieldErrors({ fields: { fullName: 'Required', nationalId: 'Invalid format' } })
+      parseApiFieldErrors({
+        fields: { fullName: 'Required', nationalId: 'Invalid format' },
+      })
     ).toEqual({ fullName: 'Required', nationalId: 'Invalid format' })
   })
 })

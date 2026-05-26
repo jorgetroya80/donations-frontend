@@ -111,7 +111,9 @@ export function FinancialOverview() {
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">
-              {balance.data ? formatCurrency(balance.data.totalIncome ?? 0) : '—'}
+              {balance.data
+                ? formatCurrency(balance.data.totalIncome ?? 0)
+                : '—'}
             </p>
           </CardContent>
         </Card>
@@ -125,7 +127,9 @@ export function FinancialOverview() {
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">
-              {balance.data ? formatCurrency(balance.data.totalExpenses ?? 0) : '—'}
+              {balance.data
+                ? formatCurrency(balance.data.totalExpenses ?? 0)
+                : '—'}
             </p>
           </CardContent>
         </Card>
@@ -139,7 +143,9 @@ export function FinancialOverview() {
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">
-              {balance.data ? formatCurrency(balance.data.netBalance ?? 0) : '—'}
+              {balance.data
+                ? formatCurrency(balance.data.netBalance ?? 0)
+                : '—'}
             </p>
           </CardContent>
         </Card>

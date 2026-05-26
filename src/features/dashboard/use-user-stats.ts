@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query'
 import { listUsers } from '@jorgetroya80/donations-api-client'
+import { useQuery } from '@tanstack/react-query'
 import { client, pageableQuerySerializer } from '@/lib/api'
 
 export function useUserStats() {

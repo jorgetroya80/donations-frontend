@@ -27,7 +27,10 @@ export function LoginPage() {
     const password = formData.get('password') as string
 
     try {
-      const { error, response, data } = await sdkLogin({ body: { username, password }, client })
+      const { error, response, data } = await sdkLogin({
+        body: { username, password },
+        client,
+      })
       if (error || !data) {
         setError(
           response?.status === 401
