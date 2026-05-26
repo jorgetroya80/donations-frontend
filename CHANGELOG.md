@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.15](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.14...donations-frontend-v0.2.15) (2026-05-26)
+
+
+### Features
+
+* migrate HTTP layer to generated OpenAPI client ([#116](https://github.com/jorgetroya80/donations-frontend/issues/116)) ([d089dfc](https://github.com/jorgetroya80/donations-frontend/commit/d089dfcd08058624aafa9d08173279319c634a49))
+
 ## [0.2.14](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.13...donations-frontend-v0.2.14) (2026-05-25)
 
 
