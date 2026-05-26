@@ -10,8 +10,10 @@ import {
   DialogFooter,
   DialogTitle,
 } from '@/components/ui/dialog'
-import type { UserRole } from '@/lib/api-types'
 import { useUpdateUser, useUser } from './use-users'
+
+type UserRole = 'ADMIN' | 'TREASURER' | 'PASTOR' | 'OPERATOR'
+
 import { UserForm } from './user-form'
 import type { UpdateUserFormData } from './user-schema'
 

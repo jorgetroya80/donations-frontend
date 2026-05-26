@@ -1,6 +1,5 @@
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { HTTPError } from 'ky'
 import { describe, expect, it, vi } from 'vitest'
 import { renderWithProviders } from '@/test/test-utils'
 import { DonorForm } from './donor-form'
@@ -114,15 +113,11 @@ describe('DonorForm', () => {
     expect(nationalIdInput).not.toHaveAttribute('aria-describedby')
   })
 
-  it('displays server field errors when onSubmit rejects with HTTPError', async () => {
+  it('displays server field errors when onSubmit rejects', async () => {
     const user = userEvent.setup()
-    // ky v2 pre-parses the response body into error.data before throwing
-    const serverError = new HTTPError(
-      new Response(null, { status: 400 }),
-      new Request('http://localhost'),
-      {} as never
-    )
-    serverError.data = { fields: { nationalId: 'Formato de DNI/NIE inválido' } }
+    const serverError = {
+      fields: { nationalId: 'Formato de DNI/NIE inválido' },
+    }
     const onSubmit = vi.fn().mockRejectedValue(serverError)
 
     renderWithProviders(<DonorForm onSubmit={onSubmit} />)

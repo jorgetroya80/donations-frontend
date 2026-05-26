@@ -1,10 +1,10 @@
+import {
+  donationSummary,
+  donorStatement,
+  expenseSummary,
+} from '@jorgetroya80/donations-api-client'
 import { useQuery } from '@tanstack/react-query'
-import { api } from '@/lib/api'
-import type {
-  DonationSummaryResponse,
-  DonorStatementResponse,
-  ExpenseSummaryResponse,
-} from '@/lib/api-types'
+import { client } from '@/lib/api'
 
 interface DateRange {
   from: string
@@ -15,9 +15,12 @@ export function useDonationReport({ from, to }: DateRange) {
   return useQuery({
     queryKey: ['reports', 'donations', from, to],
     queryFn: ({ signal }) =>
-      api
-        .get('reports/donations', { searchParams: { from, to }, signal })
-        .json<DonationSummaryResponse>(),
+      donationSummary({
+        query: { from, to },
+        client,
+        throwOnError: true,
+        signal,
+      }).then(({ data }) => data),
   })
 }
 
@@ -25,9 +28,12 @@ export function useExpenseReport({ from, to }: DateRange) {
   return useQuery({
     queryKey: ['reports', 'expenses', from, to],
     queryFn: ({ signal }) =>
-      api
-        .get('reports/expenses', { searchParams: { from, to }, signal })
-        .json<ExpenseSummaryResponse>(),
+      expenseSummary({
+        query: { from, to },
+        client,
+        throwOnError: true,
+        signal,
+      }).then(({ data }) => data),
   })
 }
 
@@ -38,12 +44,13 @@ export function useDonorStatement(
   return useQuery({
     queryKey: ['reports', 'donor-statement', donorId, from, to],
     queryFn: ({ signal }) =>
-      api
-        .get(`reports/donors/${donorId}/statement`, {
-          searchParams: { from, to },
-          signal,
-        })
-        .json<DonorStatementResponse>(),
+      donorStatement({
+        path: { id: donorId! },
+        query: { from, to },
+        client,
+        throwOnError: true,
+        signal,
+      }).then(({ data }) => data),
     enabled: donorId !== null,
   })
 }

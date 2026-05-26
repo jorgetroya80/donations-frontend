@@ -1,11 +1,13 @@
+import {
+  type CreateExpenseRequest,
+  createExpense,
+  getExpense,
+  listExpenses,
+  type UpdateExpenseRequest,
+  updateExpense,
+} from '@jorgetroya80/donations-api-client'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { api } from '@/lib/api'
-import type {
-  CreateExpenseRequest,
-  ExpenseResponse,
-  PageResponse,
-  UpdateExpenseRequest,
-} from '@/lib/api-types'
+import { client, pageableQuerySerializer } from '@/lib/api'
 
 interface ExpenseListParams {
   page: number
@@ -18,18 +20,22 @@ interface ExpenseListParams {
 export function useExpenses(params: ExpenseListParams) {
   return useQuery({
     queryKey: ['expenses', params],
-    queryFn: ({ signal }) => {
-      const searchParams: Record<string, string | number> = {
-        page: params.page,
-        size: params.size,
-      }
-      if (params.sort) searchParams.sort = params.sort
-      if (params.from) searchParams.from = params.from
-      if (params.to) searchParams.to = params.to
-      return api
-        .get('expenses', { searchParams, signal })
-        .json<PageResponse<ExpenseResponse>>()
-    },
+    queryFn: ({ signal }) =>
+      listExpenses({
+        query: {
+          from: params.from,
+          to: params.to,
+          pageable: {
+            page: params.page,
+            size: params.size,
+            sort: params.sort ? [params.sort] : undefined,
+          },
+        },
+        client,
+        throwOnError: true,
+        signal,
+        querySerializer: pageableQuerySerializer,
+      }).then(({ data }) => data),
   })
 }
 
@@ -37,7 +43,9 @@ export function useExpense(id: number) {
   return useQuery({
     queryKey: ['expenses', id],
     queryFn: ({ signal }) =>
-      api.get(`expenses/${id}`, { signal }).json<ExpenseResponse>(),
+      getExpense({ path: { id }, client, throwOnError: true, signal }).then(
+        ({ data }) => data
+      ),
     enabled: id > 0,
   })
 }
@@ -45,8 +53,10 @@ export function useExpense(id: number) {
 export function useCreateExpense() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: CreateExpenseRequest) =>
-      api.post('expenses', { json: data }).json<ExpenseResponse>(),
+    mutationFn: (body: CreateExpenseRequest) =>
+      createExpense({ body, client, throwOnError: true }).then(
+        ({ data }) => data
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['expenses'] })
     },
@@ -56,8 +66,10 @@ export function useCreateExpense() {
 export function useUpdateExpense(id: number) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: UpdateExpenseRequest) =>
-      api.put(`expenses/${id}`, { json: data }).json<ExpenseResponse>(),
+    mutationFn: (body: UpdateExpenseRequest) =>
+      updateExpense({ path: { id }, body, client, throwOnError: true }).then(
+        ({ data }) => data
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['expenses'] })
     },

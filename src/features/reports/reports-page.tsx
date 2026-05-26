@@ -56,7 +56,7 @@ function DonationSummaryTab() {
         </Alert>
       )}
 
-      {data && data.totalsByType.length > 0 ? (
+      {data && (data.totalsByType ?? []).length > 0 ? (
         <Card>
           <CardContent className="pt-6">
             <Table>
@@ -69,18 +69,18 @@ function DonationSummaryTab() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {data.totalsByType.map((row) => (
+                {(data.totalsByType ?? []).map((row) => (
                   <TableRow key={row.type}>
                     <TableCell>{t(`donations.types.${row.type}`)}</TableCell>
                     <TableCell className="text-right">
-                      {formatCurrency(row.total)}
+                      {formatCurrency(row.total ?? 0)}
                     </TableCell>
                   </TableRow>
                 ))}
                 <TableRow className="font-bold">
                   <TableCell>{t('reports.grandTotal')}</TableCell>
                   <TableCell className="text-right">
-                    {formatCurrency(data.grandTotal)}
+                    {formatCurrency(data.grandTotal ?? 0)}
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -124,7 +124,7 @@ function ExpenseSummaryTab() {
         </Alert>
       )}
 
-      {data && data.totalsByCategory.length > 0 ? (
+      {data && (data.totalsByCategory ?? []).length > 0 ? (
         <Card>
           <CardContent className="pt-6">
             <Table>
@@ -137,20 +137,20 @@ function ExpenseSummaryTab() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {data.totalsByCategory.map((row) => (
+                {(data.totalsByCategory ?? []).map((row) => (
                   <TableRow key={row.category}>
                     <TableCell>
                       {t(`expenses.categories.${row.category}`)}
                     </TableCell>
                     <TableCell className="text-right">
-                      {formatCurrency(row.total)}
+                      {formatCurrency(row.total ?? 0)}
                     </TableCell>
                   </TableRow>
                 ))}
                 <TableRow className="font-bold">
                   <TableCell>{t('reports.grandTotal')}</TableCell>
                   <TableCell className="text-right">
-                    {formatCurrency(data.grandTotal)}
+                    {formatCurrency(data.grandTotal ?? 0)}
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -218,7 +218,7 @@ function DonorStatementTab() {
         <p className="text-muted-foreground">{t('reports.noDonorSelected')}</p>
       )}
 
-      {data && data.donations.length > 0 ? (
+      {data && (data.donations ?? []).length > 0 ? (
         <Card>
           <CardHeader>
             <CardTitle>{data.donorName}</CardTitle>
@@ -236,7 +236,7 @@ function DonorStatementTab() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {data.donations.map((d) => (
+                {(data.donations ?? []).map((d) => (
                   <TableRow key={d.id}>
                     <TableCell>{dayjs(d.date).format('DD/MM/YYYY')}</TableCell>
                     <TableCell>{t(`donations.types.${d.type}`)}</TableCell>
@@ -244,14 +244,14 @@ function DonorStatementTab() {
                       {t(`donations.paymentMethods.${d.paymentMethod}`)}
                     </TableCell>
                     <TableCell className="text-right">
-                      {formatCurrency(d.amount)}
+                      {formatCurrency(d.amount ?? 0)}
                     </TableCell>
                   </TableRow>
                 ))}
                 <TableRow className="font-bold">
                   <TableCell colSpan={3}>{t('reports.grandTotal')}</TableCell>
                   <TableCell className="text-right">
-                    {formatCurrency(data.total)}
+                    {formatCurrency(data.total ?? 0)}
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -260,7 +260,7 @@ function DonorStatementTab() {
         </Card>
       ) : (
         data &&
-        data.donations.length === 0 && (
+        (data.donations ?? []).length === 0 && (
           <p className="text-muted-foreground">{t('reports.noData')}</p>
         )
       )}

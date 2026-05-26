@@ -61,16 +61,16 @@ export function FinancialOverview() {
 
   const donationChartData =
     donations.data?.totalsByType?.map((d) => ({
-      name: donationChartConfig[d.type]?.label ?? d.type,
-      value: d.total,
-      fill: donationChartConfig[d.type]?.color ?? 'var(--chart-4)',
+      name: donationChartConfig[d.type ?? '']?.label ?? d.type,
+      value: d.total ?? 0,
+      fill: donationChartConfig[d.type ?? '']?.color ?? 'var(--chart-4)',
     })) ?? []
 
   const expenseChartData =
     expenses.data?.totalsByCategory?.map((e) => ({
-      category: expenseChartConfig[e.category]?.label ?? e.category,
-      total: e.total,
-      fill: expenseChartConfig[e.category]?.color ?? 'var(--chart-4)',
+      category: expenseChartConfig[e.category ?? '']?.label ?? e.category,
+      total: e.total ?? 0,
+      fill: expenseChartConfig[e.category ?? '']?.color ?? 'var(--chart-4)',
     })) ?? []
 
   return (
@@ -111,7 +111,9 @@ export function FinancialOverview() {
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">
-              {balance.data ? formatCurrency(balance.data.totalIncome) : '—'}
+              {balance.data
+                ? formatCurrency(balance.data.totalIncome ?? 0)
+                : '—'}
             </p>
           </CardContent>
         </Card>
@@ -125,7 +127,9 @@ export function FinancialOverview() {
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">
-              {balance.data ? formatCurrency(balance.data.totalExpenses) : '—'}
+              {balance.data
+                ? formatCurrency(balance.data.totalExpenses ?? 0)
+                : '—'}
             </p>
           </CardContent>
         </Card>
@@ -139,7 +143,9 @@ export function FinancialOverview() {
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">
-              {balance.data ? formatCurrency(balance.data.netBalance) : '—'}
+              {balance.data
+                ? formatCurrency(balance.data.netBalance ?? 0)
+                : '—'}
             </p>
           </CardContent>
         </Card>

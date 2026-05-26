@@ -97,7 +97,7 @@ export function DonationsPage() {
         </div>
       )}
 
-      {data && data.content.length === 0 && (
+      {data && (data.content ?? []).length === 0 && (
         <EmptyState
           icon={<Plus size={40} />}
           message={t('donations.empty')}
@@ -108,7 +108,7 @@ export function DonationsPage() {
         />
       )}
 
-      {data && data.content.length > 0 && (
+      {data && (data.content ?? []).length > 0 && (
         <>
           <Table>
             <TableHeader>
@@ -152,12 +152,12 @@ export function DonationsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.content.map((d) => (
+              {(data.content ?? []).map((d) => (
                 <TableRow key={d.id}>
                   <TableCell>
                     {dayjs(d.donationDate).format('DD/MM/YYYY')}
                   </TableCell>
-                  <TableCell>{formatCurrency(d.amount)}</TableCell>
+                  <TableCell>{formatCurrency(d.amount ?? 0)}</TableCell>
                   <TableCell>
                     <Badge variant="secondary">
                       {t(`donations.types.${d.donationType}`)}
@@ -189,15 +189,15 @@ export function DonationsPage() {
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
               {t('donations.page', {
-                page: data.number + 1,
-                total: data.totalPages,
+                page: (data.number ?? 0) + 1,
+                total: data.totalPages ?? 0,
               })}
             </p>
             <div className="flex gap-2">
               <Button
                 variant="outline"
                 size="sm"
-                disabled={data.number === 0}
+                disabled={(data.number ?? 0) === 0}
                 onClick={() => setPage((p) => p - 1)}
               >
                 {t('donations.previous')}
@@ -205,7 +205,7 @@ export function DonationsPage() {
               <Button
                 variant="outline"
                 size="sm"
-                disabled={data.number >= data.totalPages - 1}
+                disabled={(data.number ?? 0) >= (data.totalPages ?? 0) - 1}
                 onClick={() => setPage((p) => p + 1)}
               >
                 {t('donations.next')}

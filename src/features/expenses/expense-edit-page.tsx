@@ -39,7 +39,7 @@ export function ExpenseEditPage() {
       expenseDate: pendingData.expenseDate,
       category: pendingData.category,
       description: pendingData.description,
-      vendor: pendingData.vendor,
+      vendor: pendingData.vendor ?? undefined,
       paymentMethod: pendingData.paymentMethod,
     })
 

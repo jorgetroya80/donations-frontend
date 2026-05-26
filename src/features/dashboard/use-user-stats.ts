@@ -1,15 +1,18 @@
+import { listUsers } from '@jorgetroya80/donations-api-client'
 import { useQuery } from '@tanstack/react-query'
-import { api } from '@/lib/api'
-import type { PageResponse, UserResponse } from '@/lib/api-types'
+import { client, pageableQuerySerializer } from '@/lib/api'
 
 export function useUserStats() {
   return useQuery({
     queryKey: ['user-stats'],
     queryFn: async () => {
-      const page = await api
-        .get('users', { searchParams: { page: 0, size: 1 } })
-        .json<PageResponse<UserResponse>>()
-      return { totalUsers: page.totalElements }
+      const { data } = await listUsers({
+        query: { pageable: { page: 0, size: 1 } },
+        client,
+        throwOnError: true,
+        querySerializer: pageableQuerySerializer,
+      })
+      return { totalUsers: data.totalElements }
     },
   })
 }
