@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import { api } from '@/lib/api'
-import type {
-  BalanceResponse,
-  DonationSummaryResponse,
-  ExpenseSummaryResponse,
-} from '@/lib/api-types'
+import {
+  balance,
+  donationSummary,
+  expenseSummary,
+} from '@jorgetroya80/donations-api-client'
+import { client } from '@/lib/api'
 
 interface DateRange {
   from: string
@@ -15,9 +15,7 @@ export function useBalance({ from, to }: DateRange) {
   return useQuery({
     queryKey: ['reports', 'balance', from, to],
     queryFn: ({ signal }) =>
-      api
-        .get('reports/balance', { searchParams: { from, to }, signal })
-        .json<BalanceResponse>(),
+      balance({ query: { from, to }, client, throwOnError: true, signal }).then(({ data }) => data),
   })
 }
 
@@ -25,9 +23,7 @@ export function useDonationSummary({ from, to }: DateRange) {
   return useQuery({
     queryKey: ['reports', 'donations', from, to],
     queryFn: ({ signal }) =>
-      api
-        .get('reports/donations', { searchParams: { from, to }, signal })
-        .json<DonationSummaryResponse>(),
+      donationSummary({ query: { from, to }, client, throwOnError: true, signal }).then(({ data }) => data),
   })
 }
 
@@ -35,8 +31,6 @@ export function useExpenseSummary({ from, to }: DateRange) {
   return useQuery({
     queryKey: ['reports', 'expenses', from, to],
     queryFn: ({ signal }) =>
-      api
-        .get('reports/expenses', { searchParams: { from, to }, signal })
-        .json<ExpenseSummaryResponse>(),
+      expenseSummary({ query: { from, to }, client, throwOnError: true, signal }).then(({ data }) => data),
   })
 }

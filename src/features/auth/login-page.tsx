@@ -1,5 +1,5 @@
-import { HTTPError } from 'ky'
-import { type FormEvent, useState } from 'react'
+import { login as sdkLogin } from '@jorgetroya80/donations-api-client'
+import { type SyntheticEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -7,13 +7,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { api } from '@/lib/api'
+import { client } from '@/lib/api'
 import { useAuth } from './auth-context'
-
-interface LoginResponse {
-  username: string
-  roles: string[]
-}
 
 export function LoginPage() {
   const { t } = useTranslation()
@@ -22,7 +17,7 @@ export function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: SyntheticEvent<HTMLFormElement>) {
     e.preventDefault()
     setError('')
     setLoading(true)
@@ -32,18 +27,19 @@ export function LoginPage() {
     const password = formData.get('password') as string
 
     try {
-      const data = await api
-        .post('login', { json: { username, password } })
-        .json<LoginResponse>()
-
-      login({ username: data.username, roles: data.roles })
-      navigate('/', { replace: true })
-    } catch (err) {
-      if (err instanceof HTTPError && err.response.status === 401) {
-        setError(t('auth.errorInvalidCredentials'))
+      const { error, response, data } = await sdkLogin({ body: { username, password }, client })
+      if (error || !data) {
+        setError(
+          response?.status === 401
+            ? t('auth.errorInvalidCredentials')
+            : t('auth.errorConnection')
+        )
       } else {
-        setError(t('auth.errorConnection'))
+        login({ username: data.username ?? '', roles: data.roles ?? [] })
+        navigate('/', { replace: true })
       }
+    } catch {
+      setError(t('auth.errorConnection'))
     } finally {
       setLoading(false)
     }
