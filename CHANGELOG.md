@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.17](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.16...donations-frontend-v0.2.17) (2026-05-26)
+
+
+### Features
+
+* update docker publish workflow ([#120](https://github.com/jorgetroya80/donations-frontend/issues/120)) ([487795d](https://github.com/jorgetroya80/donations-frontend/commit/487795d22efdb21939669b9df125f96e0473e629))
+
 ## [0.2.16](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.15...donations-frontend-v0.2.16) (2026-05-26)
 
 
