@@ -24,12 +24,12 @@ cd ~/donations && ./scripts/start.sh
 
 Open **http://localhost:8080** in your browser.
 
-| Script | What it does |
-|---|---|
-| `./scripts/start.sh` | Start the app |
-| `./scripts/stop.sh` | Stop the app (data is kept) |
-| `./scripts/update.sh` | Update to the latest version |
-| `./scripts/reset.sh` | Wipe database and start fresh |
+| Script                | What it does                  |
+| --------------------- | ----------------------------- |
+| `./scripts/start.sh`  | Start the app                 |
+| `./scripts/stop.sh`   | Stop the app (data is kept)   |
+| `./scripts/update.sh` | Update to the latest version  |
+| `./scripts/reset.sh`  | Wipe database and start fresh |
 
 ---
 
@@ -49,8 +49,8 @@ App runs at http://localhost:3000
 
 ## Scripts
 
-| Command                 | Description             |
-| ----------------------- | ----------------------- |
+| Command                  | Description             |
+| ------------------------ | ----------------------- |
 | `pnpm run dev`           | Start dev server        |
 | `pnpm run build`         | Production build        |
 | `pnpm run test`          | Run tests               |
@@ -68,7 +68,12 @@ App runs at http://localhost:3000
    cp .env.example .env
    ```
 
-   Defaults work out of the box — no edits needed for local development.
+   Export `NODE_AUTH_TOKEN` (a GitHub Personal Access Token with **`read:packages`** scope) in your shell profile so it's available to Docker Compose during the build:
+
+   ```bash
+   # Add once to ~/.zshrc or ~/.bashrc
+   export NODE_AUTH_TOKEN=ghp_yourtoken
+   ```
 
 2. Start API and frontend:
 
@@ -78,19 +83,20 @@ App runs at http://localhost:3000
 
 App runs at http://localhost:8080
 
-| Command | Effect |
-|---|---|
+| Command                     | Effect                         |
+| --------------------------- | ------------------------------ |
 | `docker compose up --build` | Start + rebuild frontend image |
-| `docker compose down` | Stop (data persists) |
-| `docker compose down -v` | Stop + wipe database |
-| `docker compose pull` | Pull latest API image |
+| `docker compose down`       | Stop (data persists)           |
+| `docker compose down -v`    | Stop + wipe database           |
+| `docker compose pull`       | Pull latest API image          |
 
 ## Docker (frontend only)
 
-Requires the API already running on port 8081.
+Requires the API already running on port 8081. Requires a GitHub PAT with `read:packages` scope exported as `NODE_AUTH_TOKEN`.
 
 ```bash
-docker build -t donations-frontend .
+export NODE_AUTH_TOKEN=your_token
+docker build --secret id=NODE_AUTH_TOKEN,env=NODE_AUTH_TOKEN -t donations-frontend .
 docker run --name donations-frontend --rm -p 8080:80 --add-host=api:host-gateway donations-frontend
 ```
 

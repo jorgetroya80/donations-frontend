@@ -4,9 +4,10 @@ WORKDIR /app
 
 RUN corepack enable && corepack prepare pnpm@11.1.1 --activate
 
-COPY pnpm-lock.yaml ./
+COPY pnpm-lock.yaml .npmrc ./
 RUN --mount=type=cache,target=/root/.local/share/pnpm/store \
-    pnpm fetch
+    --mount=type=secret,id=NODE_AUTH_TOKEN \
+    NODE_AUTH_TOKEN=$(cat /run/secrets/NODE_AUTH_TOKEN) pnpm fetch
 
 COPY package.json pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile --offline
