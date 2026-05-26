@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: read
+  packages: read
 
 jobs:
   docker:
@@ -37,7 +38,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           secrets: |
-            NODE_AUTH_TOKEN=${{ secrets.JSR_AUTH_TOKEN }}
+            NODE_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/donations-frontend:${{ inputs.version }}
             ${{ secrets.DOCKERHUB_USERNAME }}/donations-frontend:latest
