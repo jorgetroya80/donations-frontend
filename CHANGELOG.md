@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.16](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.15...donations-frontend-v0.2.16) (2026-05-26)
+
+
+### Features
+
+* enhance Docker setup and update README ([#118](https://github.com/jorgetroya80/donations-frontend/issues/118)) ([a02aac7](https://github.com/jorgetroya80/donations-frontend/commit/a02aac7002ad37ddb19812bf039bb4cd0ee7317b))
+
 ## [0.2.15](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.14...donations-frontend-v0.2.15) (2026-05-26)
 
 
