@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import type { DonorResponse } from '@/lib/api-types'
+import type { DonorResponse } from '@jorgetroya80/donations-api-client'
 import {
   type CreateDonationFormData,
   createDonationSchema,

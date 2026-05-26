@@ -1,11 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { api } from '@/lib/api'
-import type {
-  CreateDonorRequest,
-  DonorResponse,
-  PageResponse,
-  UpdateDonorRequest,
-} from '@/lib/api-types'
+import {
+  createDonor,
+  getDonor,
+  listDonors,
+  updateDonor,
+  type CreateDonorRequest,
+  type UpdateDonorRequest,
+} from '@jorgetroya80/donations-api-client'
+import { client, pageableQuerySerializer } from '@/lib/api'
 
 interface DonorListParams {
   page: number
@@ -16,16 +18,14 @@ interface DonorListParams {
 export function useDonors(params: DonorListParams) {
   return useQuery({
     queryKey: ['donors', params],
-    queryFn: ({ signal }) => {
-      const searchParams: Record<string, string | number> = {
-        page: params.page,
-        size: params.size,
-      }
-      if (params.sort) searchParams.sort = params.sort
-      return api
-        .get('donors', { searchParams, signal })
-        .json<PageResponse<DonorResponse>>()
-    },
+    queryFn: ({ signal }) =>
+      listDonors({
+        query: { pageable: { page: params.page, size: params.size, sort: params.sort ? [params.sort] : undefined } },
+        client,
+        throwOnError: true,
+        signal,
+        querySerializer: pageableQuerySerializer,
+      }).then(({ data }) => data),
   })
 }
 
@@ -33,7 +33,7 @@ export function useDonor(id: number) {
   return useQuery({
     queryKey: ['donors', id],
     queryFn: ({ signal }) =>
-      api.get(`donors/${id}`, { signal }).json<DonorResponse>(),
+      getDonor({ path: { id }, client, throwOnError: true, signal }).then(({ data }) => data),
     enabled: id > 0,
   })
 }
@@ -41,8 +41,8 @@ export function useDonor(id: number) {
 export function useCreateDonor() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: CreateDonorRequest) =>
-      api.post('donors', { json: data }).json<DonorResponse>(),
+    mutationFn: (body: CreateDonorRequest) =>
+      createDonor({ body, client, throwOnError: true }).then(({ data }) => data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['donors'] })
     },
@@ -52,8 +52,8 @@ export function useCreateDonor() {
 export function useUpdateDonor(id: number) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: UpdateDonorRequest) =>
-      api.put(`donors/${id}`, { json: data }).json<DonorResponse>(),
+    mutationFn: (body: UpdateDonorRequest) =>
+      updateDonor({ path: { id }, body, client, throwOnError: true }).then(({ data }) => data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['donors'] })
     },

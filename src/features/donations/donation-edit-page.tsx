@@ -41,8 +41,8 @@ export function DonationEditPage() {
       donationDate: pendingData.donationDate,
       donationType: pendingData.donationType,
       paymentMethod: pendingData.paymentMethod,
-      donorId: pendingData.donorId,
-      notes: pendingData.notes,
+      donorId: pendingData.donorId ?? undefined,
+      notes: pendingData.notes ?? undefined,
     })
 
     setPendingData(null)

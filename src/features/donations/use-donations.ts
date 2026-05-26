@@ -1,13 +1,14 @@
+import {
+  type CreateDonationRequest,
+  createDonation,
+  getDonation,
+  listDonations,
+  listDonors,
+  type UpdateDonationRequest,
+  updateDonation,
+} from '@jorgetroya80/donations-api-client'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { api } from '@/lib/api'
-import type {
-  CreateDonationRequest,
-  DonationCreateResponse,
-  DonationResponse,
-  DonorResponse,
-  PageResponse,
-  UpdateDonationRequest,
-} from '@/lib/api-types'
+import { client, pageableQuerySerializer } from '@/lib/api'
 
 interface DonationListParams {
   page: number
@@ -20,18 +21,22 @@ interface DonationListParams {
 export function useDonations(params: DonationListParams) {
   return useQuery({
     queryKey: ['donations', params],
-    queryFn: ({ signal }) => {
-      const searchParams: Record<string, string | number> = {
-        page: params.page,
-        size: params.size,
-      }
-      if (params.sort) searchParams.sort = params.sort
-      if (params.from) searchParams.from = params.from
-      if (params.to) searchParams.to = params.to
-      return api
-        .get('donations', { searchParams, signal })
-        .json<PageResponse<DonationResponse>>()
-    },
+    queryFn: ({ signal }) =>
+      listDonations({
+        query: {
+          from: params.from,
+          to: params.to,
+          pageable: {
+            page: params.page,
+            size: params.size,
+            sort: params.sort ? [params.sort] : undefined,
+          },
+        },
+        client,
+        throwOnError: true,
+        signal,
+        querySerializer: pageableQuerySerializer,
+      }).then(({ data }) => data),
   })
 }
 
@@ -39,7 +44,9 @@ export function useDonation(id: number) {
   return useQuery({
     queryKey: ['donations', id],
     queryFn: ({ signal }) =>
-      api.get(`donations/${id}`, { signal }).json<DonationResponse>(),
+      getDonation({ path: { id }, client, throwOnError: true, signal }).then(
+        ({ data }) => data
+      ),
     enabled: id > 0,
   })
 }
@@ -47,8 +54,10 @@ export function useDonation(id: number) {
 export function useCreateDonation() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: CreateDonationRequest) =>
-      api.post('donations', { json: data }).json<DonationCreateResponse>(),
+    mutationFn: (body: CreateDonationRequest) =>
+      createDonation({ body, client, throwOnError: true }).then(
+        ({ data }) => data
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['donations'] })
     },
@@ -58,8 +67,10 @@ export function useCreateDonation() {
 export function useUpdateDonation(id: number) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: UpdateDonationRequest) =>
-      api.put(`donations/${id}`, { json: data }).json<DonationResponse>(),
+    mutationFn: (body: UpdateDonationRequest) =>
+      updateDonation({ path: { id }, body, client, throwOnError: true }).then(
+        ({ data }) => data
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['donations'] })
     },
@@ -70,11 +81,12 @@ export function useDonors() {
   return useQuery({
     queryKey: ['donors'],
     queryFn: ({ signal }) =>
-      api
-        .get('donors', {
-          searchParams: { page: 0, size: 100, sort: 'fullName,asc' },
-          signal,
-        })
-        .json<PageResponse<DonorResponse>>(),
+      listDonors({
+        query: { pageable: { page: 0, size: 100, sort: ['fullName,asc'] } },
+        client,
+        throwOnError: true,
+        signal,
+        querySerializer: pageableQuerySerializer,
+      }).then(({ data }) => data),
   })
 }

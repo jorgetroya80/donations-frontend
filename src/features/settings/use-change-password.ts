@@ -1,10 +1,18 @@
+import {
+  type ChangePasswordRequest,
+  changeOwnPassword,
+} from '@jorgetroya80/donations-api-client'
 import { useMutation } from '@tanstack/react-query'
-import { api } from '@/lib/api'
-import type { ChangePasswordRequest } from '@/lib/api-types'
+import { client } from '@/lib/api'
 
 export function useChangePassword() {
   return useMutation({
-    mutationFn: (data: ChangePasswordRequest) =>
-      api.put('users/me/password', { json: data }),
+    mutationFn: async (body: ChangePasswordRequest) => {
+      const { error, response } = await changeOwnPassword({ body, client })
+      if (error)
+        throw Object.assign(new Error('Password change failed'), {
+          status: response?.status,
+        })
+    },
   })
 }

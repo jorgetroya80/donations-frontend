@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { HTTPError } from 'ky'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -44,7 +43,7 @@ export function ChangePasswordPage() {
       setSuccess(true)
       reset()
     } catch (err) {
-      if (err instanceof HTTPError && err.response.status === 400) {
+      if ((err as { status?: number }).status === 400) {
         setApiError(t('settings.errorCurrentPassword'))
       } else {
         setApiError(t('settings.errorChanging'))
