@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.18](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.17...donations-frontend-v0.2.18) (2026-05-27)
+
+
+### Features
+
+* **reports:** replace donor select with Autocomplete for large donor lists ([#123](https://github.com/jorgetroya80/donations-frontend/issues/123)) ([84408bf](https://github.com/jorgetroya80/donations-frontend/commit/84408bfa06288dcadcf26de60693197a7b2f9b2b))
+
 ## [0.2.17](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.16...donations-frontend-v0.2.17) (2026-05-26)
 
 
