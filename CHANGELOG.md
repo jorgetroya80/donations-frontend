@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.19](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.18...donations-frontend-v0.2.19) (2026-05-27)
+
+
+### Features
+
+* change reports chart for donations ([#125](https://github.com/jorgetroya80/donations-frontend/issues/125)) ([d2a0934](https://github.com/jorgetroya80/donations-frontend/commit/d2a0934e5a3a7b5c6f0a475ec79c77c65fbd0b16))
+
 ## [0.2.18](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.17...donations-frontend-v0.2.18) (2026-05-27)
 
 
