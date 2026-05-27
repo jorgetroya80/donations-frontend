@@ -72,6 +72,50 @@ describe('ReportsPage', () => {
     expect(screen.getByText('Total general')).toBeInTheDocument()
   })
 
+  it('shows no donors found message when search matches nothing', async () => {
+    const user = userEvent.setup()
+    renderPage()
+    await user.click(screen.getByText('Estado de cuenta del donante'))
+
+    const input = screen.getByPlaceholderText('Buscar donante...')
+    await user.type(input, 'zzznomatch')
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('No se encontraron donantes')
+      ).toBeInTheDocument()
+    })
+  })
+
+  it('hides statement when input is cleared after donor selected', async () => {
+    const user = userEvent.setup()
+    renderPage()
+    await user.click(screen.getByText('Estado de cuenta del donante'))
+
+    const input = screen.getByPlaceholderText('Buscar donante...')
+    await user.type(input, 'Juan')
+
+    await waitFor(() => {
+      expect(screen.getByText('Juan Pérez — 12345678A')).toBeInTheDocument()
+    })
+    await user.click(screen.getByText('Juan Pérez — 12345678A'))
+
+    await waitFor(() => {
+      expect(screen.getByText('Diezmo')).toBeInTheDocument()
+    })
+
+    // Clear the input
+    await user.clear(input)
+
+    // Statement should be hidden; prompt message should reappear
+    await waitFor(() => {
+      expect(screen.queryByText('Diezmo')).not.toBeInTheDocument()
+    })
+    expect(
+      screen.getByText('Seleccione un donante para ver su estado de cuenta')
+    ).toBeInTheDocument()
+  })
+
   it('shows active tab styling', () => {
     renderPage()
     const donationsTab = screen.getByRole('tab', {
