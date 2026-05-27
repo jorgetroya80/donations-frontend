@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { ArrowDownRight, ArrowUpRight, Scale } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Bar, BarChart, Pie, PieChart, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, XAxis, YAxis } from 'recharts'
 import { DateRangePicker } from '@/components/date-range-picker'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -25,6 +25,44 @@ function formatDate(d: Date) {
   return dayjs(d).format('YYYY-MM-DD')
 }
 
+function previousRange(from: Date, to: Date) {
+  const days = dayjs(to).diff(dayjs(from), 'day') + 1
+  return {
+    from: dayjs(from).subtract(days, 'day').format('YYYY-MM-DD'),
+    to: dayjs(from).subtract(1, 'day').format('YYYY-MM-DD'),
+  }
+}
+
+function calcPctChange(
+  current: number | null | undefined,
+  previous: number | null | undefined
+): number | null {
+  if (current == null || previous == null || previous === 0) return null
+  return ((current - previous) / Math.abs(previous)) * 100
+}
+
+function PctChange({
+  current,
+  previous,
+  inverted = false,
+}: {
+  current: number | null | undefined
+  previous: number | null | undefined
+  inverted?: boolean
+}) {
+  const pct = calcPctChange(current, previous)
+  if (pct == null) return null
+  const isPositive = pct > 0
+  const isGood = inverted ? !isPositive : isPositive
+  return (
+    <span
+      className={`mt-1 text-xs font-medium ${isGood ? 'text-green-600 dark:text-green-400' : 'text-destructive'}`}
+    >
+      {isPositive ? '↑' : '↓'} {Math.abs(pct).toFixed(1)}%
+    </span>
+  )
+}
+
 const donationChartConfig: ChartConfig = {
   TITHE: { label: 'Diezmo', color: 'var(--chart-1)' },
   OFFERING: { label: 'Ofrenda', color: 'var(--chart-2)' },
@@ -32,14 +70,24 @@ const donationChartConfig: ChartConfig = {
   OTHER: { label: 'Otro', color: 'var(--chart-4)' },
 }
 
+const donationComparisonConfig: ChartConfig = {
+  current: { label: 'Actual', color: 'var(--chart-1)' },
+  previous: { label: 'Anterior', color: 'var(--chart-3)' },
+}
+
+const expenseCategoryLabels: Record<string, string> = {
+  RENT: 'Alquiler',
+  UTILITIES: 'Servicios',
+  SALARIES: 'Salarios',
+  SUPPLIES: 'Suministros',
+  MISSIONS: 'Misiones',
+  MAINTENANCE: 'Mantenimiento',
+  OTHER: 'Otro',
+}
+
 const expenseChartConfig: ChartConfig = {
-  RENT: { label: 'Alquiler', color: 'var(--chart-1)' },
-  UTILITIES: { label: 'Servicios', color: 'var(--chart-2)' },
-  SALARIES: { label: 'Salarios', color: 'var(--chart-3)' },
-  SUPPLIES: { label: 'Suministros', color: 'var(--chart-4)' },
-  MISSIONS: { label: 'Misiones', color: 'var(--chart-5)' },
-  MAINTENANCE: { label: 'Mantenimiento', color: 'var(--chart-1)' },
-  OTHER: { label: 'Otro', color: 'var(--chart-2)' },
+  current: { label: 'Actual', color: 'var(--chart-1)' },
+  previous: { label: 'Anterior', color: 'var(--chart-3)' },
 }
 
 export function FinancialOverview() {
@@ -50,27 +98,49 @@ export function FinancialOverview() {
     from: formatDate(range.from),
     to: formatDate(range.to),
   }
+  const prevDateParams = previousRange(range.from, range.to)
 
   const balance = useBalance(dateParams)
   const donations = useDonationSummary(dateParams)
   const expenses = useExpenseSummary(dateParams)
+  const prevDonations = useDonationSummary(prevDateParams)
+  const prevBalance = useBalance(prevDateParams)
+  const prevExpenses = useExpenseSummary(prevDateParams)
 
   const isLoading =
     balance.isLoading || donations.isLoading || expenses.isLoading
   const error = balance.error || donations.error || expenses.error
 
-  const donationChartData =
-    donations.data?.totalsByType?.map((d) => ({
-      name: donationChartConfig[d.type ?? '']?.label ?? d.type,
-      value: d.total ?? 0,
-      fill: donationChartConfig[d.type ?? '']?.color ?? 'var(--chart-4)',
-    })) ?? []
+  const makeDonationItem = (type: string | null | undefined) => ({
+    type: donationChartConfig[type ?? '']?.label ?? type ?? '',
+    current:
+      donations.data?.totalsByType?.find((d) => d.type === type)?.total ?? 0,
+    previous:
+      prevDonations.data?.totalsByType?.find((d) => d.type === type)?.total ??
+      0,
+  })
+
+  const allDonationTypes = Array.from(
+    new Set([
+      ...(donations.data?.totalsByType?.map((d) => d.type) ?? []),
+      ...(prevDonations.data?.totalsByType?.map((d) => d.type) ?? []),
+    ])
+  )
+  const titheData = allDonationTypes
+    .filter((t) => t === 'TITHE')
+    .map(makeDonationItem)
+  const otherDonationsData = allDonationTypes
+    .filter((t) => t !== 'TITHE')
+    .map(makeDonationItem)
 
   const expenseChartData =
-    expenses.data?.totalsByCategory?.map((e) => ({
-      category: expenseChartConfig[e.category ?? '']?.label ?? e.category,
-      total: e.total ?? 0,
-      fill: expenseChartConfig[e.category ?? '']?.color ?? 'var(--chart-4)',
+    expenses.data?.totalsByCategory?.map((cur) => ({
+      category: expenseCategoryLabels[cur.category ?? ''] ?? cur.category,
+      current: cur.total ?? 0,
+      previous:
+        prevExpenses.data?.totalsByCategory?.find(
+          (e) => e.category === cur.category
+        )?.total ?? 0,
     })) ?? []
 
   return (
@@ -115,6 +185,10 @@ export function FinancialOverview() {
                 ? formatCurrency(balance.data.totalIncome ?? 0)
                 : '—'}
             </p>
+            <PctChange
+              current={balance.data?.totalIncome}
+              previous={prevBalance.data?.totalIncome}
+            />
           </CardContent>
         </Card>
 
@@ -131,6 +205,11 @@ export function FinancialOverview() {
                 ? formatCurrency(balance.data.totalExpenses ?? 0)
                 : '—'}
             </p>
+            <PctChange
+              current={balance.data?.totalExpenses}
+              previous={prevBalance.data?.totalExpenses}
+              inverted
+            />
           </CardContent>
         </Card>
 
@@ -147,6 +226,10 @@ export function FinancialOverview() {
                 ? formatCurrency(balance.data.netBalance ?? 0)
                 : '—'}
             </p>
+            <PctChange
+              current={balance.data?.netBalance}
+              previous={prevBalance.data?.netBalance}
+            />
           </CardContent>
         </Card>
       </div>
@@ -157,28 +240,78 @@ export function FinancialOverview() {
             <CardTitle>{t('dashboard.donationsByType')}</CardTitle>
           </CardHeader>
           <CardContent>
-            {donationChartData.length > 0 ? (
-              <ChartContainer
-                config={donationChartConfig}
-                className="mx-auto aspect-square max-h-75"
-              >
-                <PieChart>
-                  <ChartTooltip
-                    content={
-                      <ChartTooltipContent
-                        formatter={(value) => formatCurrency(value as number)}
+            {titheData.length > 0 || otherDonationsData.length > 0 ? (
+              <div className="space-y-4">
+                {titheData.length > 0 && (
+                  <ChartContainer
+                    config={donationComparisonConfig}
+                    className="max-h-20"
+                  >
+                    <BarChart data={titheData} layout="vertical">
+                      <YAxis
+                        dataKey="type"
+                        type="category"
+                        width={120}
+                        tickLine={false}
+                        axisLine={false}
                       />
-                    }
-                  />
-                  <ChartLegend content={<ChartLegendContent />} />
-                  <Pie
-                    data={donationChartData}
-                    dataKey="value"
-                    nameKey="name"
-                    innerRadius={50}
-                  />
-                </PieChart>
-              </ChartContainer>
+                      <XAxis type="number" hide />
+                      <ChartTooltip
+                        content={
+                          <ChartTooltipContent
+                            formatter={(v) => formatCurrency(v as number)}
+                          />
+                        }
+                      />
+                      <Bar
+                        dataKey="current"
+                        fill="var(--color-current)"
+                        radius={4}
+                      />
+                      <Bar
+                        dataKey="previous"
+                        fill="var(--color-previous)"
+                        radius={4}
+                      />
+                    </BarChart>
+                  </ChartContainer>
+                )}
+                {otherDonationsData.length > 0 && (
+                  <ChartContainer
+                    config={donationComparisonConfig}
+                    className="max-h-45"
+                  >
+                    <BarChart data={otherDonationsData} layout="vertical">
+                      <YAxis
+                        dataKey="type"
+                        type="category"
+                        width={120}
+                        tickLine={false}
+                        axisLine={false}
+                      />
+                      <XAxis type="number" hide />
+                      <ChartTooltip
+                        content={
+                          <ChartTooltipContent
+                            formatter={(v) => formatCurrency(v as number)}
+                          />
+                        }
+                      />
+                      <ChartLegend content={<ChartLegendContent />} />
+                      <Bar
+                        dataKey="current"
+                        fill="var(--color-current)"
+                        radius={4}
+                      />
+                      <Bar
+                        dataKey="previous"
+                        fill="var(--color-previous)"
+                        radius={4}
+                      />
+                    </BarChart>
+                  </ChartContainer>
+                )}
+              </div>
             ) : (
               <p className="py-8 text-center text-muted-foreground">
                 {t('dashboard.noData')}
@@ -193,10 +326,7 @@ export function FinancialOverview() {
           </CardHeader>
           <CardContent>
             {expenseChartData.length > 0 ? (
-              <ChartContainer
-                config={expenseChartConfig}
-                className="max-h-[300px]"
-              >
+              <ChartContainer config={expenseChartConfig} className="max-h-75">
                 <BarChart data={expenseChartData} layout="vertical">
                   <YAxis
                     dataKey="category"
@@ -213,7 +343,17 @@ export function FinancialOverview() {
                       />
                     }
                   />
-                  <Bar dataKey="total" radius={4} />
+                  <ChartLegend content={<ChartLegendContent />} />
+                  <Bar
+                    dataKey="current"
+                    fill="var(--color-current)"
+                    radius={4}
+                  />
+                  <Bar
+                    dataKey="previous"
+                    fill="var(--color-previous)"
+                    radius={4}
+                  />
                 </BarChart>
               </ChartContainer>
             ) : (
