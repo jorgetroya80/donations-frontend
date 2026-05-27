@@ -207,17 +207,17 @@ function DonorStatementTab() {
             if (!v) setDonorId(null)
           }}
         >
-          <Autocomplete.InputGroup>
+          <Autocomplete.InputGroup className="relative">
             <Autocomplete.Input
               placeholder={t('reports.searchDonor')}
               aria-label={t('reports.searchDonor')}
-              className="rounded-md border border-input bg-background px-3 py-2 text-sm"
+              className="rounded-md border border-input bg-background px-3 py-2 pr-8 text-sm"
             />
-            <Autocomplete.Clear />
+            <Autocomplete.Clear className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
           </Autocomplete.InputGroup>
           <Autocomplete.Portal>
             <Autocomplete.Positioner>
-              <Autocomplete.Popup className="z-50 min-w-48 rounded-md border border-input bg-background shadow-md">
+              <Autocomplete.Popup className="z-50 min-w-(--anchor-width) rounded-md border border-input bg-background shadow-md">
                 <DonorList onSelect={setDonorId} />
                 <Autocomplete.Empty className="px-3 py-2 text-sm text-muted-foreground">
                   {t('reports.noDonorsFound')}
