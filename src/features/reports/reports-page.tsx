@@ -166,7 +166,7 @@ function ExpenseSummaryTab() {
   )
 }
 
-function DonorList({ onSelect }: { onSelect: (id: number) => void }) {
+function DonorList({ onSelect }: { onSelect: (id: number | null) => void }) {
   const filtered = Autocomplete.useFilteredItems<DonorResponse>()
   return (
     <Autocomplete.List>
@@ -175,7 +175,7 @@ function DonorList({ onSelect }: { onSelect: (id: number) => void }) {
           key={donor.id}
           value={donor}
           index={i}
-          onClick={() => onSelect(donor.id ?? 0)}
+          onClick={() => onSelect(donor.id ?? null)}
           className="cursor-pointer px-3 py-2 text-sm data-[highlighted]:bg-accent"
         >
           {donor.fullName} — {donor.nationalId}
@@ -210,6 +210,7 @@ function DonorStatementTab() {
           <Autocomplete.InputGroup>
             <Autocomplete.Input
               placeholder={t('reports.searchDonor')}
+              aria-label={t('reports.searchDonor')}
               className="rounded-md border border-input bg-background px-3 py-2 text-sm"
             />
           </Autocomplete.InputGroup>

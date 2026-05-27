@@ -81,9 +81,7 @@ describe('ReportsPage', () => {
     await user.type(input, 'zzznomatch')
 
     await waitFor(() => {
-      expect(
-        screen.getByText('No se encontraron donantes')
-      ).toBeInTheDocument()
+      expect(screen.getByText('No se encontraron donantes')).toBeInTheDocument()
     })
   })
 
