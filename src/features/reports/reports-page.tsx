@@ -176,7 +176,7 @@ function DonorList({ onSelect }: { onSelect: (id: number | null) => void }) {
           value={donor}
           index={i}
           onClick={() => onSelect(donor.id ?? null)}
-          className="cursor-pointer px-3 py-2 text-sm data-[highlighted]:bg-accent"
+          className="cursor-pointer px-3 py-2 text-sm data-highlighted:bg-accent"
         >
           {donor.fullName} — {donor.nationalId}
         </Autocomplete.Item>
@@ -202,7 +202,7 @@ function DonorStatementTab() {
       <div className="flex flex-wrap items-center gap-4">
         <Autocomplete.Root
           items={donors}
-          itemToStringValue={(d: DonorResponse) => d.fullName ?? ''}
+          itemToStringValue={(d) => d.fullName ?? ''}
           onValueChange={(v) => {
             if (!v) setDonorId(null)
           }}
@@ -213,6 +213,7 @@ function DonorStatementTab() {
               aria-label={t('reports.searchDonor')}
               className="rounded-md border border-input bg-background px-3 py-2 text-sm"
             />
+            <Autocomplete.Clear />
           </Autocomplete.InputGroup>
           <Autocomplete.Portal>
             <Autocomplete.Positioner>
