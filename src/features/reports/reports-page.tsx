@@ -1,6 +1,7 @@
 import { Autocomplete } from '@base-ui/react'
 import type { DonorResponse } from '@jorgetroya80/donations-api-client'
 import dayjs from 'dayjs'
+import { CircleX } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DateRangePicker } from '@/components/date-range-picker'
@@ -207,17 +208,19 @@ function DonorStatementTab() {
             if (!v) setDonorId(null)
           }}
         >
-          <Autocomplete.InputGroup className="relative">
+          <Autocomplete.InputGroup className="grid items-center">
             <Autocomplete.Input
               placeholder={t('reports.searchDonor')}
               aria-label={t('reports.searchDonor')}
-              className="rounded-md border border-input bg-background px-3 py-2 pr-8 text-sm"
+              className="[grid-area:1/1] rounded-lg border border-input bg-background px-3 py-1.5 pr-8 text-sm"
             />
-            <Autocomplete.Clear className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground transition-colors hover:text-foreground" />
+            <Autocomplete.Clear className="[grid-area:1/1] mr-3 cursor-pointer justify-self-end text-muted-foreground transition-colors hover:text-foreground">
+              <CircleX size={15} />
+            </Autocomplete.Clear>
           </Autocomplete.InputGroup>
           <Autocomplete.Portal>
             <Autocomplete.Positioner>
-              <Autocomplete.Popup className="z-50 min-w-(--anchor-width) rounded-md border border-input bg-background shadow-md">
+              <Autocomplete.Popup className="z-50 min-w-(--anchor-width) rounded-lg border border-input bg-background shadow-md mt-1">
                 <DonorList onSelect={setDonorId} />
                 <Autocomplete.Empty className="px-3 py-2 text-sm text-muted-foreground">
                   {t('reports.noDonorsFound')}
