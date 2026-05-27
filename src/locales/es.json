@@ -192,7 +192,9 @@
     "selectDonor": "Seleccione un donante",
     "noData": "Sin datos para el período seleccionado",
     "errorLoading": "Error al cargar el reporte",
-    "noDonorSelected": "Seleccione un donante para ver su estado de cuenta"
+    "noDonorSelected": "Seleccione un donante para ver su estado de cuenta",
+    "searchDonor": "Buscar donante...",
+    "noDonorsFound": "No se encontraron donantes"
   },
   "settings": {
     "changePassword": "Cambiar contraseña",

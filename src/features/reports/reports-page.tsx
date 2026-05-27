@@ -1,3 +1,5 @@
+import { Autocomplete } from '@base-ui/react'
+import type { DonorResponse } from '@jorgetroya80/donations-api-client'
 import dayjs from 'dayjs'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -164,6 +166,25 @@ function ExpenseSummaryTab() {
   )
 }
 
+function DonorList({ onSelect }: { onSelect: (id: number) => void }) {
+  const filtered = Autocomplete.useFilteredItems<DonorResponse>()
+  return (
+    <Autocomplete.List>
+      {filtered.map((donor, i) => (
+        <Autocomplete.Item
+          key={donor.id}
+          value={donor}
+          index={i}
+          onClick={() => onSelect(donor.id ?? 0)}
+          className="cursor-pointer px-3 py-2 text-sm data-[highlighted]:bg-accent"
+        >
+          {donor.fullName} — {donor.nationalId}
+        </Autocomplete.Item>
+      ))}
+    </Autocomplete.List>
+  )
+}
+
 function DonorStatementTab() {
   const { t } = useTranslation()
   const [range, setRange] = useState(currentMonthRange)
@@ -179,22 +200,30 @@ function DonorStatementTab() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-4">
-        <select
-          value={donorId ?? ''}
-          onChange={(e) => {
-            const val = e.target.value
-            setDonorId(val ? Number(val) : null)
+        <Autocomplete.Root
+          items={donors}
+          itemToStringValue={(d: DonorResponse) => d.fullName ?? ''}
+          onValueChange={(v) => {
+            if (!v) setDonorId(null)
           }}
-          className="rounded-md border border-input bg-background px-3 py-2 text-sm"
-          aria-label={t('reports.selectDonor')}
         >
-          <option value="">{t('reports.selectDonor')}</option>
-          {donors.map((d) => (
-            <option key={d.id} value={d.id}>
-              {d.fullName}
-            </option>
-          ))}
-        </select>
+          <Autocomplete.InputGroup>
+            <Autocomplete.Input
+              placeholder={t('reports.searchDonor')}
+              className="rounded-md border border-input bg-background px-3 py-2 text-sm"
+            />
+          </Autocomplete.InputGroup>
+          <Autocomplete.Portal>
+            <Autocomplete.Positioner>
+              <Autocomplete.Popup className="z-50 min-w-48 rounded-md border border-input bg-background shadow-md">
+                <DonorList onSelect={setDonorId} />
+                <Autocomplete.Empty className="px-3 py-2 text-sm text-muted-foreground">
+                  {t('reports.noDonorsFound')}
+                </Autocomplete.Empty>
+              </Autocomplete.Popup>
+            </Autocomplete.Positioner>
+          </Autocomplete.Portal>
+        </Autocomplete.Root>
         <DateRangePicker
           from={range.from}
           to={range.to}

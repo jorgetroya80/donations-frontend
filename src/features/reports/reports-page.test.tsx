@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { renderWithProviders } from '@/test/test-utils'
@@ -36,33 +36,35 @@ describe('ReportsPage', () => {
     expect(screen.getByText('Servicios')).toBeInTheDocument()
   })
 
-  it('switches to donor statement tab and shows donor selector', async () => {
+  it('switches to donor statement tab and shows autocomplete input', async () => {
     const user = userEvent.setup()
     renderPage()
     await user.click(screen.getByText('Estado de cuenta del donante'))
     expect(
       screen.getByText('Seleccione un donante para ver su estado de cuenta')
     ).toBeInTheDocument()
-    expect(screen.getByLabelText('Seleccione un donante')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Buscar donante...')).toBeInTheDocument()
   })
 
-  it('loads donor statement when donor selected', async () => {
+  it('loads donor statement when donor selected from autocomplete', async () => {
+    const user = userEvent.setup()
     renderPage()
-    // Switch to donor statement tab
-    fireEvent.click(screen.getByText('Estado de cuenta del donante'))
+    await user.click(screen.getByText('Estado de cuenta del donante'))
 
-    // Wait for donors to load in selector
-    const select = screen.getByLabelText(
-      'Seleccione un donante'
-    ) as HTMLSelectElement
+    const input = screen.getByPlaceholderText('Buscar donante...')
+
+    // Type to filter donors
+    await user.type(input, 'Juan')
+
+    // Donor option appears
     await waitFor(() => {
-      expect(select.options.length).toBeGreaterThan(1)
+      expect(screen.getByText('Juan Pérez — 12345678A')).toBeInTheDocument()
     })
 
-    // Select donor
-    fireEvent.change(select, { target: { value: '1' } })
+    // Click donor option
+    await user.click(screen.getByText('Juan Pérez — 12345678A'))
 
-    // Wait for statement table to render (proves data loaded)
+    // Statement loads
     await waitFor(() => {
       expect(screen.getByText('Diezmo')).toBeInTheDocument()
     })
