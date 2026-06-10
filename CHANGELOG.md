@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.20](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.19...donations-frontend-v0.2.20) (2026-06-10)
+
+
+### Features
+
+* update react-router version ([#127](https://github.com/jorgetroya80/donations-frontend/issues/127)) ([63457e9](https://github.com/jorgetroya80/donations-frontend/commit/63457e960dc95fbdb0001b07c7f1c8231b6fd743))
+
 ## [0.2.19](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.18...donations-frontend-v0.2.19) (2026-05-27)
 
 
