@@ -1,4 +1,4 @@
-import { http, HttpResponse } from 'msw'
+import { HttpResponse, http } from 'msw'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { server } from '@/test/msw-server'
 import { kyInstance } from './api'
@@ -93,7 +93,10 @@ describe('ky afterResponse hook', () => {
 
   it('does not run 403 logic when status is 401 (early return)', async () => {
     server.use(
-      http.get('*/api/v1/donations', () => new HttpResponse(null, { status: 401 }))
+      http.get(
+        '*/api/v1/donations',
+        () => new HttpResponse(null, { status: 401 })
+      )
     )
     const listener = vi.fn()
     window.addEventListener('auth:force-rotation', listener)
