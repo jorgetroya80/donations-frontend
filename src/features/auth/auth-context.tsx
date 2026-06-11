@@ -3,10 +3,13 @@ import {
   type ReactNode,
   useCallback,
   useContext,
+  useEffect,
   useState,
 } from 'react'
 
 const AUTH_STORAGE_KEY = 'auth_user'
+
+export const FORCE_ROTATION_EVENT = 'auth:force-rotation'
 
 interface AuthUser {
   username: string
@@ -62,6 +65,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(next))
       return next
     })
+  }, [])
+
+  // Syncs React state when the ky 403 hook flips the flag in localStorage
+  // — otherwise the in-memory copy stays stale on the same-path case.
+  useEffect(() => {
+    function handleForceRotation() {
+      setUser((prev) => (prev ? { ...prev, mustChangePassword: true } : prev))
+    }
+    window.addEventListener(FORCE_ROTATION_EVENT, handleForceRotation)
+    return () => {
+      window.removeEventListener(FORCE_ROTATION_EVENT, handleForceRotation)
+    }
   }, [])
 
   return (

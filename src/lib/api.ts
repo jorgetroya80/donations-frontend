@@ -3,6 +3,7 @@ import ky from 'ky'
 
 const AUTH_STORAGE_KEY = 'auth_user'
 const CHANGE_PASSWORD_PATH = '/settings/password'
+const FORCE_ROTATION_EVENT = 'auth:force-rotation'
 
 const ORIGIN =
   typeof document !== 'undefined'
@@ -49,6 +50,7 @@ export const kyInstance = ky.create({
           (await isPasswordChangeRequired(response))
         ) {
           flagStoredUserForRotation()
+          window.dispatchEvent(new Event(FORCE_ROTATION_EVENT))
           if (window.location.pathname !== CHANGE_PASSWORD_PATH) {
             window.location.href = CHANGE_PASSWORD_PATH
           }

@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { server } from '@/test/msw-server'
 import { kyInstance } from './api'
 
@@ -18,6 +18,29 @@ beforeEach(() => {
 })
 
 describe('ky afterResponse hook', () => {
+  it('dispatches auth:force-rotation event on 403 PASSWORD_CHANGE_REQUIRED', async () => {
+    server.use(
+      http.get('*/api/v1/donations', () =>
+        HttpResponse.json(
+          {
+            status: 403,
+            error: 'Forbidden',
+            message: 'Password change required',
+            code: 'PASSWORD_CHANGE_REQUIRED',
+          },
+          { status: 403 }
+        )
+      )
+    )
+    const listener = vi.fn()
+    window.addEventListener('auth:force-rotation', listener)
+
+    await kyInstance.get('http://localhost/api/v1/donations')
+
+    expect(listener).toHaveBeenCalledTimes(1)
+    window.removeEventListener('auth:force-rotation', listener)
+  })
+
   it('flips mustChangePassword to true on 403 PASSWORD_CHANGE_REQUIRED', async () => {
     server.use(
       http.get('*/api/v1/donations', () =>

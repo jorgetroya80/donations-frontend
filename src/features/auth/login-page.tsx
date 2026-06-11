@@ -18,6 +18,8 @@ export function LoginPage() {
   const navigate = useNavigate()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  // Ref-only counter mirrors the backend's 15-min lockout after 5 fails;
+  // resets on reload because the API returns the same generic 401 either way.
   const failedAttempts = useRef(0)
 
   async function handleSubmit(e: SyntheticEvent<HTMLFormElement>) {

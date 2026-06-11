@@ -106,9 +106,10 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
       </div>
 
       <nav aria-label={navLabel} className="flex-1 flex flex-col gap-1 p-2">
-        {navItems.map((item) => {
-          if (user?.mustChangePassword) return null
-          if (item.visible && !item.visible(user)) return null
+        {user?.mustChangePassword
+          ? null
+          : navItems.map((item) => {
+              if (item.visible && !item.visible(user)) return null
 
           const link = (
             <NavLink

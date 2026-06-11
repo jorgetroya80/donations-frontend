@@ -101,6 +101,33 @@ describe('AuthProvider', () => {
     expect(localStorage.getItem(AUTH_KEY)).toBeNull()
   })
 
+  it('flips mustChangePassword on auth:force-rotation event', () => {
+    const { result } = renderHook(() => useAuth(), { wrapper })
+
+    act(() =>
+      result.current.login({
+        username: 'admin',
+        roles: ['ADMIN'],
+        mustChangePassword: false,
+      })
+    )
+    act(() => {
+      window.dispatchEvent(new Event('auth:force-rotation'))
+    })
+
+    expect(result.current.user?.mustChangePassword).toBe(true)
+  })
+
+  it('ignores auth:force-rotation when no user is logged in', () => {
+    const { result } = renderHook(() => useAuth(), { wrapper })
+
+    act(() => {
+      window.dispatchEvent(new Event('auth:force-rotation'))
+    })
+
+    expect(result.current.user).toBeNull()
+  })
+
   it('defaults mustChangePassword to false when missing from legacy payload', () => {
     localStorage.setItem(
       AUTH_KEY,
