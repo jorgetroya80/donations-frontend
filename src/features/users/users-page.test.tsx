@@ -124,6 +124,18 @@ describe('UsersPage', () => {
     })
   })
 
+  it('shows pending-rotation badge for users with mustChangePassword=true', async () => {
+    renderWithProviders(<UsersPage />)
+
+    await waitFor(() => {
+      expect(screen.getByText('tesorero')).toBeInTheDocument()
+    })
+
+    expect(
+      screen.getByText('Pendiente de cambio de contraseña')
+    ).toBeInTheDocument()
+  })
+
   it('edit links have descriptive aria-labels', async () => {
     renderWithProviders(<UsersPage />)
     await waitFor(() => {

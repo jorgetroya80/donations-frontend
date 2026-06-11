@@ -19,7 +19,8 @@
     "submitting": "Ingresando...",
     "changePassword": "Cambiar contraseña",
     "errorInvalidCredentials": "Usuario o contraseña incorrectos",
-    "errorConnection": "Error de conexión. Intente nuevamente."
+    "errorConnection": "Error de conexión. Intente nuevamente.",
+    "errorLockoutHint": "Demasiados intentos fallidos. La cuenta puede estar bloqueada por unos 15 minutos."
   },
   "dashboard": {
     "welcome": "Bienvenido, {{username}}",
@@ -175,7 +176,8 @@
     "previous": "Anterior",
     "next": "Siguiente",
     "noAccess": "No tiene permisos para acceder a esta sección",
-    "editLabel": "Editar usuario {{username}}"
+    "editLabel": "Editar usuario {{username}}",
+    "pendingRotation": "Pendiente de cambio de contraseña"
   },
   "reports": {
     "title": "Reportes",
@@ -205,7 +207,8 @@
     "currentPasswordRequired": "La contraseña actual es obligatoria",
     "successChanged": "Contraseña actualizada exitosamente",
     "errorChanging": "Error al cambiar la contraseña",
-    "errorCurrentPassword": "La contraseña actual es incorrecta"
+    "errorCurrentPassword": "La contraseña actual es incorrecta",
+    "forcedRotationNotice": "Por seguridad, debe cambiar su contraseña antes de continuar."
   },
   "sidebar": {
     "collapse": "Colapsar menú",

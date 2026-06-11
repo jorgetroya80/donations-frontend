@@ -128,9 +128,16 @@ export function UsersPage() {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={u.active ? 'default' : 'destructive'}>
-                      {u.active ? t('users.active') : t('users.inactive')}
-                    </Badge>
+                    <div className="flex flex-wrap gap-1">
+                      <Badge variant={u.active ? 'default' : 'destructive'}>
+                        {u.active ? t('users.active') : t('users.inactive')}
+                      </Badge>
+                      {u.mustChangePassword && (
+                        <Badge variant="outline">
+                          {t('users.pendingRotation')}
+                        </Badge>
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell>
                     <Link

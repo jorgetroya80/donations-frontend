@@ -2,21 +2,56 @@ import { createClient } from '@jorgetroya80/donations-api-client'
 import ky from 'ky'
 
 const AUTH_STORAGE_KEY = 'auth_user'
+const CHANGE_PASSWORD_PATH = '/settings/password'
 
 const ORIGIN =
   typeof document !== 'undefined'
     ? window.location.origin
     : 'http://localhost:3000'
 
-const kyInstance = ky.create({
+function flagStoredUserForRotation() {
+  const raw = localStorage.getItem(AUTH_STORAGE_KEY)
+  if (!raw) return
+  try {
+    const parsed = JSON.parse(raw)
+    localStorage.setItem(
+      AUTH_STORAGE_KEY,
+      JSON.stringify({ ...parsed, mustChangePassword: true })
+    )
+  } catch {
+    // corrupted payload — leave alone
+  }
+}
+
+async function isPasswordChangeRequired(response: Response): Promise<boolean> {
+  try {
+    const body = (await response.clone().json()) as { code?: string }
+    return body.code === 'PASSWORD_CHANGE_REQUIRED'
+  } catch {
+    return false
+  }
+}
+
+export const kyInstance = ky.create({
   credentials: 'include',
   throwHttpErrors: false,
   hooks: {
     afterResponse: [
-      ({ request, response }) => {
+      async ({ request, response }) => {
         if (response.status === 401 && !request.url.includes('/login')) {
           localStorage.removeItem(AUTH_STORAGE_KEY)
           window.location.href = '/login'
+          return
+        }
+        if (
+          response.status === 403 &&
+          !request.url.includes('/users/me/password') &&
+          (await isPasswordChangeRequired(response))
+        ) {
+          flagStoredUserForRotation()
+          if (window.location.pathname !== CHANGE_PASSWORD_PATH) {
+            window.location.href = CHANGE_PASSWORD_PATH
+          }
         }
       },
     ],

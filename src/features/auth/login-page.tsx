@@ -1,5 +1,5 @@
 import { login as sdkLogin } from '@jorgetroya80/donations-api-client'
-import { type SyntheticEvent, useState } from 'react'
+import { type SyntheticEvent, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -10,12 +10,15 @@ import { Label } from '@/components/ui/label'
 import { client } from '@/lib/api'
 import { useAuth } from './auth-context'
 
+const LOCKOUT_THRESHOLD = 5
+
 export function LoginPage() {
   const { t } = useTranslation()
   const { login } = useAuth()
   const navigate = useNavigate()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const failedAttempts = useRef(0)
 
   async function handleSubmit(e: SyntheticEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -32,14 +35,27 @@ export function LoginPage() {
         client,
       })
       if (error || !data) {
-        setError(
-          response?.status === 401
-            ? t('auth.errorInvalidCredentials')
-            : t('auth.errorConnection')
-        )
+        if (response?.status === 401) {
+          failedAttempts.current += 1
+          setError(
+            failedAttempts.current >= LOCKOUT_THRESHOLD
+              ? t('auth.errorLockoutHint')
+              : t('auth.errorInvalidCredentials')
+          )
+        } else {
+          setError(t('auth.errorConnection'))
+        }
       } else {
-        login({ username: data.username ?? '', roles: data.roles ?? [] })
-        navigate('/', { replace: true })
+        failedAttempts.current = 0
+        const mustChangePassword = data.mustChangePassword ?? false
+        login({
+          username: data.username ?? '',
+          roles: data.roles ?? [],
+          mustChangePassword,
+        })
+        navigate(mustChangePassword ? '/settings/password' : '/', {
+          replace: true,
+        })
       }
     } catch {
       setError(t('auth.errorConnection'))

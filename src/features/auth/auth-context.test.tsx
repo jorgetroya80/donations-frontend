@@ -20,7 +20,11 @@ describe('AuthProvider', () => {
   })
 
   it('rehydrates user from localStorage', () => {
-    const stored = { username: 'admin', roles: ['ADMIN'] }
+    const stored = {
+      username: 'admin',
+      roles: ['ADMIN'],
+      mustChangePassword: false,
+    }
     localStorage.setItem(AUTH_KEY, JSON.stringify(stored))
 
     const { result } = renderHook(() => useAuth(), { wrapper })
@@ -29,7 +33,11 @@ describe('AuthProvider', () => {
 
   it('login stores user in state and localStorage', () => {
     const { result } = renderHook(() => useAuth(), { wrapper })
-    const user = { username: 'teso', roles: ['TREASURER'] }
+    const user = {
+      username: 'teso',
+      roles: ['TREASURER'],
+      mustChangePassword: false,
+    }
 
     act(() => result.current.login(user))
 
@@ -37,14 +45,75 @@ describe('AuthProvider', () => {
     expect(JSON.parse(localStorage.getItem(AUTH_KEY)!)).toEqual(user)
   })
 
+  it('login persists mustChangePassword=true', () => {
+    const { result } = renderHook(() => useAuth(), { wrapper })
+
+    act(() =>
+      result.current.login({
+        username: 'admin',
+        roles: ['ADMIN'],
+        mustChangePassword: true,
+      })
+    )
+
+    expect(result.current.user?.mustChangePassword).toBe(true)
+  })
+
+  it('clearMustChangePassword flips the flag and persists', () => {
+    const { result } = renderHook(() => useAuth(), { wrapper })
+
+    act(() =>
+      result.current.login({
+        username: 'admin',
+        roles: ['ADMIN'],
+        mustChangePassword: true,
+      })
+    )
+    act(() => result.current.clearMustChangePassword())
+
+    expect(result.current.user?.mustChangePassword).toBe(false)
+    expect(JSON.parse(localStorage.getItem(AUTH_KEY)!).mustChangePassword).toBe(
+      false
+    )
+  })
+
+  it('clearMustChangePassword is a no-op when user is null', () => {
+    const { result } = renderHook(() => useAuth(), { wrapper })
+
+    act(() => result.current.clearMustChangePassword())
+
+    expect(result.current.user).toBeNull()
+  })
+
   it('logout clears user from state and localStorage', () => {
     const { result } = renderHook(() => useAuth(), { wrapper })
 
-    act(() => result.current.login({ username: 'admin', roles: ['ADMIN'] }))
+    act(() =>
+      result.current.login({
+        username: 'admin',
+        roles: ['ADMIN'],
+        mustChangePassword: false,
+      })
+    )
     act(() => result.current.logout())
 
     expect(result.current.user).toBeNull()
     expect(localStorage.getItem(AUTH_KEY)).toBeNull()
+  })
+
+  it('defaults mustChangePassword to false when missing from legacy payload', () => {
+    localStorage.setItem(
+      AUTH_KEY,
+      JSON.stringify({ username: 'old', roles: ['ADMIN'] })
+    )
+
+    const { result } = renderHook(() => useAuth(), { wrapper })
+
+    expect(result.current.user).toEqual({
+      username: 'old',
+      roles: ['ADMIN'],
+      mustChangePassword: false,
+    })
   })
 
   it('handles corrupted localStorage gracefully', () => {
