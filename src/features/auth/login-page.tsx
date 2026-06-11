@@ -36,31 +36,31 @@ export function LoginPage() {
         body: { username, password },
         client,
       })
-      if (error || !data) {
-        if (response?.status === 401) {
-          failedAttempts.current += 1
-          setError(
-            failedAttempts.current >= LOCKOUT_THRESHOLD
-              ? t('auth.errorLockoutHint')
-              : t('auth.errorInvalidCredentials')
-          )
-        } else {
-          setError(t('auth.errorConnection'))
-        }
-      } else if (!data.username || !data.roles) {
-        setError(t('auth.errorConnection'))
-      } else {
-        failedAttempts.current = 0
-        const mustChangePassword = data.mustChangePassword ?? false
-        login({
-          username: data.username,
-          roles: data.roles,
-          mustChangePassword,
-        })
-        navigate(mustChangePassword ? '/settings/password' : '/', {
-          replace: true,
-        })
+
+      if (response?.status === 401) {
+        failedAttempts.current += 1
+        setError(
+          failedAttempts.current >= LOCKOUT_THRESHOLD
+            ? t('auth.errorLockoutHint')
+            : t('auth.errorInvalidCredentials')
+        )
+        return
       }
+      if (error || !data?.username || !data.roles) {
+        setError(t('auth.errorConnection'))
+        return
+      }
+
+      failedAttempts.current = 0
+      const mustChangePassword = data.mustChangePassword ?? false
+      login({
+        username: data.username,
+        roles: data.roles,
+        mustChangePassword,
+      })
+      navigate(mustChangePassword ? '/settings/password' : '/', {
+        replace: true,
+      })
     } catch {
       setError(t('auth.errorConnection'))
     } finally {
