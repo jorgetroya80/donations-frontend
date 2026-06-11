@@ -118,6 +118,25 @@ describe('AuthProvider', () => {
     expect(result.current.user?.mustChangePassword).toBe(true)
   })
 
+  it('removes the auth:force-rotation listener on unmount', () => {
+    const { result, unmount } = renderHook(() => useAuth(), { wrapper })
+
+    act(() =>
+      result.current.login({
+        username: 'admin',
+        roles: ['ADMIN'],
+        mustChangePassword: false,
+      })
+    )
+    unmount()
+    act(() => {
+      window.dispatchEvent(new Event('auth:force-rotation'))
+    })
+
+    const stored = JSON.parse(localStorage.getItem(AUTH_KEY)!)
+    expect(stored.mustChangePassword).toBe(false)
+  })
+
   it('ignores auth:force-rotation when no user is logged in', () => {
     const { result } = renderHook(() => useAuth(), { wrapper })
 

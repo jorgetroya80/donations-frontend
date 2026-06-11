@@ -1,7 +1,10 @@
-import { screen, waitFor } from '@testing-library/react'
+import { act, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { http, HttpResponse } from 'msw'
 import { Route, Routes } from 'react-router'
 import { beforeEach, describe, expect, it } from 'vitest'
+import { kyInstance } from '@/lib/api'
+import { server } from '@/test/msw-server'
 import { renderWithProviders } from '@/test/test-utils'
 import { ChangePasswordPage } from './change-password-page'
 
@@ -170,6 +173,48 @@ describe('ChangePasswordPage', () => {
     })
     const stored = JSON.parse(localStorage.getItem('auth_user')!)
     expect(stored.mustChangePassword).toBe(false)
+  })
+
+  it('reveals the forced-rotation banner after a 403 PASSWORD_CHANGE_REQUIRED', async () => {
+    const originalPath = window.location.pathname
+    window.history.pushState({}, '', '/settings/password')
+    server.use(
+      http.get('*/api/v1/ping', () =>
+        HttpResponse.json(
+          {
+            status: 403,
+            error: 'Forbidden',
+            message: 'Password change required',
+            code: 'PASSWORD_CHANGE_REQUIRED',
+          },
+          { status: 403 }
+        )
+      )
+    )
+    renderForcedFlow({
+      username: 'admin',
+      roles: ['ADMIN'],
+      mustChangePassword: false,
+    })
+
+    expect(
+      screen.queryByText(
+        'Por seguridad, debe cambiar su contraseña antes de continuar.'
+      )
+    ).not.toBeInTheDocument()
+
+    await act(async () => {
+      await kyInstance.get('http://localhost/api/v1/ping')
+    })
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(
+          'Por seguridad, debe cambiar su contraseña antes de continuar.'
+        )
+      ).toBeInTheDocument()
+    })
+    window.history.pushState({}, '', originalPath)
   })
 
   it('shows error alert when current password is wrong', async () => {
