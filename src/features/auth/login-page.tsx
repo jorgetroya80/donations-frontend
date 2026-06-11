@@ -47,12 +47,14 @@ export function LoginPage() {
         } else {
           setError(t('auth.errorConnection'))
         }
+      } else if (!data.username || !data.roles) {
+        setError(t('auth.errorConnection'))
       } else {
         failedAttempts.current = 0
         const mustChangePassword = data.mustChangePassword ?? false
         login({
-          username: data.username ?? '',
-          roles: data.roles ?? [],
+          username: data.username,
+          roles: data.roles,
           mustChangePassword,
         })
         navigate(mustChangePassword ? '/settings/password' : '/', {

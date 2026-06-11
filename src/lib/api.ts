@@ -1,9 +1,11 @@
 import { createClient } from '@jorgetroya80/donations-api-client'
 import ky from 'ky'
+import { FORCE_ROTATION_EVENT } from '@/features/auth/auth-context'
 
 const AUTH_STORAGE_KEY = 'auth_user'
 const CHANGE_PASSWORD_PATH = '/settings/password'
-const FORCE_ROTATION_EVENT = 'auth:force-rotation'
+const LOGIN_API_PATH = '/api/v1/login'
+const CHANGE_PASSWORD_API_PATH = '/api/v1/users/me/password'
 
 const ORIGIN =
   typeof document !== 'undefined'
@@ -39,14 +41,15 @@ export const kyInstance = ky.create({
   hooks: {
     afterResponse: [
       async ({ request, response }) => {
-        if (response.status === 401 && !request.url.includes('/login')) {
+        const requestPath = new URL(request.url).pathname
+        if (response.status === 401 && requestPath !== LOGIN_API_PATH) {
           localStorage.removeItem(AUTH_STORAGE_KEY)
           window.location.href = '/login'
           return
         }
         if (
           response.status === 403 &&
-          !request.url.includes('/users/me/password') &&
+          requestPath !== CHANGE_PASSWORD_API_PATH &&
           (await isPasswordChangeRequired(response))
         ) {
           flagStoredUserForRotation()

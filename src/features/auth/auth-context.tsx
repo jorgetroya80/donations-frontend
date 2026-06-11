@@ -26,13 +26,32 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null)
 
+function isValidStoredUser(value: unknown): value is {
+  username: string
+  roles: string[]
+  mustChangePassword?: boolean
+} {
+  if (typeof value !== 'object' || value === null) return false
+  const v = value as Record<string, unknown>
+  if (typeof v.username !== 'string' || v.username.length === 0) return false
+  if (!Array.isArray(v.roles)) return false
+  if (!v.roles.every((r): r is string => typeof r === 'string')) return false
+  if (
+    v.mustChangePassword !== undefined &&
+    typeof v.mustChangePassword !== 'boolean'
+  )
+    return false
+  return true
+}
+
 function getStoredUser(): AuthUser | null {
   try {
     const raw = localStorage.getItem(AUTH_STORAGE_KEY)
     if (!raw) return null
-    const parsed = JSON.parse(raw) as Partial<AuthUser> & {
-      username: string
-      roles: string[]
+    const parsed: unknown = JSON.parse(raw)
+    if (!isValidStoredUser(parsed)) {
+      localStorage.removeItem(AUTH_STORAGE_KEY)
+      return null
     }
     return {
       username: parsed.username,
