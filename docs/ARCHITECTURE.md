@@ -11,11 +11,12 @@ A React 19 SPA for managing church donations, expenses, and financial reports. B
 | UI Library    | React                 | 19.2.5  |
 | Language      | TypeScript            | 5.x     |
 | Build Tool    | Vite                  | 8.0.9   |
-| Routing       | React Router          | 7.14.1  |
+| Routing       | React Router          | 7.15.0  |
 | Server State  | TanStack React Query  | 5.99.2  |
 | Forms         | React Hook Form       | 7.73.1  |
 | Schema valid  | Zod                   | 4.3.6   |
-| HTTP Client   | ky                    | 2.0.1   |
+| HTTP Client   | ky                    | 2.0.2   |
+| API Client    | @jorgetroya80/donations-api-client | 1.7.1 |
 | Styling       | Tailwind CSS          | 4.2.2   |
 | UI Primitives | Base UI               | 1.4.1   |
 | Charts        | Recharts              | 3.8.0   |
@@ -33,7 +34,8 @@ A React 19 SPA for managing church donations, expenses, and financial reports. B
 
 ```
 src/
-├── App.tsx                  # Root: provider tree + route declarations
+├── App.tsx                  # Root: provider tree (QueryClient · Theme · Auth · Tooltip · Router)
+├── app-routes.tsx           # Route declarations + lazy page imports
 ├── main.tsx                 # Entry point
 │
 ├── features/                # Feature modules (self-contained slices)
@@ -48,22 +50,24 @@ src/
 │   └── users/               # Admin user management
 │
 ├── layouts/
-│   ├── app-layout.tsx       # Sidebar + Header + <Outlet>
+│   ├── app-layout.tsx       # Sidebar + Header + <Outlet> (with ErrorBoundary + Suspense)
 │   ├── header.tsx           # Top navigation bar
-│   └── sidebar.tsx          # Left nav with role-filtered links
+│   ├── sidebar.tsx          # Left nav with role-filtered links
+│   └── use-page-title.ts    # Dynamic page title for the header
 │
 ├── components/
 │   ├── ui/                  # Base UI components (Button, Input, Table, etc.)
 │   ├── date-range-picker.tsx
 │   ├── empty-state.tsx
+│   ├── error-boundary.tsx   # Catches render errors, shows fallback + reload
 │   └── skeleton.tsx
 │
 ├── lib/
-│   ├── api.ts               # ky HTTP client instance
-│   ├── api-types.ts         # TypeScript interfaces for all API contracts
+│   ├── api.ts               # Generated API client (ky fetch adapter, 401/403 hooks)
 │   ├── permissions.ts       # Role-check functions (RBAC)
 │   ├── formatters.ts        # Currency, date helpers
 │   ├── parse-api-field-errors.ts  # Maps API validation errors to form fields
+│   ├── use-sort.ts          # Shared table sort hook (toggle, indicator, aria-sort)
 │   ├── i18n.ts              # i18next configuration (Spanish)
 │   └── utils.ts             # cn() — Tailwind class merging
 │
@@ -145,6 +149,11 @@ graph TD
 ---
 
 ## Routing & Access Control
+
+All page components are lazy-loaded (`React.lazy`) so each feature ships as
+its own chunk. `<Suspense>` (Skeleton fallback) and an `ErrorBoundary` wrap
+the routes at two levels: globally in `App.tsx`, and around the `<Outlet>` in
+`AppLayout` so a page crash leaves the sidebar and header usable.
 
 ```mermaid
 graph TD
@@ -358,38 +367,59 @@ Example — Donations:
 
 **File:** `src/lib/api.ts`
 
+HTTP access goes through the generated client from the npm package
+`@jorgetroya80/donations-api-client` (published from the backend's OpenAPI
+spec, pulled from GitHub Packages). A ky instance is injected as the fetch
+adapter so global response hooks still apply:
+
 ```
-ky instance
-  prefix  →  window.location.origin + /api/v1
-  credentials: 'include'   (session cookie forwarded on all requests)
+kyInstance (ky.create)
+  credentials: 'include'      (session cookie forwarded on all requests)
+  throwHttpErrors: false      (generated client handles status codes)
   afterResponse hook:
-    if status === 401 && url !== /login
+    if status === 401 && path !== /api/v1/login
       → localStorage.removeItem('auth_user')
       → window.location.href = '/login'
+    if status === 403 && body.code === 'PASSWORD_CHANGE_REQUIRED'
+      → flag stored user with mustChangePassword
+      → dispatch FORCE_ROTATION_EVENT
+      → redirect to /settings/password
+
+client = createClient({ baseUrl: origin, fetch: kyInstance })
 ```
+
+`pageableQuerySerializer()` (same file) flattens Spring `Pageable` params
+(`page`, `size`, `sort`) plus optional `from`/`to` into flat query params,
+because hey-api's default deepObject serializer can't handle arrays nested
+inside objects.
 
 Usage pattern in hooks:
 
 ```ts
+import { listDonations, createDonation } from '@jorgetroya80/donations-api-client'
+import { client, pageableQuerySerializer } from '@/lib/api'
+
 // Read
-const data = await api
-  .get('donations', { searchParams: { page: 0 }, signal })
-  .json<PageResponse<DonationResponse>>();
+const data = await listDonations({
+  query: { from, to, pageable: { page, size, sort: [sort] } },
+  client,
+  throwOnError: true,
+  signal,
+  querySerializer: pageableQuerySerializer,
+}).then(({ data }) => data)
 
 // Write
-const result = await api
-  .post('donations', { json: payload })
-  .json<DonationCreateResponse>();
-
-// Update
-await api.put(`donations/${id}`, { json: payload }).json<DonationResponse>();
+const data = await createDonation({ body, client, throwOnError: true }).then(
+  ({ data }) => data
+)
 ```
 
 ---
 
 ## Type System
 
-**File:** `src/lib/api-types.ts`
+**Source:** `@jorgetroya80/donations-api-client` (generated from the backend
+OpenAPI spec — no hand-written API types in this repo)
 
 ```mermaid
 classDiagram

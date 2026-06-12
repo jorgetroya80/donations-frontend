@@ -215,6 +215,11 @@
     "expand": "Expandir menú",
     "mainNavigation": "Navegación principal"
   },
+  "errors": {
+    "unexpectedTitle": "Algo salió mal",
+    "unexpectedMessage": "Ocurrió un error inesperado. Intenta recargar la página.",
+    "reload": "Recargar página"
+  },
   "common": {
     "loading": "Cargando...",
     "error": "Error",
