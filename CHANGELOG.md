@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.21](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.20...donations-frontend-v0.2.21) (2026-06-12)
+
+
+### Features
+
+* **auth:** forced password rotation flow ([#130](https://github.com/jorgetroya80/donations-frontend/issues/130)) ([11f68c2](https://github.com/jorgetroya80/donations-frontend/commit/11f68c28bb1a1db19df6946a7f6e25daa6ac953c))
+
 ## [0.2.20](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.19...donations-frontend-v0.2.20) (2026-06-10)
 
 
