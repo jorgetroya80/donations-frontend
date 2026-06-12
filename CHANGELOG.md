@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.22](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.21...donations-frontend-v0.2.22) (2026-06-12)
+
+
+### Features
+
+* project review improvements (error boundaries, lazy routes, shared sort hook) ([#132](https://github.com/jorgetroya80/donations-frontend/issues/132)) ([5c2ca3f](https://github.com/jorgetroya80/donations-frontend/commit/5c2ca3ff4e901202f0ed6d02ad25c3581754b1c1))
+
 ## [0.2.21](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.20...donations-frontend-v0.2.21) (2026-06-12)
 
 
