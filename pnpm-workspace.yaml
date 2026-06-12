@@ -1,2 +1,4 @@
 allowBuilds:
   msw: true
+minimumReleaseAgeExclude:
+  - '@jorgetroya80/donations-api-client'

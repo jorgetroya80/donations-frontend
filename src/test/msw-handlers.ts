@@ -12,12 +12,21 @@ export const handlers = [
       return HttpResponse.json({
         username: 'admin',
         roles: ['ADMIN'],
+        mustChangePassword: false,
       })
     }
     if (body.username === 'tesorero' && body.password === 'tesorero') {
       return HttpResponse.json({
         username: 'tesorero',
         roles: ['TREASURER', 'ADMIN'],
+        mustChangePassword: false,
+      })
+    }
+    if (body.username === 'must-rotate' && body.password === 'random') {
+      return HttpResponse.json({
+        username: 'must-rotate',
+        roles: ['ADMIN'],
+        mustChangePassword: true,
       })
     }
     return new HttpResponse(null, { status: 401 })
@@ -378,6 +387,7 @@ export const handlers = [
           username: 'admin',
           active: true,
           roles: ['ADMIN'],
+          mustChangePassword: false,
           createdAt: '2026-01-01T10:00:00',
           updatedAt: '2026-01-01T10:00:00',
         },
@@ -386,6 +396,7 @@ export const handlers = [
           username: 'tesorero',
           active: true,
           roles: ['TREASURER', 'OPERATOR'],
+          mustChangePassword: true,
           createdAt: '2026-02-01T10:00:00',
           updatedAt: '2026-02-01T10:00:00',
         },

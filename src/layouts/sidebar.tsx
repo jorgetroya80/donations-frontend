@@ -106,59 +106,63 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
       </div>
 
       <nav aria-label={navLabel} className="flex-1 flex flex-col gap-1 p-2">
-        {navItems.map((item) => {
-          if (item.visible && !item.visible(user)) return null
+        {user?.mustChangePassword
+          ? null
+          : navItems.map((item) => {
+              if (item.visible && !item.visible(user)) return null
 
-          const link = (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.to === '/'}
-              className={({ isActive }) =>
-                cn(
-                  'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
-                  'hover:bg-accent hover:text-accent-foreground',
-                  isActive
-                    ? 'bg-accent text-accent-foreground'
-                    : 'text-muted-foreground',
-                  collapsed && 'justify-center px-0'
-                )
-              }
-            >
-              {item.icon}
-              {!collapsed && <span>{t(item.labelKey)}</span>}
-            </NavLink>
-          )
-
-          if (collapsed) {
-            return (
-              <Tooltip key={item.to}>
-                <TooltipTrigger
-                  render={
-                    <NavLink
-                      to={item.to}
-                      end={item.to === '/'}
-                      className={({ isActive }) =>
-                        cn(
-                          'flex w-full items-center justify-center rounded-md py-2 text-sm font-medium transition-colors',
-                          'hover:bg-accent hover:text-accent-foreground',
-                          isActive
-                            ? 'bg-accent text-accent-foreground'
-                            : 'text-muted-foreground'
-                        )
-                      }
-                    />
+              const link = (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  end={item.to === '/'}
+                  className={({ isActive }) =>
+                    cn(
+                      'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                      'hover:bg-accent hover:text-accent-foreground',
+                      isActive
+                        ? 'bg-accent text-accent-foreground'
+                        : 'text-muted-foreground',
+                      collapsed && 'justify-center px-0'
+                    )
                   }
                 >
                   {item.icon}
-                </TooltipTrigger>
-                <TooltipContent side="right">{t(item.labelKey)}</TooltipContent>
-              </Tooltip>
-            )
-          }
+                  {!collapsed && <span>{t(item.labelKey)}</span>}
+                </NavLink>
+              )
 
-          return link
-        })}
+              if (collapsed) {
+                return (
+                  <Tooltip key={item.to}>
+                    <TooltipTrigger
+                      render={
+                        <NavLink
+                          to={item.to}
+                          end={item.to === '/'}
+                          className={({ isActive }) =>
+                            cn(
+                              'flex w-full items-center justify-center rounded-md py-2 text-sm font-medium transition-colors',
+                              'hover:bg-accent hover:text-accent-foreground',
+                              isActive
+                                ? 'bg-accent text-accent-foreground'
+                                : 'text-muted-foreground'
+                            )
+                          }
+                        />
+                      }
+                    >
+                      {item.icon}
+                    </TooltipTrigger>
+                    <TooltipContent side="right">
+                      {t(item.labelKey)}
+                    </TooltipContent>
+                  </Tooltip>
+                )
+              }
+
+              return link
+            })}
       </nav>
 
       <div className="border-t p-2">

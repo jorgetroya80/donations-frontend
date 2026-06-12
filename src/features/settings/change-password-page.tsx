@@ -2,10 +2,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useAuth } from '@/features/auth/auth-context'
 import {
   type ChangePasswordFormData,
   changePasswordSchema,
@@ -15,6 +17,9 @@ import { useChangePassword } from './use-change-password'
 export function ChangePasswordPage() {
   const { t } = useTranslation()
   const mutation = useChangePassword()
+  const navigate = useNavigate()
+  const { user, clearMustChangePassword } = useAuth()
+  const forced = user?.mustChangePassword ?? false
   const [success, setSuccess] = useState(false)
   const [apiError, setApiError] = useState('')
 
@@ -40,6 +45,11 @@ export function ChangePasswordPage() {
         currentPassword: data.currentPassword,
         newPassword: data.newPassword,
       })
+      clearMustChangePassword()
+      if (forced) {
+        navigate('/', { replace: true })
+        return
+      }
       setSuccess(true)
       reset()
     } catch (err) {
@@ -54,6 +64,14 @@ export function ChangePasswordPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">{t('settings.changePassword')}</h1>
+
+      {forced && (
+        <Alert>
+          <AlertDescription>
+            {t('settings.forcedRotationNotice')}
+          </AlertDescription>
+        </Alert>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-md space-y-4">
         {success && (

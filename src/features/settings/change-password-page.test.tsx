@@ -1,12 +1,35 @@
-import { screen, waitFor } from '@testing-library/react'
+import { act, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { HttpResponse, http } from 'msw'
+import { Route, Routes } from 'react-router'
+import { beforeEach, describe, expect, it } from 'vitest'
+import { kyInstance } from '@/lib/api'
+import { server } from '@/test/msw-server'
 import { renderWithProviders } from '@/test/test-utils'
 import { ChangePasswordPage } from './change-password-page'
 
 function renderPage() {
   return renderWithProviders(<ChangePasswordPage />)
 }
+
+function renderForcedFlow(authUser: {
+  username: string
+  roles: string[]
+  mustChangePassword: boolean
+}) {
+  localStorage.setItem('auth_user', JSON.stringify(authUser))
+  return renderWithProviders(
+    <Routes>
+      <Route path="/" element={<p>Dashboard</p>} />
+      <Route path="/settings/password" element={<ChangePasswordPage />} />
+    </Routes>,
+    { route: '/settings/password' }
+  )
+}
+
+beforeEach(() => {
+  localStorage.clear()
+})
 
 describe('ChangePasswordPage', () => {
   it('renders form fields', () => {
@@ -99,6 +122,99 @@ describe('ChangePasswordPage', () => {
     const input = screen.getByLabelText('Contraseña actual')
     expect(input).toHaveAttribute('aria-invalid', 'false')
     expect(input).not.toHaveAttribute('aria-describedby')
+  })
+
+  it('shows forced-rotation notice when user.mustChangePassword=true', () => {
+    renderForcedFlow({
+      username: 'admin',
+      roles: ['ADMIN'],
+      mustChangePassword: true,
+    })
+
+    expect(
+      screen.getByText(
+        'Por seguridad, debe cambiar su contraseña antes de continuar.'
+      )
+    ).toBeInTheDocument()
+  })
+
+  it('does not show notice on voluntary change', () => {
+    renderForcedFlow({
+      username: 'admin',
+      roles: ['ADMIN'],
+      mustChangePassword: false,
+    })
+
+    expect(
+      screen.queryByText(
+        'Por seguridad, debe cambiar su contraseña antes de continuar.'
+      )
+    ).not.toBeInTheDocument()
+  })
+
+  it('clears the flag and redirects to / on success in forced mode', async () => {
+    const user = userEvent.setup()
+    renderForcedFlow({
+      username: 'admin',
+      roles: ['ADMIN'],
+      mustChangePassword: true,
+    })
+
+    await user.type(screen.getByLabelText('Contraseña actual'), 'oldpass123')
+    await user.type(screen.getByLabelText('Nueva contraseña'), 'newpass123')
+    await user.type(
+      screen.getByLabelText('Confirmar nueva contraseña'),
+      'newpass123'
+    )
+    await user.click(screen.getByRole('button', { name: 'Guardar' }))
+
+    await waitFor(() => {
+      expect(screen.getByText('Dashboard')).toBeInTheDocument()
+    })
+    const stored = JSON.parse(localStorage.getItem('auth_user')!)
+    expect(stored.mustChangePassword).toBe(false)
+  })
+
+  it('reveals the forced-rotation banner after a 403 PASSWORD_CHANGE_REQUIRED', async () => {
+    const originalPath = window.location.pathname
+    window.history.pushState({}, '', '/settings/password')
+    server.use(
+      http.get('*/api/v1/ping', () =>
+        HttpResponse.json(
+          {
+            status: 403,
+            error: 'Forbidden',
+            message: 'Password change required',
+            code: 'PASSWORD_CHANGE_REQUIRED',
+          },
+          { status: 403 }
+        )
+      )
+    )
+    renderForcedFlow({
+      username: 'admin',
+      roles: ['ADMIN'],
+      mustChangePassword: false,
+    })
+
+    expect(
+      screen.queryByText(
+        'Por seguridad, debe cambiar su contraseña antes de continuar.'
+      )
+    ).not.toBeInTheDocument()
+
+    await act(async () => {
+      await kyInstance.get('http://localhost/api/v1/ping')
+    })
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(
+          'Por seguridad, debe cambiar su contraseña antes de continuar.'
+        )
+      ).toBeInTheDocument()
+    })
+    window.history.pushState({}, '', originalPath)
   })
 
   it('shows error alert when current password is wrong', async () => {

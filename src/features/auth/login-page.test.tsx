@@ -10,6 +10,10 @@ function TestApp() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/" element={<p>Dashboard</p>} />
+      <Route
+        path="/settings/password"
+        element={<p>Change Password Screen</p>}
+      />
     </Routes>
   )
 }
@@ -64,7 +68,49 @@ describe('LoginPage', () => {
 
     await waitFor(() => {
       const stored = JSON.parse(localStorage.getItem('auth_user')!)
-      expect(stored).toEqual({ username: 'admin', roles: ['ADMIN'] })
+      expect(stored).toEqual({
+        username: 'admin',
+        roles: ['ADMIN'],
+        mustChangePassword: false,
+      })
     })
+  })
+
+  it('redirects to change-password when mustChangePassword=true', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<TestApp />, { route: '/login' })
+
+    await user.type(screen.getByLabelText('Usuario'), 'must-rotate')
+    await user.type(screen.getByLabelText('Contraseña'), 'random')
+    await user.click(screen.getByRole('button', { name: 'Ingresar' }))
+
+    await waitFor(() => {
+      expect(screen.getByText('Change Password Screen')).toBeInTheDocument()
+    })
+    expect(screen.queryByText('Dashboard')).not.toBeInTheDocument()
+  })
+
+  it('shows lockout hint after 5 consecutive failed attempts', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<TestApp />, { route: '/login' })
+
+    const username = screen.getByLabelText('Usuario')
+    const password = screen.getByLabelText('Contraseña')
+    const submit = screen.getByRole('button', { name: 'Ingresar' })
+
+    for (let i = 0; i < 5; i++) {
+      await user.clear(username)
+      await user.clear(password)
+      await user.type(username, 'wrong')
+      await user.type(password, 'wrong')
+      await user.click(submit)
+      await waitFor(() => expect(submit).not.toBeDisabled())
+    }
+
+    expect(
+      screen.getByText(
+        'Demasiados intentos fallidos. La cuenta puede estar bloqueada por unos 15 minutos.'
+      )
+    ).toBeInTheDocument()
   })
 })

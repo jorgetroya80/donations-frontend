@@ -18,7 +18,7 @@ function renderSidebar() {
 
 function getVisibleNavItems() {
   return screen
-    .getAllByRole('link')
+    .queryAllByRole('link')
     .map((link) => link.textContent)
     .filter(Boolean)
 }
@@ -101,6 +101,22 @@ describe('Sidebar collapsed state', () => {
 
     const nestedLinks = container.querySelectorAll('button a')
     expect(nestedLinks).toHaveLength(0)
+  })
+})
+
+describe('Sidebar forced password rotation', () => {
+  it('hides all nav links when user.mustChangePassword=true', () => {
+    localStorage.setItem(
+      'auth_user',
+      JSON.stringify({
+        username: 'admin',
+        roles: ['ADMIN', 'TREASURER'],
+        mustChangePassword: true,
+      })
+    )
+    renderSidebar()
+
+    expect(getVisibleNavItems()).toEqual([])
   })
 })
 

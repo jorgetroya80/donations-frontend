@@ -28,6 +28,7 @@ export function UsersPage() {
     size: 10,
     sort,
   })
+  const rows = data?.content ?? []
 
   function toggleSort(field: string) {
     const [currentField, currentDir] = sort.split(',')
@@ -81,7 +82,7 @@ export function UsersPage() {
         </div>
       )}
 
-      {data && (data.content ?? []).length === 0 && (
+      {data && rows.length === 0 && (
         <EmptyState
           icon={<Plus size={40} />}
           message={t('users.empty')}
@@ -89,7 +90,7 @@ export function UsersPage() {
         />
       )}
 
-      {data && (data.content ?? []).length > 0 && (
+      {data && rows.length > 0 && (
         <>
           <Table>
             <TableHeader>
@@ -115,7 +116,7 @@ export function UsersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {(data.content ?? []).map((u) => (
+              {rows.map((u) => (
                 <TableRow key={u.id}>
                   <TableCell>{u.username}</TableCell>
                   <TableCell>
@@ -128,9 +129,16 @@ export function UsersPage() {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={u.active ? 'default' : 'destructive'}>
-                      {u.active ? t('users.active') : t('users.inactive')}
-                    </Badge>
+                    <div className="flex flex-wrap gap-1">
+                      <Badge variant={u.active ? 'default' : 'destructive'}>
+                        {u.active ? t('users.active') : t('users.inactive')}
+                      </Badge>
+                      {u.mustChangePassword && (
+                        <Badge variant="outline">
+                          {t('users.pendingRotation')}
+                        </Badge>
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell>
                     <Link

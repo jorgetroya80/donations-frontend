@@ -24,11 +24,11 @@ services:
       retries: 3
 
   api:
-    image: jorgetroya/donations-api:main
+    image: jorgetroya/donations-api:${DONATIONS_API_VERSION:-1.7.1}
     platform: linux/amd64
     pull_policy: always
-    expose:
-      - '8081'
+    ports:
+      - '8081:8081'
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}

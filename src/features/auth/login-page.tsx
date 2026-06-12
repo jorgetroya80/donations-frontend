@@ -1,5 +1,5 @@
 import { login as sdkLogin } from '@jorgetroya80/donations-api-client'
-import { type SyntheticEvent, useState } from 'react'
+import { type SyntheticEvent, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -10,12 +10,17 @@ import { Label } from '@/components/ui/label'
 import { client } from '@/lib/api'
 import { useAuth } from './auth-context'
 
+const LOCKOUT_THRESHOLD = 5
+
 export function LoginPage() {
   const { t } = useTranslation()
   const { login } = useAuth()
   const navigate = useNavigate()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  // Ref-only counter mirrors the backend's 15-min lockout after 5 fails;
+  // resets on reload because the API returns the same generic 401 either way.
+  const failedAttempts = useRef(0)
 
   async function handleSubmit(e: SyntheticEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -31,16 +36,31 @@ export function LoginPage() {
         body: { username, password },
         client,
       })
-      if (error || !data) {
+
+      if (response?.status === 401) {
+        failedAttempts.current += 1
         setError(
-          response?.status === 401
-            ? t('auth.errorInvalidCredentials')
-            : t('auth.errorConnection')
+          failedAttempts.current >= LOCKOUT_THRESHOLD
+            ? t('auth.errorLockoutHint')
+            : t('auth.errorInvalidCredentials')
         )
-      } else {
-        login({ username: data.username ?? '', roles: data.roles ?? [] })
-        navigate('/', { replace: true })
+        return
       }
+      if (error || !data?.username || !data.roles) {
+        setError(t('auth.errorConnection'))
+        return
+      }
+
+      failedAttempts.current = 0
+      const mustChangePassword = data.mustChangePassword ?? false
+      login({
+        username: data.username,
+        roles: data.roles,
+        mustChangePassword,
+      })
+      navigate(mustChangePassword ? '/settings/password' : '/', {
+        replace: true,
+      })
     } catch {
       setError(t('auth.errorConnection'))
     } finally {
