@@ -18,13 +18,17 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { currentMonthRange, formatCurrency } from '@/lib/formatters'
+import { useSort } from '@/lib/use-sort'
 import { useExpenses } from './use-expenses'
 
 export function ExpensesPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [page, setPage] = useState(0)
-  const [sort, setSort] = useState('expenseDate,desc')
+  const { sort, toggleSort, sortIndicator, ariaSort } = useSort(
+    'expenseDate,desc',
+    () => setPage(0)
+  )
   const [range, setRange] = useState(currentMonthRange)
 
   const { data, isLoading, error } = useExpenses({
@@ -34,28 +38,6 @@ export function ExpensesPage() {
     from: dayjs(range.from).format('YYYY-MM-DD'),
     to: dayjs(range.to).format('YYYY-MM-DD'),
   })
-
-  function toggleSort(field: string) {
-    const [currentField, currentDir] = sort.split(',')
-    if (currentField === field) {
-      setSort(`${field},${currentDir === 'asc' ? 'desc' : 'asc'}`)
-    } else {
-      setSort(`${field},asc`)
-    }
-    setPage(0)
-  }
-
-  function sortIndicator(field: string) {
-    const [currentField, currentDir] = sort.split(',')
-    if (currentField !== field) return ''
-    return currentDir === 'asc' ? ' ↑' : ' ↓'
-  }
-
-  function ariaSort(field: string): 'ascending' | 'descending' | 'none' {
-    const [currentField, currentDir] = sort.split(',')
-    if (currentField !== field) return 'none'
-    return currentDir === 'asc' ? 'ascending' : 'descending'
-  }
 
   return (
     <div className="space-y-4">

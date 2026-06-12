@@ -15,13 +15,17 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { useSort } from '@/lib/use-sort'
 import { useUsers } from './use-users'
 
 export function UsersPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [page, setPage] = useState(0)
-  const [sort, setSort] = useState('username,asc')
+  const { sort, toggleSort, sortIndicator, ariaSort } = useSort(
+    'username,asc',
+    () => setPage(0)
+  )
 
   const { data, isLoading, error } = useUsers({
     page,
@@ -29,28 +33,6 @@ export function UsersPage() {
     sort,
   })
   const rows = data?.content ?? []
-
-  function toggleSort(field: string) {
-    const [currentField, currentDir] = sort.split(',')
-    if (currentField === field) {
-      setSort(`${field},${currentDir === 'asc' ? 'desc' : 'asc'}`)
-    } else {
-      setSort(`${field},asc`)
-    }
-    setPage(0)
-  }
-
-  function sortIndicator(field: string) {
-    const [currentField, currentDir] = sort.split(',')
-    if (currentField !== field) return ''
-    return currentDir === 'asc' ? ' ↑' : ' ↓'
-  }
-
-  function ariaSort(field: string): 'ascending' | 'descending' | 'none' {
-    const [currentField, currentDir] = sort.split(',')
-    if (currentField !== field) return 'none'
-    return currentDir === 'asc' ? 'ascending' : 'descending'
-  }
 
   return (
     <div className="space-y-4">
