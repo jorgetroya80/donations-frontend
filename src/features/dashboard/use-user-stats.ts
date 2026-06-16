@@ -12,7 +12,7 @@ export function useUserStats() {
         throwOnError: true,
         querySerializer: pageableQuerySerializer,
       })
-      return { totalUsers: data.totalElements }
+      return { totalUsers: data.page?.totalElements }
     },
   })
 }

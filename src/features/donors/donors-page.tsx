@@ -133,15 +133,15 @@ export function DonorsPage() {
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
               {t('donors.page', {
-                page: (data.number ?? 0) + 1,
-                total: data.totalPages ?? 0,
+                page: (data.page?.number ?? 0) + 1,
+                total: data.page?.totalPages ?? 0,
               })}
             </p>
             <div className="flex gap-2">
               <Button
                 variant="outline"
                 size="sm"
-                disabled={(data.number ?? 0) === 0}
+                disabled={(data.page?.number ?? 0) === 0}
                 onClick={() => setPage((p) => p - 1)}
               >
                 {t('donors.previous')}
@@ -149,7 +149,9 @@ export function DonorsPage() {
               <Button
                 variant="outline"
                 size="sm"
-                disabled={(data.number ?? 0) >= (data.totalPages ?? 0) - 1}
+                disabled={
+                  (data.page?.number ?? 0) >= (data.page?.totalPages ?? 0) - 1
+                }
                 onClick={() => setPage((p) => p + 1)}
               >
                 {t('donors.next')}
