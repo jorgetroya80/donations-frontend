@@ -30,7 +30,7 @@ describe('useExpenses', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(result.current.data?.content).toHaveLength(2)
     expect(result.current.data?.content?.[0].category).toBe('RENT')
-    expect(result.current.data?.totalElements).toBe(2)
+    expect(result.current.data?.page?.totalElements).toBe(2)
   })
 })
 
@@ -103,10 +103,12 @@ describe('useExpenses - cancellation', () => {
         capturedSignal = request.signal
         return HttpResponse.json({
           content: [],
-          totalElements: 0,
-          totalPages: 0,
-          size: 10,
-          number: 0,
+          page: {
+            size: 10,
+            number: 0,
+            totalElements: 0,
+            totalPages: 0,
+          },
         })
       })
     )
