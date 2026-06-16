@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.23](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.22...donations-frontend-v0.2.23) (2026-06-16)
+
+
+### Features
+
+* migrate to nested page paginated response shape ([#135](https://github.com/jorgetroya80/donations-frontend/issues/135)) ([20a0b9c](https://github.com/jorgetroya80/donations-frontend/commit/20a0b9cf066db53db1907de06c2e51c37b2b865b))
+
 ## [0.2.22](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.21...donations-frontend-v0.2.22) (2026-06-12)
 
 
