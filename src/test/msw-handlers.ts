@@ -143,10 +143,12 @@ export const handlers = [
           updatedAt: '2026-04-16T10:00:00',
         },
       ],
-      totalElements: 2,
-      totalPages: 1,
-      size: 10,
-      number: 0,
+      page: {
+        size: 10,
+        number: 0,
+        totalElements: 2,
+        totalPages: 1,
+      },
     })
   }),
 
@@ -244,10 +246,12 @@ export const handlers = [
           updatedAt: '2026-02-01T10:00:00',
         },
       ],
-      totalElements: 2,
-      totalPages: 1,
-      size: 10,
-      number: 0,
+      page: {
+        size: 10,
+        number: 0,
+        totalElements: 2,
+        totalPages: 1,
+      },
     })
   }),
 
@@ -325,10 +329,12 @@ export const handlers = [
           updatedAt: '2026-04-12T10:00:00',
         },
       ],
-      totalElements: 2,
-      totalPages: 1,
-      size: 10,
-      number: 0,
+      page: {
+        size: 10,
+        number: 0,
+        totalElements: 2,
+        totalPages: 1,
+      },
     })
   }),
 
@@ -401,10 +407,12 @@ export const handlers = [
           updatedAt: '2026-02-01T10:00:00',
         },
       ],
-      totalElements: 2,
-      totalPages: 1,
-      size: 10,
-      number: 0,
+      page: {
+        size: 10,
+        number: 0,
+        totalElements: 2,
+        totalPages: 1,
+      },
     })
   }),
 
