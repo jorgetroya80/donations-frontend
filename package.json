@@ -17,18 +17,14 @@
     "typecheck": "tsc --noEmit -p tsconfig.app.json"
   },
   "lint-staged": {
-    "**/*.{cjs,css,js,json,mjs}": [
-      "biome format --write --staged"
-    ],
-    "src/**/*.{ts,tsx}": [
-      "biome lint --write --staged"
-    ]
+    "**/*.{cjs,css,js,json,mjs}": ["biome format --write --staged"],
+    "src/**/*.{ts,tsx}": ["biome lint --write --staged"]
   },
   "dependencies": {
     "@base-ui/react": "1.4.1",
     "@fontsource-variable/geist": "5.2.8",
     "@hookform/resolvers": "5.2.2",
-    "@jorgetroya80/donations-api-client": "1.7.1",
+    "@jorgetroya80/donations-api-client": "1.8.0",
     "@tanstack/react-query": "5.99.2",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
