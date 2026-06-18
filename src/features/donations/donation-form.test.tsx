@@ -4,28 +4,10 @@ import { describe, expect, it, vi } from 'vitest'
 import { renderWithProviders } from '@/test/test-utils'
 import { DonationForm } from './donation-form'
 
-const mockDonors = [
-  {
-    id: 1,
-    fullName: 'Juan Pérez',
-    nationalId: '12345678A',
-    email: undefined,
-    phone: undefined,
-    address: undefined,
-    active: true,
-    createdAt: '2026-01-01T10:00:00',
-    updatedAt: '2026-01-01T10:00:00',
-  },
-]
-
 describe('DonationForm', () => {
   it('renders all form fields', () => {
     renderWithProviders(
-      <DonationForm
-        donors={mockDonors}
-        onSubmit={vi.fn()}
-        submitLabel="Guardar"
-      />
+      <DonationForm onSubmit={vi.fn()} submitLabel="Guardar" />
     )
 
     expect(screen.getByLabelText('Monto')).toBeInTheDocument()
@@ -39,11 +21,7 @@ describe('DonationForm', () => {
     const onSubmit = vi.fn()
 
     renderWithProviders(
-      <DonationForm
-        donors={mockDonors}
-        onSubmit={onSubmit}
-        submitLabel="Guardar"
-      />
+      <DonationForm onSubmit={onSubmit} submitLabel="Guardar" />
     )
 
     await user.click(screen.getByRole('button', { name: 'Guardar' }))
@@ -56,11 +34,7 @@ describe('DonationForm', () => {
   it('sets aria-invalid and aria-describedby on invalid fields after submit', async () => {
     const user = userEvent.setup()
     renderWithProviders(
-      <DonationForm
-        donors={mockDonors}
-        onSubmit={vi.fn()}
-        submitLabel="Guardar"
-      />
+      <DonationForm onSubmit={vi.fn()} submitLabel="Guardar" />
     )
 
     await user.click(screen.getByRole('button', { name: 'Guardar' }))
@@ -89,11 +63,7 @@ describe('DonationForm', () => {
 
   it('has no aria-invalid or aria-describedby before submit', () => {
     renderWithProviders(
-      <DonationForm
-        donors={mockDonors}
-        onSubmit={vi.fn()}
-        submitLabel="Guardar"
-      />
+      <DonationForm onSubmit={vi.fn()} submitLabel="Guardar" />
     )
 
     const amountInput = screen.getByLabelText('Monto')
@@ -108,7 +78,6 @@ describe('DonationForm', () => {
   it('renders Cancel button when onCancel is provided', () => {
     renderWithProviders(
       <DonationForm
-        donors={mockDonors}
         onSubmit={vi.fn()}
         onCancel={vi.fn()}
         submitLabel="Guardar"
@@ -120,7 +89,6 @@ describe('DonationForm', () => {
   it('Cancel button has type="button"', () => {
     renderWithProviders(
       <DonationForm
-        donors={mockDonors}
         onSubmit={vi.fn()}
         onCancel={vi.fn()}
         submitLabel="Guardar"
@@ -137,7 +105,6 @@ describe('DonationForm', () => {
     const onCancel = vi.fn()
     renderWithProviders(
       <DonationForm
-        donors={mockDonors}
         onSubmit={vi.fn()}
         onCancel={onCancel}
         submitLabel="Guardar"
@@ -156,7 +123,6 @@ describe('DonationForm', () => {
           donationType: 'TITHE',
           paymentMethod: 'CASH',
         }}
-        donors={mockDonors}
         onSubmit={vi.fn()}
         submitLabel="Guardar"
       />

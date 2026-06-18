@@ -5,14 +5,12 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { DonationForm } from './donation-form'
 import type { CreateDonationFormData } from './donation-schema'
-import { useCreateDonation, useDonors } from './use-donations'
+import { useCreateDonation } from './use-donations'
 
 export function DonationCreatePage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const createMutation = useCreateDonation()
-  const { data: donorsPage } = useDonors()
-  const donors = donorsPage?.content ?? []
 
   const [duplicateWarning, setDuplicateWarning] = useState(false)
   const [pendingData, setPendingData] = useState<CreateDonationFormData | null>(
@@ -79,7 +77,6 @@ export function DonationCreatePage() {
       )}
 
       <DonationForm
-        donors={donors}
         onSubmit={handleSubmit}
         onCancel={() => navigate('/donations')}
         submitting={createMutation.isPending}

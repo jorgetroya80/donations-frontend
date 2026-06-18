@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dialog'
 import { DonationForm } from './donation-form'
 import type { CreateDonationFormData } from './donation-schema'
-import { useDonation, useDonors, useUpdateDonation } from './use-donations'
+import { useDonation, useUpdateDonation } from './use-donations'
 
 export function DonationEditPage() {
   const { t } = useTranslation()
@@ -21,8 +21,6 @@ export function DonationEditPage() {
   const donationId = Number(id)
 
   const { data: donation, isLoading, error } = useDonation(donationId)
-  const { data: donorsPage } = useDonors()
-  const donors = donorsPage?.content ?? []
   const updateMutation = useUpdateDonation(donationId)
 
   const [pendingData, setPendingData] = useState<CreateDonationFormData | null>(
@@ -84,7 +82,6 @@ export function DonationEditPage() {
           donorId: donation.donorId,
           notes: donation.notes,
         }}
-        donors={donors}
         onSubmit={handleFormSubmit}
         onCancel={() => navigate('/donations')}
         submitting={updateMutation.isPending}
