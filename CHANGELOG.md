@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.24](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.23...donations-frontend-v0.2.24) (2026-06-18)
+
+
+### Features
+
+* enhance typography and UI components with improved text wrapping and styling ([#138](https://github.com/jorgetroya80/donations-frontend/issues/138)) ([b189df6](https://github.com/jorgetroya80/donations-frontend/commit/b189df6725abf2dcfb378e9a83e80b7980315eaf))
+
 ## [0.2.23](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.22...donations-frontend-v0.2.23) (2026-06-16)
 
 
