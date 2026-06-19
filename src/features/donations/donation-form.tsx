@@ -190,7 +190,7 @@ export function DonationForm({
       </div>
 
       <div className="space-y-2">
-        <Label>{t('donations.donorOptional')}</Label>
+        <Label htmlFor="donorId">{t('donations.donorOptional')}</Label>
         <Controller
           control={control}
           name="donorId"

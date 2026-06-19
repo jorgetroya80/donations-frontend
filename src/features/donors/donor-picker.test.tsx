@@ -21,6 +21,21 @@ describe('DonorPicker', () => {
     ).toBeInTheDocument()
   })
 
+  it('trigger exposes dialog popup semantics and toggles aria-expanded', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<DonorPicker value={null} onChange={vi.fn()} />)
+
+    const trigger = screen.getByRole('button', { name: 'Seleccione donante' })
+    expect(trigger).toHaveAttribute('id', 'donorId')
+    expect(trigger).toHaveAttribute('aria-haspopup', 'dialog')
+    expect(trigger).toHaveAttribute('aria-expanded', 'false')
+
+    await user.click(trigger)
+    await waitFor(() => {
+      expect(trigger).toHaveAttribute('aria-expanded', 'true')
+    })
+  })
+
   it('shows the selected donor name when a value is set', async () => {
     renderWithProviders(<DonorPicker value={1} onChange={vi.fn()} />)
     await waitFor(() => {

@@ -1,4 +1,4 @@
-import { X } from 'lucide-react'
+import { ChevronsUpDown, X } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Skeleton } from '@/components/skeleton'
@@ -40,13 +40,17 @@ export function DonorPicker({ value, onChange }: DonorPickerProps) {
     <div className="flex gap-2">
       <Button
         type="button"
+        id="donorId"
         variant="outline"
-        className="min-w-0 flex-1 justify-start font-normal"
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        className="min-w-0 flex-1 justify-between font-normal"
         onClick={() => setOpen(true)}
       >
         <span className={`truncate ${value ? '' : 'text-muted-foreground'}`}>
           {label}
         </span>
+        <ChevronsUpDown size={16} className="opacity-50" aria-hidden="true" />
       </Button>
       <Button
         type="button"
@@ -68,6 +72,7 @@ export function DonorPicker({ value, onChange }: DonorPickerProps) {
             <DialogTitle>{t('donations.selectDonor')}</DialogTitle>
           </DialogHeader>
           <DonorPickerTable
+            selectedId={value}
             onSelect={(id) => {
               onChange(id)
               setOpen(false)
@@ -79,7 +84,13 @@ export function DonorPicker({ value, onChange }: DonorPickerProps) {
   )
 }
 
-function DonorPickerTable({ onSelect }: { onSelect: (id: number) => void }) {
+function DonorPickerTable({
+  selectedId,
+  onSelect,
+}: {
+  selectedId: number | null
+  onSelect: (id: number) => void
+}) {
   const { t } = useTranslation()
   const [page, setPage] = useState(0)
   const { sort, toggleSort, sortIndicator, ariaSort } = useSort(
@@ -96,9 +107,9 @@ function DonorPickerTable({ onSelect }: { onSelect: (id: number) => void }) {
         aria-label={t('common.loading')}
         className="space-y-2"
       >
-        <Skeleton />
-        <Skeleton />
-        <Skeleton />
+        {Array.from({ length: 10 }, (_, i) => (
+          <Skeleton key={i} />
+        ))}
       </div>
     )
   }
@@ -144,19 +155,25 @@ function DonorPickerTable({ onSelect }: { onSelect: (id: number) => void }) {
         </TableHeader>
         <TableBody>
           {donors.map((donor) => (
-            <TableRow key={donor.id}>
-              <TableCell>
-                <button
-                  type="button"
-                  className="block w-full rounded py-1 text-left font-medium transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  onClick={() => {
-                    if (donor.id != null) onSelect(donor.id)
-                  }}
-                >
-                  {donor.fullName}
-                </button>
-              </TableCell>
-              <TableCell>{donor.nationalId}</TableCell>
+            <TableRow
+              key={donor.id}
+              role="button"
+              tabIndex={0}
+              aria-label={donor.fullName}
+              data-state={donor.id === selectedId ? 'selected' : undefined}
+              className="cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+              onClick={() => {
+                if (donor.id != null) onSelect(donor.id)
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  if (donor.id != null) onSelect(donor.id)
+                }
+              }}
+            >
+              <TableCell className="font-medium">{donor.fullName}</TableCell>
+              <TableCell>{donor.nationalId ?? '—'}</TableCell>
             </TableRow>
           ))}
         </TableBody>
