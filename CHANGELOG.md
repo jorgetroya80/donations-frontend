@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.25](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.24...donations-frontend-v0.2.25) (2026-06-19)
+
+
+### Features
+
+* **donor-picker:** paginated donor picker with table dialog ([#140](https://github.com/jorgetroya80/donations-frontend/issues/140)) ([8413d64](https://github.com/jorgetroya80/donations-frontend/commit/8413d64f58c9737a2ef8f8315f980bcff68fca43))
+
 ## [0.2.24](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.23...donations-frontend-v0.2.24) (2026-06-18)
 
 
