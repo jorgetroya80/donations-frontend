@@ -114,4 +114,23 @@ describe('DonorPicker', () => {
       ).toBeInTheDocument()
     })
   })
+
+  it('shows an error message when the donor request fails', async () => {
+    const user = userEvent.setup()
+    server.use(
+      http.get('*/api/v1/donors', () => new HttpResponse(null, { status: 500 }))
+    )
+
+    renderWithProviders(<DonorPicker value={null} onChange={vi.fn()} />)
+    await user.click(screen.getByRole('button', { name: 'Seleccione donante' }))
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('Error al cargar los donantes')
+      ).toBeInTheDocument()
+    })
+    expect(
+      screen.queryByText('No hay donantes registrados')
+    ).not.toBeInTheDocument()
+  })
 })

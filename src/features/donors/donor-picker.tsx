@@ -2,6 +2,7 @@ import { X } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Skeleton } from '@/components/skeleton'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -85,7 +86,7 @@ function DonorPickerTable({ onSelect }: { onSelect: (id: number) => void }) {
     'fullName,asc',
     () => setPage(0)
   )
-  const { data, isLoading } = useDonors({ page, size: 10, sort })
+  const { data, isLoading, error } = useDonors({ page, size: 10, sort })
   const donors = data?.content ?? []
 
   if (isLoading) {
@@ -99,6 +100,14 @@ function DonorPickerTable({ onSelect }: { onSelect: (id: number) => void }) {
         <Skeleton />
         <Skeleton />
       </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <Alert variant="destructive">
+        <AlertDescription>{t('donors.errorLoading')}</AlertDescription>
+      </Alert>
     )
   }
 
