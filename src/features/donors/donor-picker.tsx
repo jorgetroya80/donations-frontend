@@ -40,22 +40,27 @@ export function DonorPicker({ value, onChange }: DonorPickerProps) {
       <Button
         type="button"
         variant="outline"
-        className="flex-1 justify-start font-normal"
+        className="min-w-0 flex-1 justify-start font-normal"
         onClick={() => setOpen(true)}
       >
-        <span className={value ? '' : 'text-muted-foreground'}>{label}</span>
+        <span className={`truncate ${value ? '' : 'text-muted-foreground'}`}>
+          {label}
+        </span>
       </Button>
-      {value != null && (
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          aria-label={t('donations.clearDonor')}
-          onClick={() => onChange(null)}
-        >
-          <X size={16} />
-        </Button>
-      )}
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        aria-label={t('donations.clearDonor')}
+        aria-hidden={value == null}
+        tabIndex={value == null ? -1 : 0}
+        className={`transition-opacity duration-150 ${
+          value == null ? 'pointer-events-none opacity-0' : 'opacity-100'
+        }`}
+        onClick={() => onChange(null)}
+      >
+        <X size={16} />
+      </Button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-2xl">
           <DialogHeader>
@@ -134,7 +139,7 @@ function DonorPickerTable({ onSelect }: { onSelect: (id: number) => void }) {
               <TableCell>
                 <button
                   type="button"
-                  className="text-left font-medium hover:underline"
+                  className="block w-full rounded py-1 text-left font-medium transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   onClick={() => {
                     if (donor.id != null) onSelect(donor.id)
                   }}
