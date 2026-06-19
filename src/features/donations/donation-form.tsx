@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import type { DonorResponse } from '@jorgetroya80/donations-api-client'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
@@ -13,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { DonorPicker } from '@/features/donors/donor-picker'
 import {
   type CreateDonationFormData,
   createDonationSchema,
@@ -22,7 +22,6 @@ import {
 
 interface DonationFormProps {
   defaultValues?: Partial<CreateDonationFormData>
-  donors: DonorResponse[]
   onSubmit: (data: CreateDonationFormData) => void
   onCancel?: () => void
   submitting?: boolean
@@ -31,7 +30,6 @@ interface DonationFormProps {
 
 export function DonationForm({
   defaultValues,
-  donors,
   onSubmit,
   onCancel,
   submitting,
@@ -192,30 +190,15 @@ export function DonationForm({
       </div>
 
       <div className="space-y-2">
-        <Label>{t('donations.donorOptional')}</Label>
+        <Label htmlFor="donorId">{t('donations.donorOptional')}</Label>
         <Controller
           control={control}
           name="donorId"
           render={({ field }) => (
-            <Select
-              value={
-                field.value
-                  ? donors.find((d) => d.id === field.value)?.fullName
-                  : ''
-              }
-              onValueChange={(v) => field.onChange(v ? Number(v) : null)}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder={t('donations.selectDonor')} />
-              </SelectTrigger>
-              <SelectContent>
-                {donors.map((donor) => (
-                  <SelectItem key={donor.id} value={String(donor.id)}>
-                    {donor.fullName}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <DonorPicker
+              value={field.value ?? null}
+              onChange={field.onChange}
+            />
           )}
         />
       </div>

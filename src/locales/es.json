@@ -81,6 +81,7 @@
     "selectType": "Seleccione tipo",
     "selectPayment": "Seleccione método",
     "selectDonor": "Seleccione donante",
+    "clearDonor": "Quitar donante",
     "editLabel": "Editar donación del {{date}}"
   },
   "donors": {
