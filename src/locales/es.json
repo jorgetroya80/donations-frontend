@@ -129,6 +129,7 @@
       "SUPPLIES": "Suministros",
       "MISSIONS": "Misiones",
       "MAINTENANCE": "Mantenimiento",
+      "IRPF": "IRPF",
       "OTHER": "Otro"
     },
     "paymentMethods": {
