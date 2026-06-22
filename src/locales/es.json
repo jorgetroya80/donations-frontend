@@ -82,6 +82,8 @@
     "selectPayment": "Seleccione método",
     "selectDonor": "Seleccione donante",
     "clearDonor": "Quitar donante",
+    "searchDonor": "Buscar donante…",
+    "noDonorsFound": "No se encontraron donantes",
     "editLabel": "Editar donación del {{date}}"
   },
   "donors": {
@@ -129,6 +131,7 @@
       "SUPPLIES": "Suministros",
       "MISSIONS": "Misiones",
       "MAINTENANCE": "Mantenimiento",
+      "IRPF": "IRPF",
       "OTHER": "Otro"
     },
     "paymentMethods": {

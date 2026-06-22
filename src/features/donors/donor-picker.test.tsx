@@ -14,138 +14,149 @@ beforeEach(() => {
 })
 
 describe('DonorPicker', () => {
-  it('shows placeholder when no value is selected', () => {
+  it('renders a combobox with a search placeholder when no value is selected', () => {
     renderWithProviders(<DonorPicker value={null} onChange={vi.fn()} />)
-    expect(
-      screen.getByRole('button', { name: 'Seleccione donante' })
-    ).toBeInTheDocument()
-  })
-
-  it('trigger exposes dialog popup semantics and toggles aria-expanded', async () => {
-    const user = userEvent.setup()
-    renderWithProviders(<DonorPicker value={null} onChange={vi.fn()} />)
-
-    const trigger = screen.getByRole('button', { name: 'Seleccione donante' })
-    expect(trigger).toHaveAttribute('id', 'donorId')
-    expect(trigger).toHaveAttribute('aria-haspopup', 'dialog')
-    expect(trigger).toHaveAttribute('aria-expanded', 'false')
-
-    await user.click(trigger)
-    await waitFor(() => {
-      expect(trigger).toHaveAttribute('aria-expanded', 'true')
-    })
+    const combobox = screen.getByRole('combobox')
+    expect(combobox).toHaveAttribute('id', 'donorId')
+    expect(combobox).toHaveAttribute('placeholder', 'Buscar donante…')
+    expect(combobox).toHaveAttribute('aria-expanded', 'false')
+    expect(combobox).toHaveValue('')
   })
 
   it('shows the selected donor name when a value is set', async () => {
     renderWithProviders(<DonorPicker value={1} onChange={vi.fn()} />)
-    await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: 'Juan Pérez' })
-      ).toBeInTheDocument()
-    })
+    await waitFor(() =>
+      expect(screen.getByRole('combobox')).toHaveValue('Juan Pérez')
+    )
   })
 
-  it('opens the dialog and renders donor rows', async () => {
+  it('opens the listbox on focus and lists donors', async () => {
     const user = userEvent.setup()
     renderWithProviders(<DonorPicker value={null} onChange={vi.fn()} />)
 
-    await user.click(screen.getByRole('button', { name: 'Seleccione donante' }))
-
-    await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: 'Juan Pérez' })
-      ).toBeInTheDocument()
-    })
+    await user.click(screen.getByRole('combobox'))
+    await waitFor(() =>
+      expect(screen.getByRole('combobox')).toHaveAttribute(
+        'aria-expanded',
+        'true'
+      )
+    )
     expect(
-      screen.getByRole('button', { name: 'María García' })
+      await screen.findByRole('option', { name: /Juan Pérez/ })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('option', { name: /María García/ })
     ).toBeInTheDocument()
   })
 
-  it('selecting a row calls onChange with the donor id and closes the dialog', async () => {
-    const user = userEvent.setup()
+  it('filters via server-side search and selects a donor', async () => {
     const onChange = vi.fn()
+    const user = userEvent.setup()
     renderWithProviders(<DonorPicker value={null} onChange={onChange} />)
 
-    await user.click(screen.getByRole('button', { name: 'Seleccione donante' }))
-    await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: 'Juan Pérez' })
-      ).toBeInTheDocument()
-    })
+    const combobox = screen.getByRole('combobox')
+    await user.click(combobox)
+    await user.type(combobox, 'maría')
 
-    await user.click(screen.getByRole('button', { name: 'Juan Pérez' }))
+    await waitFor(() =>
+      expect(screen.queryByRole('option', { name: /Juan Pérez/ })).toBeNull()
+    )
+    const option = await screen.findByRole('option', { name: /María García/ })
+    await user.click(option)
 
-    expect(onChange).toHaveBeenCalledWith(1)
-    await waitFor(() => {
-      expect(
-        screen.queryByRole('button', { name: 'María García' })
-      ).not.toBeInTheDocument()
-    })
+    expect(onChange).toHaveBeenCalledWith(2)
+    await waitFor(() =>
+      expect(screen.getByRole('combobox')).toHaveAttribute(
+        'aria-expanded',
+        'false'
+      )
+    )
   })
 
-  it('clear button resets the value to null', async () => {
-    const user = userEvent.setup()
+  it('selects the highlighted donor with the keyboard', async () => {
     const onChange = vi.fn()
+    const user = userEvent.setup()
+    renderWithProviders(<DonorPicker value={null} onChange={onChange} />)
+
+    const combobox = screen.getByRole('combobox')
+    await user.click(combobox)
+    await screen.findByRole('option', { name: /Juan Pérez/ })
+    await user.keyboard('{ArrowDown}{Enter}')
+
+    expect(onChange).toHaveBeenCalledWith(1)
+  })
+
+  it('clears the selection', async () => {
+    const onChange = vi.fn()
+    const user = userEvent.setup()
     renderWithProviders(<DonorPicker value={1} onChange={onChange} />)
+    await waitFor(() =>
+      expect(screen.getByRole('combobox')).toHaveValue('Juan Pérez')
+    )
 
-    const clearButton = await screen.findByRole('button', {
-      name: 'Quitar donante',
-    })
-    await user.click(clearButton)
-
+    await user.click(screen.getByRole('button', { name: 'Quitar donante' }))
     expect(onChange).toHaveBeenCalledWith(null)
   })
 
-  it('paginates to the next page', async () => {
+  it('shows an empty state when search yields no donors', async () => {
     const user = userEvent.setup()
-    server.use(
-      http.get('*/api/v1/donors', ({ request }) => {
-        const page = Number(new URL(request.url).searchParams.get('page') ?? 0)
-        const donor =
-          page === 0
-            ? { id: 1, fullName: 'Juan Pérez', nationalId: '12345678A' }
-            : { id: 2, fullName: 'Ana López', nationalId: '99999999Z' }
-        return HttpResponse.json({
-          content: [{ ...donor, active: true }],
-          page: { size: 1, number: page, totalElements: 2, totalPages: 2 },
-        })
-      })
-    )
-
     renderWithProviders(<DonorPicker value={null} onChange={vi.fn()} />)
-    await user.click(screen.getByRole('button', { name: 'Seleccione donante' }))
 
-    await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: 'Juan Pérez' })
-      ).toBeInTheDocument()
-    })
+    const combobox = screen.getByRole('combobox')
+    await user.click(combobox)
+    await user.type(combobox, 'zzz')
 
-    await user.click(screen.getByRole('button', { name: 'Siguiente' }))
-
-    await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: 'Ana López' })
-      ).toBeInTheDocument()
-    })
+    expect(
+      await screen.findByText('No se encontraron donantes')
+    ).toBeInTheDocument()
   })
 
-  it('shows an error message when the donor request fails', async () => {
-    const user = userEvent.setup()
+  it('surfaces an error when the donor request fails', async () => {
     server.use(
       http.get('*/api/v1/donors', () => new HttpResponse(null, { status: 500 }))
     )
-
+    const user = userEvent.setup()
     renderWithProviders(<DonorPicker value={null} onChange={vi.fn()} />)
-    await user.click(screen.getByRole('button', { name: 'Seleccione donante' }))
 
-    await waitFor(() => {
-      expect(
-        screen.getByText('Error al cargar los donantes')
-      ).toBeInTheDocument()
-    })
+    await user.click(screen.getByRole('combobox'))
     expect(
-      screen.queryByText('No hay donantes registrados')
-    ).not.toBeInTheDocument()
+      await screen.findByText('Error al cargar los donantes')
+    ).toBeInTheDocument()
+  })
+
+  it('does not fetch the donor list until the picker is opened', async () => {
+    let calls = 0
+    server.use(
+      http.get('*/api/v1/donors', () => {
+        calls += 1
+        return HttpResponse.json({
+          content: [],
+          page: { size: 10, number: 0, totalElements: 0, totalPages: 0 },
+        })
+      })
+    )
+    const user = userEvent.setup()
+    renderWithProviders(<DonorPicker value={null} onChange={vi.fn()} />)
+
+    await new Promise((r) => setTimeout(r, 50))
+    expect(calls).toBe(0)
+
+    await user.click(screen.getByRole('combobox'))
+    await waitFor(() => expect(calls).toBeGreaterThan(0))
+  })
+
+  it('closes the listbox on Escape', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<DonorPicker value={null} onChange={vi.fn()} />)
+
+    const combobox = screen.getByRole('combobox')
+    await user.click(combobox)
+    await screen.findByRole('option', { name: /Juan Pérez/ })
+
+    await user.keyboard('{Escape}')
+    await waitFor(() =>
+      expect(combobox).toHaveAttribute('aria-expanded', 'false')
+    )
+    expect(screen.queryByRole('listbox')).toBeNull()
   })
 })

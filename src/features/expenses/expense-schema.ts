@@ -7,6 +7,7 @@ export const expenseCategories = [
   'SUPPLIES',
   'MISSIONS',
   'MAINTENANCE',
+  'IRPF',
   'OTHER',
 ] as const
 

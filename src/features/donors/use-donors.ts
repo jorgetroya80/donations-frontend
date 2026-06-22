@@ -13,14 +13,20 @@ interface DonorListParams {
   page: number
   size: number
   sort?: string
+  search?: string
 }
 
-export function useDonors(params: DonorListParams) {
+export function useDonors(
+  params: DonorListParams,
+  options?: { enabled?: boolean }
+) {
   return useQuery({
     queryKey: ['donors', params],
+    enabled: options?.enabled,
     queryFn: ({ signal }) =>
       listDonors({
         query: {
+          search: params.search || undefined,
           pageable: {
             page: params.page,
             size: params.size,

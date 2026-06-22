@@ -220,37 +220,48 @@ export const handlers = [
     })
   }),
 
-  http.get(`${API}/donors`, () => {
+  http.get(`${API}/donors`, ({ request }) => {
+    const allDonors = [
+      {
+        id: 1,
+        fullName: 'Juan Pérez',
+        nationalId: '12345678A',
+        email: 'juan@test.com',
+        phone: null,
+        address: null,
+        active: true,
+        createdAt: '2026-01-01T10:00:00',
+        updatedAt: '2026-01-01T10:00:00',
+      },
+      {
+        id: 2,
+        fullName: 'María García',
+        nationalId: '87654321B',
+        email: null,
+        phone: '600123456',
+        address: 'Calle Mayor 1',
+        active: false,
+        createdAt: '2026-02-01T10:00:00',
+        updatedAt: '2026-02-01T10:00:00',
+      },
+    ]
+    const search = new URL(request.url).searchParams
+      .get('search')
+      ?.toLowerCase()
+    const content = search
+      ? allDonors.filter(
+          (d) =>
+            d.fullName.toLowerCase().includes(search) ||
+            d.nationalId.toLowerCase().includes(search)
+        )
+      : allDonors
     return HttpResponse.json({
-      content: [
-        {
-          id: 1,
-          fullName: 'Juan Pérez',
-          nationalId: '12345678A',
-          email: 'juan@test.com',
-          phone: null,
-          address: null,
-          active: true,
-          createdAt: '2026-01-01T10:00:00',
-          updatedAt: '2026-01-01T10:00:00',
-        },
-        {
-          id: 2,
-          fullName: 'María García',
-          nationalId: '87654321B',
-          email: null,
-          phone: '600123456',
-          address: 'Calle Mayor 1',
-          active: false,
-          createdAt: '2026-02-01T10:00:00',
-          updatedAt: '2026-02-01T10:00:00',
-        },
-      ],
+      content,
       page: {
         size: 10,
         number: 0,
-        totalElements: 2,
-        totalPages: 1,
+        totalElements: content.length,
+        totalPages: content.length === 0 ? 0 : 1,
       },
     })
   }),
