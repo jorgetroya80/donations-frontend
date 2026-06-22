@@ -124,6 +124,27 @@ describe('DonorPicker', () => {
     ).toBeInTheDocument()
   })
 
+  it('does not fetch the donor list until the picker is opened', async () => {
+    let calls = 0
+    server.use(
+      http.get('*/api/v1/donors', () => {
+        calls += 1
+        return HttpResponse.json({
+          content: [],
+          page: { size: 10, number: 0, totalElements: 0, totalPages: 0 },
+        })
+      })
+    )
+    const user = userEvent.setup()
+    renderWithProviders(<DonorPicker value={null} onChange={vi.fn()} />)
+
+    await new Promise((r) => setTimeout(r, 50))
+    expect(calls).toBe(0)
+
+    await user.click(screen.getByRole('combobox'))
+    await waitFor(() => expect(calls).toBeGreaterThan(0))
+  })
+
   it('closes the listbox on Escape', async () => {
     const user = userEvent.setup()
     renderWithProviders(<DonorPicker value={null} onChange={vi.fn()} />)

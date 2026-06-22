@@ -16,9 +16,13 @@ interface DonorListParams {
   search?: string
 }
 
-export function useDonors(params: DonorListParams) {
+export function useDonors(
+  params: DonorListParams,
+  options?: { enabled?: boolean }
+) {
   return useQuery({
     queryKey: ['donors', params],
+    enabled: options?.enabled,
     queryFn: ({ signal }) =>
       listDonors({
         query: {

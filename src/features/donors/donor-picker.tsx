@@ -23,12 +23,10 @@ export function DonorPicker({ value, onChange }: DonorPickerProps) {
   const debouncedQuery = useDebouncedValue(query, 250)
 
   const { data: selectedDonor } = useDonor(value ?? 0)
-  const { data, isLoading, error } = useDonors({
-    page: 0,
-    size: 10,
-    sort: 'fullName,asc',
-    search: debouncedQuery,
-  })
+  const { data, isLoading, error } = useDonors(
+    { page: 0, size: 10, sort: 'fullName,asc', search: debouncedQuery },
+    { enabled: open }
+  )
   const donors = data?.content ?? []
 
   // Close on outside interaction.
@@ -94,7 +92,7 @@ export function DonorPicker({ value, onChange }: DonorPickerProps) {
           open && highlight >= 0 ? optionId(donors[highlight]?.id) : undefined
         }
         placeholder={t('donations.searchDonor')}
-        className="flex h-9 min-w-0 flex-1 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="flex h-8 min-w-0 flex-1 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base shadow-xs transition-colors outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm"
         value={inputValue}
         onFocus={() => {
           if (!open) openWithFreshQuery()
@@ -126,7 +124,7 @@ export function DonorPicker({ value, onChange }: DonorPickerProps) {
       </Button>
 
       {open && (
-        <div className="absolute top-10 left-0 z-50 w-full overflow-hidden rounded-md border border-input bg-background shadow-md">
+        <div className="absolute top-9 left-0 z-50 w-full overflow-hidden rounded-lg border border-input bg-background shadow-md">
           {error ? (
             <Alert variant="destructive" className="border-0">
               <AlertDescription>{t('donors.errorLoading')}</AlertDescription>
