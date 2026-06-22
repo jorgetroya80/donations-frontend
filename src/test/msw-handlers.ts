@@ -245,7 +245,9 @@ export const handlers = [
         updatedAt: '2026-02-01T10:00:00',
       },
     ]
-    const search = new URL(request.url).searchParams.get('search')?.toLowerCase()
+    const search = new URL(request.url).searchParams
+      .get('search')
+      ?.toLowerCase()
     const content = search
       ? allDonors.filter(
           (d) =>
