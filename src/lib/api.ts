@@ -74,11 +74,13 @@ export function pageableQuerySerializer(q: unknown): string {
   const query = q as {
     from?: string
     to?: string
+    search?: string
     pageable?: { page?: number; size?: number; sort?: string[] }
   }
   const parts: string[] = []
   if (query.from) parts.push(`from=${query.from}`)
   if (query.to) parts.push(`to=${query.to}`)
+  if (query.search) parts.push(`search=${encodeURIComponent(query.search)}`)
   const { page, size, sort } = query.pageable ?? {}
   if (page !== undefined) parts.push(`page=${page}`)
   if (size !== undefined) parts.push(`size=${size}`)

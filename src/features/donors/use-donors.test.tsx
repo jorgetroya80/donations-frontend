@@ -32,6 +32,16 @@ describe('useDonors', () => {
     expect(result.current.data?.content?.[0].fullName).toBe('Juan Pérez')
     expect(result.current.data?.page?.totalElements).toBe(2)
   })
+
+  it('forwards the search param and returns the filtered subset', async () => {
+    const { result } = renderHook(
+      () => useDonors({ page: 0, size: 10, search: 'maría' }),
+      { wrapper: createWrapper() }
+    )
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+    expect(result.current.data?.content).toHaveLength(1)
+    expect(result.current.data?.content?.[0].fullName).toBe('María García')
+  })
 })
 
 describe('useDonor', () => {
