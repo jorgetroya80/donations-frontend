@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.26](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.25...donations-frontend-v0.2.26) (2026-06-22)
+
+
+### Features
+
+* **donors:** server-side searchable donor picker (combobox) ([#142](https://github.com/jorgetroya80/donations-frontend/issues/142)) ([7c230cb](https://github.com/jorgetroya80/donations-frontend/commit/7c230cb096c96075a82c1c891ca1940f35abac2f))
+
 ## [0.2.25](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.24...donations-frontend-v0.2.25) (2026-06-19)
 
 
