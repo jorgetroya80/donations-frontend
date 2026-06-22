@@ -1,6 +1,8 @@
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { HttpResponse, http } from 'msw'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { server } from '@/test/msw-server'
 import { renderWithProviders } from '@/test/test-utils'
 import { DonorPicker } from './donor-picker'
 
@@ -94,5 +96,46 @@ describe('DonorPicker', () => {
 
     await user.click(screen.getByRole('button', { name: 'Quitar donante' }))
     expect(onChange).toHaveBeenCalledWith(null)
+  })
+
+  it('shows an empty state when search yields no donors', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<DonorPicker value={null} onChange={vi.fn()} />)
+
+    const combobox = screen.getByRole('combobox')
+    await user.click(combobox)
+    await user.type(combobox, 'zzz')
+
+    expect(
+      await screen.findByText('No se encontraron donantes')
+    ).toBeInTheDocument()
+  })
+
+  it('surfaces an error when the donor request fails', async () => {
+    server.use(
+      http.get('*/api/v1/donors', () => new HttpResponse(null, { status: 500 }))
+    )
+    const user = userEvent.setup()
+    renderWithProviders(<DonorPicker value={null} onChange={vi.fn()} />)
+
+    await user.click(screen.getByRole('combobox'))
+    expect(
+      await screen.findByText('Error al cargar los donantes')
+    ).toBeInTheDocument()
+  })
+
+  it('closes the listbox on Escape', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<DonorPicker value={null} onChange={vi.fn()} />)
+
+    const combobox = screen.getByRole('combobox')
+    await user.click(combobox)
+    await screen.findByRole('option', { name: /Juan Pérez/ })
+
+    await user.keyboard('{Escape}')
+    await waitFor(() =>
+      expect(combobox).toHaveAttribute('aria-expanded', 'false')
+    )
+    expect(screen.queryByRole('listbox')).toBeNull()
   })
 })
