@@ -1,7 +1,4 @@
-import { Autocomplete } from '@base-ui/react'
-import type { DonorResponse } from '@jorgetroya80/donations-api-client'
 import dayjs from 'dayjs'
-import { CircleX } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DateRangePicker } from '@/components/date-range-picker'
@@ -15,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useDonors } from '@/features/donations/use-donations'
+import { DonorPicker } from '@/features/donors/donor-picker'
 import { currentMonthRange, formatCurrency } from '@/lib/formatters'
 import {
   useDonationReport,
@@ -167,68 +164,21 @@ function ExpenseSummaryTab() {
   )
 }
 
-function DonorList({ onSelect }: { onSelect: (id: number | null) => void }) {
-  const filtered = Autocomplete.useFilteredItems<DonorResponse>()
-  return (
-    <Autocomplete.List>
-      {filtered.map((donor, i) => (
-        <Autocomplete.Item
-          key={donor.id}
-          value={donor}
-          index={i}
-          onClick={() => onSelect(donor.id ?? null)}
-          className="cursor-pointer px-3 py-2 text-sm data-highlighted:bg-accent"
-        >
-          {donor.fullName} — {donor.nationalId}
-        </Autocomplete.Item>
-      ))}
-    </Autocomplete.List>
-  )
-}
-
 function DonorStatementTab() {
   const { t } = useTranslation()
   const [range, setRange] = useState(currentMonthRange)
   const [donorId, setDonorId] = useState<number | null>(null)
-  const { data: donorsPage } = useDonors()
   const { data, isLoading, error } = useDonorStatement(donorId, {
     from: formatDate(range.from),
     to: formatDate(range.to),
   })
 
-  const donors = donorsPage?.content ?? []
-
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-4">
-        <Autocomplete.Root
-          items={donors}
-          itemToStringValue={(d) => d.fullName ?? ''}
-          onValueChange={(v) => {
-            if (!v) setDonorId(null)
-          }}
-        >
-          <Autocomplete.InputGroup className="grid items-center">
-            <Autocomplete.Input
-              placeholder={t('reports.searchDonor')}
-              aria-label={t('reports.searchDonor')}
-              className="[grid-area:1/1] rounded-lg border border-input bg-background px-3 py-1.5 pr-8 text-sm"
-            />
-            <Autocomplete.Clear className="[grid-area:1/1] mr-3 cursor-pointer justify-self-end text-muted-foreground transition-colors hover:text-foreground">
-              <CircleX size={15} />
-            </Autocomplete.Clear>
-          </Autocomplete.InputGroup>
-          <Autocomplete.Portal>
-            <Autocomplete.Positioner>
-              <Autocomplete.Popup className="z-50 min-w-(--anchor-width) rounded-lg border border-input bg-background shadow-md mt-1">
-                <DonorList onSelect={setDonorId} />
-                <Autocomplete.Empty className="px-3 py-2 text-sm text-muted-foreground">
-                  {t('reports.noDonorsFound')}
-                </Autocomplete.Empty>
-              </Autocomplete.Popup>
-            </Autocomplete.Positioner>
-          </Autocomplete.Portal>
-        </Autocomplete.Root>
+        <div className="min-w-56 flex-1 sm:max-w-sm">
+          <DonorPicker value={donorId} onChange={setDonorId} />
+        </div>
         <DateRangePicker
           from={range.from}
           to={range.to}
