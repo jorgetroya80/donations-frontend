@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.27](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.26...donations-frontend-v0.2.27) (2026-06-26)
+
+
+### Features
+
+* **reports:** use searchable DonorPicker in donor-statement tab ([#144](https://github.com/jorgetroya80/donations-frontend/issues/144)) ([6ef269c](https://github.com/jorgetroya80/donations-frontend/commit/6ef269ca410d4f2410e92d3e43cb0a5b48218b00))
+
 ## [0.2.26](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.25...donations-frontend-v0.2.26) (2026-06-22)
 
 
