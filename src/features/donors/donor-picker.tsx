@@ -111,7 +111,7 @@ export function DonorPicker({ value, onChange }: DonorPickerProps) {
         aria-label={t('donations.clearDonor')}
         aria-hidden={value == null}
         tabIndex={value == null ? -1 : 0}
-        className={`transition-opacity duration-150 ${
+        className={`relative transition-opacity duration-150 before:absolute before:-inset-1 before:content-[''] ${
           value == null ? 'pointer-events-none opacity-0' : 'opacity-100'
         }`}
         onClick={() => {
