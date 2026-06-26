@@ -176,7 +176,7 @@ function DonorStatementTab() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-4">
-        <div className="w-64">
+        <div className="min-w-56 flex-1 sm:max-w-sm">
           <DonorPicker value={donorId} onChange={setDonorId} />
         </div>
         <DateRangePicker
