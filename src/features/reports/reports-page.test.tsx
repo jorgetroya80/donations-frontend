@@ -36,33 +36,32 @@ describe('ReportsPage', () => {
     expect(screen.getByText('Servicios')).toBeInTheDocument()
   })
 
-  it('switches to donor statement tab and shows autocomplete input', async () => {
+  it('switches to donor statement tab and shows donor picker input', async () => {
     const user = userEvent.setup()
     renderPage()
     await user.click(screen.getByText('Estado de cuenta del donante'))
     expect(
       screen.getByText('Seleccione un donante para ver su estado de cuenta')
     ).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('Buscar donante...')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Buscar donante…')).toBeInTheDocument()
   })
 
-  it('loads donor statement when donor selected from autocomplete', async () => {
+  it('loads donor statement when donor selected from picker', async () => {
     const user = userEvent.setup()
     renderPage()
     await user.click(screen.getByText('Estado de cuenta del donante'))
 
-    const input = screen.getByPlaceholderText('Buscar donante...')
+    const input = screen.getByPlaceholderText('Buscar donante…')
 
-    // Type to filter donors
+    // Type to filter donors (server-side search)
+    await user.click(input)
     await user.type(input, 'Juan')
 
     // Donor option appears
-    await waitFor(() => {
-      expect(screen.getByText('Juan Pérez — 12345678A')).toBeInTheDocument()
-    })
+    const option = await screen.findByRole('option', { name: /Juan Pérez/ })
 
     // Click donor option
-    await user.click(screen.getByText('Juan Pérez — 12345678A'))
+    await user.click(option)
 
     // Statement loads
     await waitFor(() => {
@@ -77,7 +76,8 @@ describe('ReportsPage', () => {
     renderPage()
     await user.click(screen.getByText('Estado de cuenta del donante'))
 
-    const input = screen.getByPlaceholderText('Buscar donante...')
+    const input = screen.getByPlaceholderText('Buscar donante…')
+    await user.click(input)
     await user.type(input, 'zzznomatch')
 
     await waitFor(() => {
@@ -85,25 +85,24 @@ describe('ReportsPage', () => {
     })
   })
 
-  it('hides statement when input is cleared after donor selected', async () => {
+  it('hides statement when donor is cleared after selection', async () => {
     const user = userEvent.setup()
     renderPage()
     await user.click(screen.getByText('Estado de cuenta del donante'))
 
-    const input = screen.getByPlaceholderText('Buscar donante...')
+    const input = screen.getByPlaceholderText('Buscar donante…')
+    await user.click(input)
     await user.type(input, 'Juan')
 
-    await waitFor(() => {
-      expect(screen.getByText('Juan Pérez — 12345678A')).toBeInTheDocument()
-    })
-    await user.click(screen.getByText('Juan Pérez — 12345678A'))
+    const option = await screen.findByRole('option', { name: /Juan Pérez/ })
+    await user.click(option)
 
     await waitFor(() => {
       expect(screen.getByText('Diezmo')).toBeInTheDocument()
     })
 
-    // Clear the input
-    await user.clear(input)
+    // Clear the selected donor via the clear button
+    await user.click(screen.getByRole('button', { name: 'Quitar donante' }))
 
     // Statement should be hidden; prompt message should reappear
     await waitFor(() => {
