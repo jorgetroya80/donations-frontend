@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.29](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.28...donations-frontend-v0.2.29) (2026-06-29)
+
+
+### Bug Fixes
+
+* **docker:** add BuildKit syntax directive for Render build secrets ([#149](https://github.com/jorgetroya80/donations-frontend/issues/149)) ([25b45d0](https://github.com/jorgetroya80/donations-frontend/commit/25b45d0e989dc6c3911a3179358ee731951910a1))
+
 ## [0.2.28](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.27...donations-frontend-v0.2.28) (2026-06-29)
 
 
