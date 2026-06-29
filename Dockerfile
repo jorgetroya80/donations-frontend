@@ -24,8 +24,10 @@ FROM nginx:1.27-alpine
 LABEL org.opencontainers.image.title="donations-frontend" \
       org.opencontainers.image.source="https://github.com/jorgetroya80/donations-frontend"
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY default.conf.template /etc/nginx/templates/default.conf.template
 COPY --from=build /app/dist /usr/share/nginx/html
+
+ENV PORT=80 API_UPSTREAM=http://api:8081 API_HOST=api
 
 EXPOSE 80
 

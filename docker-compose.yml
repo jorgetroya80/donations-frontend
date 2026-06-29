@@ -1,13 +1,13 @@
 services:
   frontend:
     image: jorgetroya/donations-frontend:latest
-    platform: linux/amd64
     build:
       context: .
       args:
         VITE_API_URL: ${VITE_API_URL:-}
       secrets:
-        - node_auth_token
+        - source: node_auth_token
+          target: NODE_AUTH_TOKEN
     ports:
       - '8080:80'
     depends_on:
@@ -25,7 +25,6 @@ services:
 
   api:
     image: jorgetroya/donations-api:${DONATIONS_API_VERSION:-1.7.1}
-    platform: linux/amd64
     pull_policy: always
     ports:
       - '8081:8081'
