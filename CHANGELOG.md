@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.28](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.27...donations-frontend-v0.2.28) (2026-06-29)
+
+
+### Features
+
+* **deploy:** deploy frontend to Render (Docker web service, same-origin /api proxy) ([#147](https://github.com/jorgetroya80/donations-frontend/issues/147)) ([50b5454](https://github.com/jorgetroya80/donations-frontend/commit/50b5454c9d71e8d644102337d8a9d5bf72331125))
+
 ## [0.2.27](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.26...donations-frontend-v0.2.27) (2026-06-26)
 
 
