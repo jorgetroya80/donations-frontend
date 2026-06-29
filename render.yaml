@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: donations-frontend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: frankfurt
+    autoDeploy: true
+    healthCheckPath: /
+    envVars:
+      - key: API_UPSTREAM
+        sync: false
+      - key: API_HOST
+        sync: false

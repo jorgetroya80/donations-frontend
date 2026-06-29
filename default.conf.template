@@ -1,5 +1,5 @@
 server {
-    listen 80;
+    listen ${PORT};
     root /usr/share/nginx/html;
     index index.html;
 
@@ -15,10 +15,11 @@ server {
     add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'" always;
 
     location /api/ {
-        proxy_pass http://api:8081;
+        proxy_pass ${API_UPSTREAM};
+        proxy_ssl_server_name on;
         proxy_http_version 1.1;
         proxy_set_header Connection "";
-        proxy_set_header Host $host;
+        proxy_set_header Host ${API_HOST};
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
