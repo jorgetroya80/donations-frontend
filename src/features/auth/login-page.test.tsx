@@ -1,7 +1,10 @@
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { http } from 'msw'
 import { Route, Routes } from 'react-router'
 import { beforeEach, describe, expect, it } from 'vitest'
+import { server } from '@/test/msw-server'
+import { problemDetailResponse } from '@/test/problem-detail'
 import { renderWithProviders } from '@/test/test-utils'
 import { LoginPage } from './login-page'
 
@@ -140,6 +143,50 @@ describe('LoginPage', () => {
       screen.queryByText(
         'Demasiados intentos fallidos. La cuenta puede estar bloqueada por unos 15 minutos.'
       )
+    ).not.toBeInTheDocument()
+
+    // ...and the counter must survive the 400: the next 401 is the 5th
+    // real failure and trips the lockout hint
+    await user.clear(username)
+    await user.clear(password)
+    await user.type(username, 'wrong')
+    await user.type(password, 'wrong')
+    await user.click(submit)
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(
+          'Demasiados intentos fallidos. La cuenta puede estar bloqueada por unos 15 minutos.'
+        )
+      ).toBeInTheDocument()
+    })
+  })
+
+  it('shows connection error, not invalid credentials, on a 500', async () => {
+    server.use(
+      http.post('*/api/v1/login', () =>
+        problemDetailResponse({
+          status: 500,
+          title: 'Internal Server Error',
+          detail: 'Unexpected error',
+          instance: '/api/v1/login',
+        })
+      )
+    )
+    const user = userEvent.setup()
+    renderWithProviders(<TestApp />, { route: '/login' })
+
+    await user.type(screen.getByLabelText('Usuario'), 'admin')
+    await user.type(screen.getByLabelText('Contraseña'), 'random')
+    await user.click(screen.getByRole('button', { name: 'Ingresar' }))
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('Error de conexión. Intente nuevamente.')
+      ).toBeInTheDocument()
+    })
+    expect(
+      screen.queryByText('Usuario o contraseña incorrectos')
     ).not.toBeInTheDocument()
   })
 
