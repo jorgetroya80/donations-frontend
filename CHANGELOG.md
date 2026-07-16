@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.3.0](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.30...donations-frontend-v0.3.0) (2026-07-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* migrate error handling to RFC 9457 ProblemDetail (api-client 2.0.0) ([#154](https://github.com/jorgetroya80/donations-frontend/issues/154))
+
+### Features
+
+* migrate error handling to RFC 9457 ProblemDetail (api-client 2.0.0) ([#154](https://github.com/jorgetroya80/donations-frontend/issues/154)) ([5fab641](https://github.com/jorgetroya80/donations-frontend/commit/5fab641469a0a285b6fc298220d55ffef29554c6)), closes [#153](https://github.com/jorgetroya80/donations-frontend/issues/153)
+
 ## [0.2.30](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.29...donations-frontend-v0.2.30) (2026-07-16)
 
 
