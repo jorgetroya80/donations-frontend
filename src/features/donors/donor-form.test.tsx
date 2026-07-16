@@ -116,6 +116,11 @@ describe('DonorForm', () => {
   it('displays server field errors when onSubmit rejects', async () => {
     const user = userEvent.setup()
     const serverError = {
+      type: 'about:blank',
+      title: 'Bad Request',
+      status: 400,
+      detail: 'Validation failed',
+      instance: '/api/v1/donors',
       fields: { nationalId: 'Formato de DNI/NIE inválido' },
     }
     const onSubmit = vi.fn().mockRejectedValue(serverError)
