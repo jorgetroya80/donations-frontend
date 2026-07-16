@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.30](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.29...donations-frontend-v0.2.30) (2026-07-16)
+
+
+### Bug Fixes
+
+* **deps:** bump undici to 7.28.0 to resolve CVE-2026-9697 ([#151](https://github.com/jorgetroya80/donations-frontend/issues/151)) ([fb8c59c](https://github.com/jorgetroya80/donations-frontend/commit/fb8c59ca265c87cb97fb25922925149007997f0d))
+
 ## [0.2.29](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.28...donations-frontend-v0.2.29) (2026-06-29)
 
 
