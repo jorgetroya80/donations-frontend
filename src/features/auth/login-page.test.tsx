@@ -108,6 +108,41 @@ describe('LoginPage', () => {
     ).not.toBeInTheDocument()
   })
 
+  it('does not count 400 blank-credential rejections toward lockout', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<TestApp />, { route: '/login' })
+
+    const username = screen.getByLabelText('Usuario')
+    const password = screen.getByLabelText('Contraseña')
+    const submit = screen.getByRole('button', { name: 'Ingresar' })
+
+    for (let i = 0; i < 4; i++) {
+      await user.clear(username)
+      await user.clear(password)
+      await user.type(username, 'wrong')
+      await user.type(password, 'wrong')
+      await user.click(submit)
+      await waitFor(() => expect(submit).not.toBeDisabled())
+    }
+
+    // A validation 400 as the 5th rejection must not trip the lockout hint
+    await user.clear(username)
+    await user.clear(password)
+    await user.type(username, ' ')
+    await user.type(password, ' ')
+    await user.click(submit)
+    await waitFor(() => expect(submit).not.toBeDisabled())
+
+    expect(
+      screen.getByText('Usuario o contraseña incorrectos')
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByText(
+        'Demasiados intentos fallidos. La cuenta puede estar bloqueada por unos 15 minutos.'
+      )
+    ).not.toBeInTheDocument()
+  })
+
   it('shows lockout hint after 5 consecutive failed attempts', async () => {
     const user = userEvent.setup()
     renderWithProviders(<TestApp />, { route: '/login' })

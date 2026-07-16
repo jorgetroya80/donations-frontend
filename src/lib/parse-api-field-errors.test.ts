@@ -37,6 +37,24 @@ describe('parseApiFieldErrors', () => {
     expect(parseApiFieldErrors(undefined)).toEqual({})
   })
 
+  it('returns fields when the problem detail omits type (as the real API does)', () => {
+    expect(
+      parseApiFieldErrors({
+        title: 'Bad Request',
+        status: 400,
+        detail: 'Validation failed',
+        instance: '/api/v1/login',
+        fields: {
+          username: 'Username is required',
+          password: 'Password is required',
+        },
+      })
+    ).toEqual({
+      username: 'Username is required',
+      password: 'Password is required',
+    })
+  })
+
   it('handles multiple field errors', () => {
     expect(
       parseApiFieldErrors({
