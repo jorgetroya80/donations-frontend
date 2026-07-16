@@ -1,10 +1,11 @@
 import { act, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { HttpResponse, http } from 'msw'
+import { http } from 'msw'
 import { Route, Routes } from 'react-router'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { kyInstance } from '@/lib/api'
 import { server } from '@/test/msw-server'
+import { problemDetailResponse } from '@/test/problem-detail'
 import { renderWithProviders } from '@/test/test-utils'
 import { ChangePasswordPage } from './change-password-page'
 
@@ -180,15 +181,13 @@ describe('ChangePasswordPage', () => {
     window.history.pushState({}, '', '/settings/password')
     server.use(
       http.get('*/api/v1/ping', () =>
-        HttpResponse.json(
-          {
-            status: 403,
-            error: 'Forbidden',
-            message: 'Password change required',
-            code: 'PASSWORD_CHANGE_REQUIRED',
-          },
-          { status: 403 }
-        )
+        problemDetailResponse({
+          status: 403,
+          title: 'Forbidden',
+          detail: 'Password change required',
+          instance: '/api/v1/ping',
+          code: 'PASSWORD_CHANGE_REQUIRED',
+        })
       )
     )
     renderForcedFlow({

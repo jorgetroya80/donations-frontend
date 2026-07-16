@@ -1,4 +1,5 @@
 import { HttpResponse, http } from 'msw'
+import { problemDetailResponse } from './problem-detail'
 
 const API = '*/api/v1'
 
@@ -7,6 +8,18 @@ export const handlers = [
     const body = (await request.json()) as {
       username: string
       password: string
+    }
+    if (!body.username?.trim() || !body.password?.trim()) {
+      return problemDetailResponse({
+        status: 400,
+        title: 'Bad Request',
+        detail: 'Validation failed',
+        instance: '/api/v1/login',
+        fields: {
+          username: 'Username is required',
+          password: 'Password is required',
+        },
+      })
     }
     if (body.username === 'admin' && body.password === 'random') {
       return HttpResponse.json({
@@ -29,7 +42,12 @@ export const handlers = [
         mustChangePassword: true,
       })
     }
-    return new HttpResponse(null, { status: 401 })
+    return problemDetailResponse({
+      status: 401,
+      title: 'Unauthorized',
+      detail: 'Bad credentials',
+      instance: '/api/v1/login',
+    })
   }),
 
   http.put(`${API}/users/me/password`, async ({ request }) => {
@@ -38,7 +56,12 @@ export const handlers = [
       newPassword: string
     }
     if (body.currentPassword === 'wrongpassword') {
-      return new HttpResponse(null, { status: 400 })
+      return problemDetailResponse({
+        status: 400,
+        title: 'Bad Request',
+        detail: 'Current password is incorrect',
+        instance: '/api/v1/users/me/password',
+      })
     }
     return new HttpResponse(null, { status: 200 })
   }),

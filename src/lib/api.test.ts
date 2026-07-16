@@ -1,6 +1,7 @@
 import { HttpResponse, http } from 'msw'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { server } from '@/test/msw-server'
+import { problemDetailResponse } from '@/test/problem-detail'
 import { kyInstance } from './api'
 
 const AUTH_KEY = 'auth_user'
@@ -21,15 +22,13 @@ describe('ky afterResponse hook', () => {
   it('dispatches auth:force-rotation event on 403 PASSWORD_CHANGE_REQUIRED', async () => {
     server.use(
       http.get('*/api/v1/donations', () =>
-        HttpResponse.json(
-          {
-            status: 403,
-            error: 'Forbidden',
-            message: 'Password change required',
-            code: 'PASSWORD_CHANGE_REQUIRED',
-          },
-          { status: 403 }
-        )
+        problemDetailResponse({
+          status: 403,
+          title: 'Forbidden',
+          detail: 'Password change required',
+          instance: '/api/v1/donations',
+          code: 'PASSWORD_CHANGE_REQUIRED',
+        })
       )
     )
     const listener = vi.fn()
@@ -44,15 +43,13 @@ describe('ky afterResponse hook', () => {
   it('flips mustChangePassword to true on 403 PASSWORD_CHANGE_REQUIRED', async () => {
     server.use(
       http.get('*/api/v1/donations', () =>
-        HttpResponse.json(
-          {
-            status: 403,
-            error: 'Forbidden',
-            message: 'Password change required',
-            code: 'PASSWORD_CHANGE_REQUIRED',
-          },
-          { status: 403 }
-        )
+        problemDetailResponse({
+          status: 403,
+          title: 'Forbidden',
+          detail: 'Password change required',
+          instance: '/api/v1/donations',
+          code: 'PASSWORD_CHANGE_REQUIRED',
+        })
       )
     )
 
@@ -65,10 +62,12 @@ describe('ky afterResponse hook', () => {
   it('leaves flag untouched on plain 403 without the code', async () => {
     server.use(
       http.get('*/api/v1/donations', () =>
-        HttpResponse.json(
-          { status: 403, error: 'Forbidden', message: 'Nope' },
-          { status: 403 }
-        )
+        problemDetailResponse({
+          status: 403,
+          title: 'Forbidden',
+          detail: 'Nope',
+          instance: '/api/v1/donations',
+        })
       )
     )
 
@@ -113,15 +112,13 @@ describe('ky afterResponse hook', () => {
     window.history.pushState({}, '', '/settings/password')
     server.use(
       http.get('*/api/v1/donations', () =>
-        HttpResponse.json(
-          {
-            status: 403,
-            error: 'Forbidden',
-            message: 'Password change required',
-            code: 'PASSWORD_CHANGE_REQUIRED',
-          },
-          { status: 403 }
-        )
+        problemDetailResponse({
+          status: 403,
+          title: 'Forbidden',
+          detail: 'Password change required',
+          instance: '/api/v1/donations',
+          code: 'PASSWORD_CHANGE_REQUIRED',
+        })
       )
     )
     const listener = vi.fn()
@@ -147,15 +144,13 @@ describe('ky afterResponse hook', () => {
     )
     server.use(
       http.put('*/api/v1/users/me/password', () =>
-        HttpResponse.json(
-          {
-            status: 403,
-            error: 'Forbidden',
-            message: 'Password change required',
-            code: 'PASSWORD_CHANGE_REQUIRED',
-          },
-          { status: 403 }
-        )
+        problemDetailResponse({
+          status: 403,
+          title: 'Forbidden',
+          detail: 'Password change required',
+          instance: '/api/v1/users/me/password',
+          code: 'PASSWORD_CHANGE_REQUIRED',
+        })
       )
     )
 

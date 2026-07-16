@@ -46,6 +46,12 @@ export function LoginPage() {
         )
         return
       }
+      // Blank/whitespace credentials: the API rejects them with a
+      // validation 400 that does not count toward the account lockout.
+      if (response?.status === 400) {
+        setError(t('auth.errorInvalidCredentials'))
+        return
+      }
       if (error || !data?.username || !data.roles) {
         setError(t('auth.errorConnection'))
         return
