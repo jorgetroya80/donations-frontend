@@ -9,6 +9,18 @@ export const handlers = [
       username: string
       password: string
     }
+    if (!body.username?.trim() || !body.password?.trim()) {
+      return problemDetailResponse({
+        status: 400,
+        title: 'Bad Request',
+        detail: 'Validation failed',
+        instance: '/api/v1/login',
+        fields: {
+          username: 'Username is required',
+          password: 'Password is required',
+        },
+      })
+    }
     if (body.username === 'admin' && body.password === 'random') {
       return HttpResponse.json({
         username: 'admin',

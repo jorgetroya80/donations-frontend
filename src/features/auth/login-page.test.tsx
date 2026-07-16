@@ -90,6 +90,24 @@ describe('LoginPage', () => {
     expect(screen.queryByText('Dashboard')).not.toBeInTheDocument()
   })
 
+  it('shows invalid-credentials error on 400 for blank credentials', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<TestApp />, { route: '/login' })
+
+    await user.type(screen.getByLabelText('Usuario'), ' ')
+    await user.type(screen.getByLabelText('Contraseña'), ' ')
+    await user.click(screen.getByRole('button', { name: 'Ingresar' }))
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('Usuario o contraseña incorrectos')
+      ).toBeInTheDocument()
+    })
+    expect(
+      screen.queryByText('Error de conexión. Intente nuevamente.')
+    ).not.toBeInTheDocument()
+  })
+
   it('shows lockout hint after 5 consecutive failed attempts', async () => {
     const user = userEvent.setup()
     renderWithProviders(<TestApp />, { route: '/login' })
