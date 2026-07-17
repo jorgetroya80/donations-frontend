@@ -169,7 +169,7 @@ export function FinancialOverview() {
       )}
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <Card>
+        <Card className="@container">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
               {t('dashboard.totalIncome')}
@@ -180,7 +180,7 @@ export function FinancialOverview() {
             />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">
+            <p className="font-bold text-2xl @max-3xs:text-lg">
               {balance.data
                 ? formatCurrency(balance.data.totalIncome ?? 0)
                 : '—'}
@@ -192,7 +192,7 @@ export function FinancialOverview() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="@container">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
               {t('dashboard.totalExpenses')}
@@ -200,7 +200,7 @@ export function FinancialOverview() {
             <ArrowDownRight size={16} className="text-destructive" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">
+            <p className="font-bold text-2xl @max-3xs:text-lg">
               {balance.data
                 ? formatCurrency(balance.data.totalExpenses ?? 0)
                 : '—'}
@@ -213,7 +213,7 @@ export function FinancialOverview() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="@container">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
               {t('dashboard.netBalance')}
@@ -221,7 +221,7 @@ export function FinancialOverview() {
             <Scale size={16} className="text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">
+            <p className="font-bold text-2xl @max-3xs:text-lg">
               {balance.data
                 ? formatCurrency(balance.data.netBalance ?? 0)
                 : '—'}
