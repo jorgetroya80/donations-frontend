@@ -209,7 +209,9 @@
   "sidebar": {
     "collapse": "Colapsar menú",
     "expand": "Expandir menú",
-    "mainNavigation": "Navegación principal"
+    "mainNavigation": "Navegación principal",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú"
   },
   "errors": {
     "unexpectedTitle": "Algo salió mal",

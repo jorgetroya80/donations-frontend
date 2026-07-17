@@ -1,4 +1,4 @@
-import { KeyRound, LogOut, Moon, Sun, User } from 'lucide-react'
+import { KeyRound, LogOut, Menu, Moon, Sun, User } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { buttonVariants } from '@/components/ui/button'
@@ -13,7 +13,12 @@ import { useAuth } from '@/features/auth/auth-context'
 import { useTheme } from '@/features/theme/theme-context'
 import { usePageTitle } from './use-page-title'
 
-export function Header() {
+interface HeaderProps {
+  onMenuClick?: () => void
+  menuButtonRef?: React.Ref<HTMLButtonElement>
+}
+
+export function Header({ onMenuClick, menuButtonRef }: HeaderProps) {
   const { t } = useTranslation()
   const { user, logout } = useAuth()
   const { theme, toggleTheme } = useTheme()
@@ -31,7 +36,23 @@ export function Header() {
 
   return (
     <header className="bg-card flex h-14 items-center justify-between border-b px-4">
-      <span className="text-sm font-medium">{pageTitle}</span>
+      <div className="flex items-center gap-1">
+        {onMenuClick && (
+          <button
+            ref={menuButtonRef}
+            onClick={onMenuClick}
+            aria-label={t('sidebar.openMenu')}
+            className={buttonVariants({
+              variant: 'ghost',
+              size: 'icon',
+              className: 'md:hidden',
+            })}
+          >
+            <Menu size={16} />
+          </button>
+        )}
+        <span className="text-sm font-medium">{pageTitle}</span>
+      </div>
       <div className="flex items-center gap-1">
         <button
           onClick={toggleTheme}
