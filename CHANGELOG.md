@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.0...donations-frontend-v0.3.1) (2026-07-17)
+
+
+### Features
+
+* UI/UX refresh — prefill fix, toasts, ProblemDetail errors, mobile nav, a11y ([#156](https://github.com/jorgetroya80/donations-frontend/issues/156)) ([dc6ceae](https://github.com/jorgetroya80/donations-frontend/commit/dc6ceae83fa4e4b92f74a82bec2e01fbddea1dd3))
+
 ## [0.3.0](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.2.30...donations-frontend-v0.3.0) (2026-07-16)
 
 
