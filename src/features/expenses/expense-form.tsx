@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { parseApiFieldErrors } from '@/lib/parse-api-field-errors'
 import {
   type CreateExpenseFormData,
   createExpenseSchema,
@@ -21,7 +22,7 @@ import {
 
 interface ExpenseFormProps {
   defaultValues?: Partial<CreateExpenseFormData>
-  onSubmit: (data: CreateExpenseFormData) => void
+  onSubmit: (data: CreateExpenseFormData) => void | Promise<void>
   onCancel?: () => void
   submitting?: boolean
   submitLabel: string
@@ -50,6 +51,7 @@ export function ExpenseForm({
     register,
     handleSubmit,
     control,
+    setError,
     formState: { errors },
   } = useForm<CreateExpenseFormData>({
     resolver: zodResolver(createExpenseSchema),
@@ -64,8 +66,19 @@ export function ExpenseForm({
     },
   })
 
+  async function submitHandler(data: CreateExpenseFormData) {
+    try {
+      await onSubmit(data)
+    } catch (err) {
+      const fields = parseApiFieldErrors(err)
+      for (const [field, message] of Object.entries(fields)) {
+        setError(field as keyof CreateExpenseFormData, { message })
+      }
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(submitHandler)} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="amount">{t('expenses.amount')}</Label>

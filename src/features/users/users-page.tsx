@@ -15,6 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import { useSort } from '@/lib/use-sort'
 import { useUsers } from './use-users'
 
@@ -46,7 +47,9 @@ export function UsersPage() {
 
       {error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('users.errorLoading')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(error, t('users.errorLoading'))}
+          </AlertDescription>
         </Alert>
       )}
 

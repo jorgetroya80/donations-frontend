@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/table'
 import { DonorPicker } from '@/features/donors/donor-picker'
 import { currentMonthRange, formatCurrency } from '@/lib/formatters'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import {
   useDonationReport,
   useDonorStatement,
@@ -46,7 +47,9 @@ function DonationSummaryTab() {
 
       {error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('reports.errorLoading')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(error, t('reports.errorLoading'))}
+          </AlertDescription>
         </Alert>
       )}
 
@@ -114,7 +117,9 @@ function ExpenseSummaryTab() {
 
       {error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('reports.errorLoading')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(error, t('reports.errorLoading'))}
+          </AlertDescription>
         </Alert>
       )}
 
@@ -188,7 +193,9 @@ function DonorStatementTab() {
 
       {error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('reports.errorLoading')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(error, t('reports.errorLoading'))}
+          </AlertDescription>
         </Alert>
       )}
 

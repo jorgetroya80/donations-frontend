@@ -15,6 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import { useSort } from '@/lib/use-sort'
 import { useDonors } from './use-donors'
 
@@ -41,7 +42,9 @@ export function DonorsPage() {
 
       {error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('donors.errorLoading')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(error, t('donors.errorLoading'))}
+          </AlertDescription>
         </Alert>
       )}
 

@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useToast } from '@/components/ui/toast'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import { useUpdateUser, useUser } from './use-users'
 
 type UserRole = 'ADMIN' | 'TREASURER' | 'PASTOR' | 'OPERATOR'
@@ -42,7 +43,9 @@ export function UserEditPage() {
   if (error || !user) {
     return (
       <Alert variant="destructive">
-        <AlertDescription>{t('users.errorLoading')}</AlertDescription>
+        <AlertDescription>
+          {getProblemMessage(error, t('users.errorLoading'))}
+        </AlertDescription>
       </Alert>
     )
   }
@@ -53,7 +56,9 @@ export function UserEditPage() {
 
       {updateMutation.error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('users.errorSaving')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(updateMutation.error, t('users.errorSaving'))}
+          </AlertDescription>
         </Alert>
       )}
 

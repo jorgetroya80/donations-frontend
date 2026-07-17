@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { parseApiFieldErrors } from '@/lib/parse-api-field-errors'
 import {
   type CreateUserFormData,
   createUserSchema,
@@ -15,7 +16,7 @@ import {
 interface UserFormCreateProps {
   mode: 'create'
   defaultValues?: Partial<CreateUserFormData>
-  onSubmit: (data: CreateUserFormData) => void
+  onSubmit: (data: CreateUserFormData) => void | Promise<void>
   onCancel?: () => void
   submitting?: boolean
   submitLabel: string
@@ -24,7 +25,7 @@ interface UserFormCreateProps {
 interface UserFormEditProps {
   mode: 'edit'
   defaultValues?: Partial<UpdateUserFormData>
-  onSubmit: (data: UpdateUserFormData) => void
+  onSubmit: (data: UpdateUserFormData) => void | Promise<void>
   onCancel?: () => void
   submitting?: boolean
   submitLabel: string
@@ -48,6 +49,7 @@ export function UserForm({
     register,
     handleSubmit,
     control,
+    setError,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -60,13 +62,23 @@ export function UserForm({
     },
   })
 
+  async function submitHandler(data: Record<string, unknown>) {
+    try {
+      await (
+        onSubmit as (data: Record<string, unknown>) => void | Promise<void>
+      )(data)
+    } catch (err) {
+      const fields = parseApiFieldErrors(err)
+      for (const [field, message] of Object.entries(fields)) {
+        setError(field as 'username' | 'password' | 'roles' | 'active', {
+          message,
+        })
+      }
+    }
+  }
+
   return (
-    <form
-      onSubmit={handleSubmit(
-        onSubmit as (data: Record<string, unknown>) => void
-      )}
-      className="space-y-4"
-    >
+    <form onSubmit={handleSubmit(submitHandler)} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="username">{t('users.username')}</Label>

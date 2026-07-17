@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useToast } from '@/components/ui/toast'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import { useCreateUser } from './use-users'
 import { UserForm } from './user-form'
 import type { CreateUserFormData } from './user-schema'
@@ -30,7 +31,9 @@ export function UserCreatePage() {
 
       {createMutation.error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('users.errorSaving')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(createMutation.error, t('users.errorSaving'))}
+          </AlertDescription>
         </Alert>
       )}
 

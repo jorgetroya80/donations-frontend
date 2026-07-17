@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useToast } from '@/components/ui/toast'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import { ExpenseForm } from './expense-form'
 import type { CreateExpenseFormData } from './expense-schema'
 import { useExpense, useUpdateExpense } from './use-expenses'
@@ -41,7 +42,9 @@ export function ExpenseEditPage() {
   if (error || !expense) {
     return (
       <Alert variant="destructive">
-        <AlertDescription>{t('expenses.errorLoading')}</AlertDescription>
+        <AlertDescription>
+          {getProblemMessage(error, t('expenses.errorLoading'))}
+        </AlertDescription>
       </Alert>
     )
   }
@@ -52,7 +55,9 @@ export function ExpenseEditPage() {
 
       {updateMutation.error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('expenses.errorSaving')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(updateMutation.error, t('expenses.errorSaving'))}
+          </AlertDescription>
         </Alert>
       )}
 

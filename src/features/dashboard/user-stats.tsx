@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import { useUserStats } from './use-user-stats'
 
 export function UserStats() {
@@ -17,7 +18,9 @@ export function UserStats() {
 
       {error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('dashboard.errorLoading')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(error, t('dashboard.errorLoading'))}
+          </AlertDescription>
         </Alert>
       )}
 

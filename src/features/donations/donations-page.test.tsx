@@ -1,6 +1,9 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { http } from 'msw'
 import { beforeEach, describe, expect, it } from 'vitest'
+import { server } from '@/test/msw-server'
+import { problemDetailResponse } from '@/test/problem-detail'
 import { renderWithProviders } from '@/test/test-utils'
 import { DonationsPage } from './donations-page'
 
@@ -30,6 +33,27 @@ describe('DonationsPage', () => {
     expect(screen.getByText('Anónimo')).toBeInTheDocument()
     expect(screen.getByText('Diezmo')).toBeInTheDocument()
     expect(screen.getByText('Ofrenda')).toBeInTheDocument()
+  })
+
+  it('shows the ProblemDetail message when loading fails', async () => {
+    server.use(
+      http.get('*/api/v1/donations', () =>
+        problemDetailResponse({
+          status: 500,
+          title: 'Error interno',
+          detail: 'La base de datos no está disponible',
+          instance: '/api/v1/donations',
+        })
+      )
+    )
+
+    renderWithProviders(<DonationsPage />)
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('La base de datos no está disponible')
+      ).toBeInTheDocument()
+    })
   })
 
   it('renders pagination info', async () => {

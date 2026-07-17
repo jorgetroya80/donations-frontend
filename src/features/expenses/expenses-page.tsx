@@ -18,6 +18,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { currentMonthRange, formatCurrency } from '@/lib/formatters'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import { useSort } from '@/lib/use-sort'
 import { useExpenses } from './use-expenses'
 
@@ -61,7 +62,9 @@ export function ExpensesPage() {
 
       {error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('expenses.errorLoading')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(error, t('expenses.errorLoading'))}
+          </AlertDescription>
         </Alert>
       )}
 

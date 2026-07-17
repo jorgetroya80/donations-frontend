@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useToast } from '@/components/ui/toast'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import { DonationForm } from './donation-form'
 import type { CreateDonationFormData } from './donation-schema'
 import { useDonation, useUpdateDonation } from './use-donations'
@@ -41,7 +42,9 @@ export function DonationEditPage() {
   if (error || !donation) {
     return (
       <Alert variant="destructive">
-        <AlertDescription>{t('donations.errorLoading')}</AlertDescription>
+        <AlertDescription>
+          {getProblemMessage(error, t('donations.errorLoading'))}
+        </AlertDescription>
       </Alert>
     )
   }
@@ -52,7 +55,12 @@ export function DonationEditPage() {
 
       {updateMutation.error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('donations.errorSaving')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(
+              updateMutation.error,
+              t('donations.errorSaving')
+            )}
+          </AlertDescription>
         </Alert>
       )}
 

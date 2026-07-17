@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Skeleton } from '@/components/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import { useDebouncedValue } from '@/lib/use-debounced-value'
 import { useDonor, useDonors } from './use-donors'
 
@@ -127,7 +128,9 @@ export function DonorPicker({ value, onChange }: DonorPickerProps) {
         <div className="absolute top-9 left-0 z-50 w-full overflow-hidden rounded-lg border border-input bg-background shadow-md">
           {error ? (
             <Alert variant="destructive" className="border-0">
-              <AlertDescription>{t('donors.errorLoading')}</AlertDescription>
+              <AlertDescription>
+                {getProblemMessage(error, t('donors.errorLoading'))}
+              </AlertDescription>
             </Alert>
           ) : isLoading ? (
             <div

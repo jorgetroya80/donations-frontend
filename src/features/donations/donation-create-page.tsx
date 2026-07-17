@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/toast'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import { DonationForm } from './donation-form'
 import type { CreateDonationFormData } from './donation-schema'
 import { useCreateDonation } from './use-donations'
@@ -65,7 +66,12 @@ export function DonationCreatePage() {
 
       {createMutation.error && !duplicateWarning && (
         <Alert variant="destructive">
-          <AlertDescription>{t('donations.errorSaving')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(
+              createMutation.error,
+              t('donations.errorSaving')
+            )}
+          </AlertDescription>
         </Alert>
       )}
 

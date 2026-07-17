@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useToast } from '@/components/ui/toast'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import { ExpenseForm } from './expense-form'
 import type { CreateExpenseFormData } from './expense-schema'
 import { useCreateExpense } from './use-expenses'
@@ -32,7 +33,9 @@ export function ExpenseCreatePage() {
 
       {createMutation.error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('expenses.errorSaving')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(createMutation.error, t('expenses.errorSaving'))}
+          </AlertDescription>
         </Alert>
       )}
 

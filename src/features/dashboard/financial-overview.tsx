@@ -15,6 +15,7 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart'
 import { currentMonthRange, formatCurrency } from '@/lib/formatters'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import {
   useBalance,
   useDonationSummary,
@@ -158,7 +159,9 @@ export function FinancialOverview() {
 
       {error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('dashboard.errorLoading')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(error, t('dashboard.errorLoading'))}
+          </AlertDescription>
         </Alert>
       )}
 

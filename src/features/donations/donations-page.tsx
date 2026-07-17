@@ -18,6 +18,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { currentMonthRange, formatCurrency } from '@/lib/formatters'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import { useSort } from '@/lib/use-sort'
 import { useDonations } from './use-donations'
 
@@ -61,7 +62,9 @@ export function DonationsPage() {
 
       {error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('donations.errorLoading')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(error, t('donations.errorLoading'))}
+          </AlertDescription>
         </Alert>
       )}
 
