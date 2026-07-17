@@ -39,7 +39,9 @@
     "userManagement": "Gestión de usuarios",
     "totalUsers": "Usuarios registrados",
     "manageUsers": "Administrar usuarios",
-    "financialOverview": "Resumen financiero"
+    "financialOverview": "Resumen financiero",
+    "currentPeriod": "Actual",
+    "previousPeriod": "Anterior"
   },
   "donations": {
     "title": "Donaciones",

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
 import { DateRangePicker } from '@/components/date-range-picker'
 import { EmptyState } from '@/components/empty-state'
+import { PageHeader } from '@/components/page-header'
 import { TableSkeleton } from '@/components/skeleton'
 import { SortableTh } from '@/components/sortable-th'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -44,7 +45,7 @@ export function ExpensesPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold">{t('expenses.title')}</h1>
+        <PageHeader title={t('expenses.title')} />
         <div className="flex items-center gap-2">
           <DateRangePicker
             from={range.from}

@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
+import { PageHeader } from '@/components/page-header'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -63,7 +64,7 @@ export function ChangePasswordPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">{t('settings.changePassword')}</h1>
+      <PageHeader title={t('settings.changePassword')} />
 
       {forced && (
         <Alert>

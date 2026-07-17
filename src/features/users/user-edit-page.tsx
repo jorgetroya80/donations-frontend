@@ -8,6 +8,7 @@ import { useUpdateUser, useUser } from './use-users'
 
 type UserRole = 'ADMIN' | 'TREASURER' | 'PASTOR' | 'OPERATOR'
 
+import { PageHeader } from '@/components/page-header'
 import { UserForm } from './user-form'
 import type { UpdateUserFormData } from './user-schema'
 
@@ -58,7 +59,7 @@ export function UserEditPage() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
-      <h1 className="text-2xl font-bold">{t('users.edit')}</h1>
+      <PageHeader title={t('users.edit')} />
 
       {updateMutation.error && (
         <Alert variant="destructive">

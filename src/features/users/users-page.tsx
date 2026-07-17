@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
 import { EmptyState } from '@/components/empty-state'
+import { PageHeader } from '@/components/page-header'
 import { TableSkeleton } from '@/components/skeleton'
 import { SortableTh } from '@/components/sortable-th'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -39,7 +40,7 @@ export function UsersPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold">{t('users.title')}</h1>
+        <PageHeader title={t('users.title')} />
         <Button onClick={() => navigate('/users/new')}>
           <Plus size={16} />
           {t('users.new')}

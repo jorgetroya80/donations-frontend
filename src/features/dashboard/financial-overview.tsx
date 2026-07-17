@@ -59,42 +59,28 @@ function PctChange({
   const isGood = inverted ? !isPositive : isPositive
   return (
     <span
-      className={`mt-1 text-xs font-medium ${isGood ? 'text-green-600 dark:text-green-400' : 'text-destructive'}`}
+      className={`mt-1 text-xs font-medium ${isGood ? 'text-success' : 'text-destructive'}`}
     >
       {isPositive ? '↑' : '↓'} {Math.abs(pct).toFixed(1)}%
     </span>
   )
 }
 
-const donationChartConfig: ChartConfig = {
-  TITHE: { label: 'Diezmo', color: 'var(--chart-1)' },
-  OFFERING: { label: 'Ofrenda', color: 'var(--chart-2)' },
-  SPECIAL_OFFERING: { label: 'Ofrenda especial', color: 'var(--chart-3)' },
-  OTHER: { label: 'Otro', color: 'var(--chart-4)' },
-}
-
-const donationComparisonConfig: ChartConfig = {
-  current: { label: 'Actual', color: 'var(--chart-1)' },
-  previous: { label: 'Anterior', color: 'var(--chart-3)' },
-}
-
-const expenseCategoryLabels: Record<string, string> = {
-  RENT: 'Alquiler',
-  UTILITIES: 'Servicios',
-  SALARIES: 'Salarios',
-  SUPPLIES: 'Suministros',
-  MISSIONS: 'Misiones',
-  MAINTENANCE: 'Mantenimiento',
-  OTHER: 'Otro',
-}
-
-const expenseChartConfig: ChartConfig = {
-  current: { label: 'Actual', color: 'var(--chart-1)' },
-  previous: { label: 'Anterior', color: 'var(--chart-3)' },
-}
+const donationTypes = ['TITHE', 'OFFERING', 'SPECIAL_OFFERING', 'OTHER']
 
 export function FinancialOverview() {
   const { t } = useTranslation()
+
+  const donationChartConfig: ChartConfig = Object.fromEntries(
+    donationTypes.map((type, i) => [
+      type,
+      { label: t(`donations.types.${type}`), color: `var(--chart-${i + 1})` },
+    ])
+  )
+  const comparisonConfig: ChartConfig = {
+    current: { label: t('dashboard.currentPeriod'), color: 'var(--chart-1)' },
+    previous: { label: t('dashboard.previousPeriod'), color: 'var(--chart-3)' },
+  }
   const [range, setRange] = useState(currentMonthRange)
 
   const dateParams = {
@@ -138,7 +124,7 @@ export function FinancialOverview() {
 
   const expenseChartData =
     expenses.data?.totalsByCategory?.map((cur) => ({
-      category: expenseCategoryLabels[cur.category ?? ''] ?? cur.category,
+      category: cur.category ? t(`expenses.categories.${cur.category}`) : '',
       current: cur.total ?? 0,
       previous:
         prevExpenses.data?.totalsByCategory?.find(
@@ -179,10 +165,7 @@ export function FinancialOverview() {
             <CardTitle className="text-sm font-medium">
               {t('dashboard.totalIncome')}
             </CardTitle>
-            <ArrowUpRight
-              size={16}
-              className="text-green-600 dark:text-green-400"
-            />
+            <ArrowUpRight size={16} className="text-success" />
           </CardHeader>
           <CardContent>
             <p className="font-bold text-2xl @max-3xs:text-lg">
@@ -249,7 +232,7 @@ export function FinancialOverview() {
               <div className="space-y-4">
                 {titheData.length > 0 && (
                   <ChartContainer
-                    config={donationComparisonConfig}
+                    config={comparisonConfig}
                     className="max-h-20"
                   >
                     <BarChart data={titheData} layout="vertical">
@@ -283,7 +266,7 @@ export function FinancialOverview() {
                 )}
                 {otherDonationsData.length > 0 && (
                   <ChartContainer
-                    config={donationComparisonConfig}
+                    config={comparisonConfig}
                     className="max-h-45"
                   >
                     <BarChart data={otherDonationsData} layout="vertical">
@@ -332,7 +315,7 @@ export function FinancialOverview() {
           </CardHeader>
           <CardContent>
             {expenseChartData.length > 0 ? (
-              <ChartContainer config={expenseChartConfig} className="max-h-75">
+              <ChartContainer config={comparisonConfig} className="max-h-75">
                 <BarChart data={expenseChartData} layout="vertical">
                   <YAxis
                     dataKey="category"
