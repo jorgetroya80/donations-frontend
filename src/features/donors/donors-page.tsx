@@ -3,7 +3,8 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
 import { EmptyState } from '@/components/empty-state'
-import { Skeleton } from '@/components/skeleton'
+import { TableSkeleton } from '@/components/skeleton'
+import { SortableTh } from '@/components/sortable-th'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -48,19 +49,7 @@ export function DonorsPage() {
         </Alert>
       )}
 
-      {isLoading && (
-        <div
-          aria-busy="true"
-          aria-label={t('common.loading')}
-          className="space-y-2"
-        >
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
-        </div>
-      )}
+      {isLoading && <TableSkeleton />}
 
       {data && (data.content ?? []).length === 0 && (
         <EmptyState
@@ -78,21 +67,13 @@ export function DonorsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead
-                  className="cursor-pointer"
-                  onClick={() => toggleSort('fullName')}
-                  tabIndex={0}
-                  aria-sort={ariaSort('fullName')}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      toggleSort('fullName')
-                    }
-                  }}
+                <SortableTh
+                  ariaSort={ariaSort('fullName')}
+                  onSort={() => toggleSort('fullName')}
+                  indicator={sortIndicator('fullName')}
                 >
                   {t('donors.fullName')}
-                  <span aria-hidden="true">{sortIndicator('fullName')}</span>
-                </TableHead>
+                </SortableTh>
                 <TableHead>{t('donors.nationalId')}</TableHead>
                 <TableHead>{t('donors.email')}</TableHead>
                 <TableHead>{t('donors.phone')}</TableHead>

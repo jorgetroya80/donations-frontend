@@ -124,18 +124,20 @@ export function UserForm({
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label>{t('users.roles')}</Label>
+      <fieldset
+        className="space-y-2"
+        aria-describedby={errors.roles ? 'roles-error' : undefined}
+      >
+        <legend className="text-sm leading-none font-medium">
+          {t('users.roles')}
+        </legend>
         <Controller
           control={control}
           name="roles"
           render={({ field }) => {
             const value = (field.value ?? []) as string[]
             return (
-              <div
-                className="flex flex-wrap gap-3"
-                aria-describedby={errors.roles ? 'roles-error' : undefined}
-              >
+              <div className="flex flex-wrap gap-3">
                 {userRoles.map((role) => (
                   <label key={role} className="flex items-center gap-2 text-sm">
                     <input
@@ -149,7 +151,7 @@ export function UserForm({
                         )
                       }
                       aria-invalid={!!errors.roles}
-                      className="size-4 rounded border-input"
+                      className="size-4 rounded border-input accent-primary outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
                     />
                     {t(`users.roleNames.${role}`)}
                   </label>
@@ -163,14 +165,14 @@ export function UserForm({
             {errors.roles.message as string}
           </p>
         )}
-      </div>
+      </fieldset>
 
       <div className="flex items-center gap-2">
         <input
           type="checkbox"
           id="active"
           {...register('active')}
-          className="size-4 rounded border-input"
+          className="size-4 rounded border-input accent-primary outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
         />
         <Label htmlFor="active">{t('users.active')}</Label>
       </div>

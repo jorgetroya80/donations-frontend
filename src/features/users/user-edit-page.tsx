@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
+import { Skeleton } from '@/components/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useToast } from '@/components/ui/toast'
 import { getProblemMessage } from '@/lib/get-problem-message'
@@ -34,9 +35,14 @@ export function UserEditPage() {
 
   if (isLoading) {
     return (
-      <Alert>
-        <AlertDescription>{t('common.loading')}</AlertDescription>
-      </Alert>
+      <div
+        aria-busy="true"
+        aria-label={t('common.loading')}
+        className="mx-auto max-w-2xl space-y-4"
+      >
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-64" />
+      </div>
     )
   }
 

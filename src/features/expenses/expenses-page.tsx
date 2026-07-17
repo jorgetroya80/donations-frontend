@@ -5,7 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
 import { DateRangePicker } from '@/components/date-range-picker'
 import { EmptyState } from '@/components/empty-state'
-import { Skeleton } from '@/components/skeleton'
+import { TableSkeleton } from '@/components/skeleton'
+import { SortableTh } from '@/components/sortable-th'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -68,19 +69,7 @@ export function ExpensesPage() {
         </Alert>
       )}
 
-      {isLoading && (
-        <div
-          aria-busy="true"
-          aria-label={t('common.loading')}
-          className="space-y-2"
-        >
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
-        </div>
-      )}
+      {isLoading && <TableSkeleton />}
 
       {data && (data.content ?? []).length === 0 && (
         <EmptyState
@@ -98,36 +87,20 @@ export function ExpensesPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead
-                  className="cursor-pointer"
-                  onClick={() => toggleSort('expenseDate')}
-                  tabIndex={0}
-                  aria-sort={ariaSort('expenseDate')}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      toggleSort('expenseDate')
-                    }
-                  }}
+                <SortableTh
+                  ariaSort={ariaSort('expenseDate')}
+                  onSort={() => toggleSort('expenseDate')}
+                  indicator={sortIndicator('expenseDate')}
                 >
                   {t('expenses.date')}
-                  <span aria-hidden="true">{sortIndicator('expenseDate')}</span>
-                </TableHead>
-                <TableHead
-                  className="cursor-pointer"
-                  onClick={() => toggleSort('amount')}
-                  tabIndex={0}
-                  aria-sort={ariaSort('amount')}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      toggleSort('amount')
-                    }
-                  }}
+                </SortableTh>
+                <SortableTh
+                  ariaSort={ariaSort('amount')}
+                  onSort={() => toggleSort('amount')}
+                  indicator={sortIndicator('amount')}
                 >
                   {t('expenses.amount')}
-                  <span aria-hidden="true">{sortIndicator('amount')}</span>
-                </TableHead>
+                </SortableTh>
                 <TableHead>{t('expenses.category')}</TableHead>
                 <TableHead>{t('expenses.description')}</TableHead>
                 <TableHead>{t('expenses.paymentMethod')}</TableHead>

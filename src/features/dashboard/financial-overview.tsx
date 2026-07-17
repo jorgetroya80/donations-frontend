@@ -1,9 +1,11 @@
 import dayjs from 'dayjs'
-import { ArrowDownRight, ArrowUpRight, Scale } from 'lucide-react'
+import { ArrowDownRight, ArrowUpRight, BarChart3, Scale } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Bar, BarChart, XAxis, YAxis } from 'recharts'
 import { DateRangePicker } from '@/components/date-range-picker'
+import { EmptyState } from '@/components/empty-state'
+import { Skeleton } from '@/components/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -166,9 +168,9 @@ export function FinancialOverview() {
       )}
 
       {isLoading && (
-        <Alert>
-          <AlertDescription>{t('common.loading')}</AlertDescription>
-        </Alert>
+        <div aria-busy="true" aria-label={t('common.loading')}>
+          <Skeleton />
+        </div>
       )}
 
       <div className="grid gap-4 sm:grid-cols-3">
@@ -316,9 +318,10 @@ export function FinancialOverview() {
                 )}
               </div>
             ) : (
-              <p className="py-8 text-center text-muted-foreground">
-                {t('dashboard.noData')}
-              </p>
+              <EmptyState
+                icon={<BarChart3 size={40} />}
+                message={t('dashboard.noData')}
+              />
             )}
           </CardContent>
         </Card>
@@ -360,9 +363,10 @@ export function FinancialOverview() {
                 </BarChart>
               </ChartContainer>
             ) : (
-              <p className="py-8 text-center text-muted-foreground">
-                {t('dashboard.noData')}
-              </p>
+              <EmptyState
+                icon={<BarChart3 size={40} />}
+                message={t('dashboard.noData')}
+              />
             )}
           </CardContent>
         </Card>

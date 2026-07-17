@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { renderWithProviders } from '@/test/test-utils'
@@ -85,9 +85,12 @@ describe('ExpensesPage', () => {
     await waitFor(() => {
       expect(screen.getByText('Alquiler local abril')).toBeInTheDocument()
     })
-    fireEvent.keyDown(screen.getByRole('columnheader', { name: /Fecha/ }), {
-      key: 'Enter',
-    })
+    const user = userEvent.setup()
+    const sortButton = within(
+      screen.getByRole('columnheader', { name: /Fecha/ })
+    ).getByRole('button')
+    sortButton.focus()
+    await user.keyboard('{Enter}')
     await waitFor(() => {
       expect(
         screen.getByRole('columnheader', { name: /Fecha/ })
@@ -100,9 +103,12 @@ describe('ExpensesPage', () => {
     await waitFor(() => {
       expect(screen.getByText('Alquiler local abril')).toBeInTheDocument()
     })
-    fireEvent.keyDown(screen.getByRole('columnheader', { name: /Fecha/ }), {
-      key: ' ',
-    })
+    const user = userEvent.setup()
+    const sortButton = within(
+      screen.getByRole('columnheader', { name: /Fecha/ })
+    ).getByRole('button')
+    sortButton.focus()
+    await user.keyboard(' ')
     await waitFor(() => {
       expect(
         screen.getByRole('columnheader', { name: /Fecha/ })
