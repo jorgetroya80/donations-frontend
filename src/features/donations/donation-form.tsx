@@ -37,6 +37,16 @@ export function DonationForm({
 }: DonationFormProps) {
   const { t } = useTranslation()
 
+  const donationTypeItems = Object.fromEntries(
+    donationTypes.map((type) => [type, t(`donations.types.${type}`)])
+  )
+  const paymentMethodItems = Object.fromEntries(
+    paymentMethods.map((method) => [
+      method,
+      t(`donations.paymentMethods.${method}`),
+    ])
+  )
+
   const {
     register,
     handleSubmit,
@@ -109,7 +119,8 @@ export function DonationForm({
             name="donationType"
             render={({ field }) => (
               <Select
-                value={field.value ? t(`donations.types.${field.value}`) : ''}
+                items={donationTypeItems}
+                value={field.value ?? null}
                 onValueChange={field.onChange}
               >
                 <SelectTrigger
@@ -150,11 +161,8 @@ export function DonationForm({
             name="paymentMethod"
             render={({ field }) => (
               <Select
-                value={
-                  field.value
-                    ? t(`donations.paymentMethods.${field.value}`)
-                    : ''
-                }
+                items={paymentMethodItems}
+                value={field.value ?? null}
                 onValueChange={field.onChange}
               >
                 <SelectTrigger

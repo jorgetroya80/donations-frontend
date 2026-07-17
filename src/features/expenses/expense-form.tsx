@@ -36,6 +36,16 @@ export function ExpenseForm({
 }: ExpenseFormProps) {
   const { t } = useTranslation()
 
+  const categoryItems = Object.fromEntries(
+    expenseCategories.map((cat) => [cat, t(`expenses.categories.${cat}`)])
+  )
+  const paymentMethodItems = Object.fromEntries(
+    paymentMethods.map((method) => [
+      method,
+      t(`expenses.paymentMethods.${method}`),
+    ])
+  )
+
   const {
     register,
     handleSubmit,
@@ -108,9 +118,8 @@ export function ExpenseForm({
             name="category"
             render={({ field }) => (
               <Select
-                value={
-                  field.value ? t(`expenses.categories.${field.value}`) : ''
-                }
+                items={categoryItems}
+                value={field.value ?? null}
                 onValueChange={field.onChange}
               >
                 <SelectTrigger
@@ -151,9 +160,8 @@ export function ExpenseForm({
             name="paymentMethod"
             render={({ field }) => (
               <Select
-                value={
-                  field.value ? t(`expenses.paymentMethods.${field.value}`) : ''
-                }
+                items={paymentMethodItems}
+                value={field.value ?? null}
                 onValueChange={field.onChange}
               >
                 <SelectTrigger
