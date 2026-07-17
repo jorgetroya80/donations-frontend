@@ -1,9 +1,11 @@
 import dayjs from 'dayjs'
-import { ArrowDownRight, ArrowUpRight, Scale } from 'lucide-react'
+import { ArrowDownRight, ArrowUpRight, BarChart3, Scale } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Bar, BarChart, XAxis, YAxis } from 'recharts'
 import { DateRangePicker } from '@/components/date-range-picker'
+import { EmptyState } from '@/components/empty-state'
+import { Skeleton } from '@/components/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -15,6 +17,7 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart'
 import { currentMonthRange, formatCurrency } from '@/lib/formatters'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import {
   useBalance,
   useDonationSummary,
@@ -56,42 +59,28 @@ function PctChange({
   const isGood = inverted ? !isPositive : isPositive
   return (
     <span
-      className={`mt-1 text-xs font-medium ${isGood ? 'text-green-600 dark:text-green-400' : 'text-destructive'}`}
+      className={`mt-1 text-xs font-medium ${isGood ? 'text-success' : 'text-destructive'}`}
     >
       {isPositive ? '↑' : '↓'} {Math.abs(pct).toFixed(1)}%
     </span>
   )
 }
 
-const donationChartConfig: ChartConfig = {
-  TITHE: { label: 'Diezmo', color: 'var(--chart-1)' },
-  OFFERING: { label: 'Ofrenda', color: 'var(--chart-2)' },
-  SPECIAL_OFFERING: { label: 'Ofrenda especial', color: 'var(--chart-3)' },
-  OTHER: { label: 'Otro', color: 'var(--chart-4)' },
-}
-
-const donationComparisonConfig: ChartConfig = {
-  current: { label: 'Actual', color: 'var(--chart-1)' },
-  previous: { label: 'Anterior', color: 'var(--chart-3)' },
-}
-
-const expenseCategoryLabels: Record<string, string> = {
-  RENT: 'Alquiler',
-  UTILITIES: 'Servicios',
-  SALARIES: 'Salarios',
-  SUPPLIES: 'Suministros',
-  MISSIONS: 'Misiones',
-  MAINTENANCE: 'Mantenimiento',
-  OTHER: 'Otro',
-}
-
-const expenseChartConfig: ChartConfig = {
-  current: { label: 'Actual', color: 'var(--chart-1)' },
-  previous: { label: 'Anterior', color: 'var(--chart-3)' },
-}
+const donationTypes = ['TITHE', 'OFFERING', 'SPECIAL_OFFERING', 'OTHER']
 
 export function FinancialOverview() {
   const { t } = useTranslation()
+
+  const donationChartConfig: ChartConfig = Object.fromEntries(
+    donationTypes.map((type, i) => [
+      type,
+      { label: t(`donations.types.${type}`), color: `var(--chart-${i + 1})` },
+    ])
+  )
+  const comparisonConfig: ChartConfig = {
+    current: { label: t('dashboard.currentPeriod'), color: 'var(--chart-1)' },
+    previous: { label: t('dashboard.previousPeriod'), color: 'var(--chart-3)' },
+  }
   const [range, setRange] = useState(currentMonthRange)
 
   const dateParams = {
@@ -135,7 +124,7 @@ export function FinancialOverview() {
 
   const expenseChartData =
     expenses.data?.totalsByCategory?.map((cur) => ({
-      category: expenseCategoryLabels[cur.category ?? ''] ?? cur.category,
+      category: cur.category ? t(`expenses.categories.${cur.category}`) : '',
       current: cur.total ?? 0,
       previous:
         prevExpenses.data?.totalsByCategory?.find(
@@ -158,29 +147,28 @@ export function FinancialOverview() {
 
       {error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('dashboard.errorLoading')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(error, t('dashboard.errorLoading'))}
+          </AlertDescription>
         </Alert>
       )}
 
       {isLoading && (
-        <Alert>
-          <AlertDescription>{t('common.loading')}</AlertDescription>
-        </Alert>
+        <div aria-busy="true" aria-label={t('common.loading')}>
+          <Skeleton />
+        </div>
       )}
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <Card>
+        <Card className="@container">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
               {t('dashboard.totalIncome')}
             </CardTitle>
-            <ArrowUpRight
-              size={16}
-              className="text-green-600 dark:text-green-400"
-            />
+            <ArrowUpRight size={16} className="text-success" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">
+            <p className="font-bold text-2xl @max-3xs:text-lg">
               {balance.data
                 ? formatCurrency(balance.data.totalIncome ?? 0)
                 : '—'}
@@ -192,7 +180,7 @@ export function FinancialOverview() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="@container">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
               {t('dashboard.totalExpenses')}
@@ -200,7 +188,7 @@ export function FinancialOverview() {
             <ArrowDownRight size={16} className="text-destructive" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">
+            <p className="font-bold text-2xl @max-3xs:text-lg">
               {balance.data
                 ? formatCurrency(balance.data.totalExpenses ?? 0)
                 : '—'}
@@ -213,7 +201,7 @@ export function FinancialOverview() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="@container">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
               {t('dashboard.netBalance')}
@@ -221,7 +209,7 @@ export function FinancialOverview() {
             <Scale size={16} className="text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">
+            <p className="font-bold text-2xl @max-3xs:text-lg">
               {balance.data
                 ? formatCurrency(balance.data.netBalance ?? 0)
                 : '—'}
@@ -244,7 +232,7 @@ export function FinancialOverview() {
               <div className="space-y-4">
                 {titheData.length > 0 && (
                   <ChartContainer
-                    config={donationComparisonConfig}
+                    config={comparisonConfig}
                     className="max-h-20"
                   >
                     <BarChart data={titheData} layout="vertical">
@@ -278,7 +266,7 @@ export function FinancialOverview() {
                 )}
                 {otherDonationsData.length > 0 && (
                   <ChartContainer
-                    config={donationComparisonConfig}
+                    config={comparisonConfig}
                     className="max-h-45"
                   >
                     <BarChart data={otherDonationsData} layout="vertical">
@@ -313,9 +301,10 @@ export function FinancialOverview() {
                 )}
               </div>
             ) : (
-              <p className="py-8 text-center text-muted-foreground">
-                {t('dashboard.noData')}
-              </p>
+              <EmptyState
+                icon={<BarChart3 size={40} />}
+                message={t('dashboard.noData')}
+              />
             )}
           </CardContent>
         </Card>
@@ -326,7 +315,7 @@ export function FinancialOverview() {
           </CardHeader>
           <CardContent>
             {expenseChartData.length > 0 ? (
-              <ChartContainer config={expenseChartConfig} className="max-h-75">
+              <ChartContainer config={comparisonConfig} className="max-h-75">
                 <BarChart data={expenseChartData} layout="vertical">
                   <YAxis
                     dataKey="category"
@@ -357,9 +346,10 @@ export function FinancialOverview() {
                 </BarChart>
               </ChartContainer>
             ) : (
-              <p className="py-8 text-center text-muted-foreground">
-                {t('dashboard.noData')}
-              </p>
+              <EmptyState
+                icon={<BarChart3 size={40} />}
+                message={t('dashboard.noData')}
+              />
             )}
           </CardContent>
         </Card>

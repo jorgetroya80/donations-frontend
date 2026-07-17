@@ -1,4 +1,4 @@
-import { screen, waitFor, within } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { renderWithProviders } from '@/test/test-utils'
@@ -50,7 +50,7 @@ describe('DonorEditPage', () => {
     })
   })
 
-  it('opens confirmation dialog on form submit and saves on confirm', async () => {
+  it('saves directly on submit and shows success toast', async () => {
     const user = userEvent.setup()
     renderWithProviders(<DonorEditPage />)
 
@@ -65,42 +65,12 @@ describe('DonorEditPage', () => {
 
     await user.click(screen.getByRole('button', { name: 'Guardar' }))
 
-    // Confirmation dialog appears
+    // No confirmation dialog; success toast appears
     await waitFor(() => {
-      expect(screen.getByText(/Confirmar cambios/i)).toBeInTheDocument()
+      expect(
+        screen.getByText('Donante actualizado exitosamente')
+      ).toBeInTheDocument()
     })
-
-    // Click confirm
-    await user.click(screen.getByRole('button', { name: /Confirmar/i }))
-
-    await waitFor(() => {
-      expect(screen.queryByText(/Confirmar cambios/i)).not.toBeInTheDocument()
-    })
-  })
-
-  it('closes confirmation dialog on cancel', async () => {
-    const user = userEvent.setup()
-    renderWithProviders(<DonorEditPage />)
-
-    await waitFor(() => {
-      expect(screen.getByLabelText('Nombre completo')).toHaveValue('Juan Pérez')
-    })
-
-    await user.click(screen.getByRole('button', { name: 'Guardar' }))
-
-    await waitFor(() => {
-      expect(screen.getByText(/Confirmar cambios/i)).toBeInTheDocument()
-    })
-
-    await waitFor(() => {
-      const dialog = screen.getByRole('dialog')
-      within(dialog)
-        .getByRole('button', { name: /Cancelar/i })
-        .click()
-    })
-
-    await waitFor(() => {
-      expect(screen.queryByText(/Confirmar cambios/i)).not.toBeInTheDocument()
-    })
+    expect(screen.queryByText(/Confirmar cambios/i)).not.toBeInTheDocument()
   })
 })

@@ -1,6 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
+import { PageHeader } from '@/components/page-header'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { useToast } from '@/components/ui/toast'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import { DonorForm } from './donor-form'
 import type { CreateDonorFormData } from './donor-schema'
 import { useCreateDonor } from './use-donors'
@@ -8,6 +11,7 @@ import { useCreateDonor } from './use-donors'
 export function DonorCreatePage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const toast = useToast()
   const createMutation = useCreateDonor()
 
   async function handleSubmit(data: CreateDonorFormData) {
@@ -19,16 +23,19 @@ export function DonorCreatePage() {
       address: data.address || undefined,
     })
 
+    toast.add({ title: t('donors.successCreated') })
     navigate('/donors')
   }
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
-      <h1 className="text-2xl font-bold">{t('donors.new')}</h1>
+      <PageHeader title={t('donors.new')} />
 
       {createMutation.error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('donors.errorSaving')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(createMutation.error, t('donors.errorSaving'))}
+          </AlertDescription>
         </Alert>
       )}
 

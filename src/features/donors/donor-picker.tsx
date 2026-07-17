@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { Skeleton } from '@/components/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import { useDebouncedValue } from '@/lib/use-debounced-value'
 import { useDonor, useDonors } from './use-donors'
 
@@ -80,7 +82,7 @@ export function DonorPicker({ value, onChange }: DonorPickerProps) {
 
   return (
     <div ref={containerRef} className="relative flex gap-2">
-      <input
+      <Input
         id="donorId"
         type="text"
         role="combobox"
@@ -92,7 +94,7 @@ export function DonorPicker({ value, onChange }: DonorPickerProps) {
           open && highlight >= 0 ? optionId(donors[highlight]?.id) : undefined
         }
         placeholder={t('donations.searchDonor')}
-        className="flex h-8 min-w-0 flex-1 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base shadow-xs transition-colors outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm"
+        className="flex-1"
         value={inputValue}
         onFocus={() => {
           if (!open) openWithFreshQuery()
@@ -127,7 +129,9 @@ export function DonorPicker({ value, onChange }: DonorPickerProps) {
         <div className="absolute top-9 left-0 z-50 w-full overflow-hidden rounded-lg border border-input bg-background shadow-md">
           {error ? (
             <Alert variant="destructive" className="border-0">
-              <AlertDescription>{t('donors.errorLoading')}</AlertDescription>
+              <AlertDescription>
+                {getProblemMessage(error, t('donors.errorLoading'))}
+              </AlertDescription>
             </Alert>
           ) : isLoading ? (
             <div

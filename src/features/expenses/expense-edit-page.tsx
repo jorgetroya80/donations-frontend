@@ -1,15 +1,10 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
+import { PageHeader } from '@/components/page-header'
+import { Skeleton } from '@/components/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { useToast } from '@/components/ui/toast'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import { ExpenseForm } from './expense-form'
 import type { CreateExpenseFormData } from './expense-schema'
 import { useExpense, useUpdateExpense } from './use-expenses'
@@ -17,59 +12,59 @@ import { useExpense, useUpdateExpense } from './use-expenses'
 export function ExpenseEditPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const toast = useToast()
   const { id } = useParams<{ id: string }>()
   const expenseId = Number(id)
 
   const { data: expense, isLoading, error } = useExpense(expenseId)
   const updateMutation = useUpdateExpense(expenseId)
 
-  const [pendingData, setPendingData] = useState<CreateExpenseFormData | null>(
-    null
-  )
-
-  function handleFormSubmit(data: CreateExpenseFormData) {
-    setPendingData(data)
-  }
-
-  async function handleConfirmSave() {
-    if (!pendingData) return
-
+  async function handleFormSubmit(data: CreateExpenseFormData) {
     await updateMutation.mutateAsync({
-      amount: pendingData.amount,
-      expenseDate: pendingData.expenseDate,
-      category: pendingData.category,
-      description: pendingData.description,
-      vendor: pendingData.vendor ?? undefined,
-      paymentMethod: pendingData.paymentMethod,
+      amount: data.amount,
+      expenseDate: data.expenseDate,
+      category: data.category,
+      description: data.description,
+      vendor: data.vendor ?? undefined,
+      paymentMethod: data.paymentMethod,
     })
 
-    setPendingData(null)
+    toast.add({ title: t('expenses.successUpdated') })
     navigate('/expenses')
   }
 
   if (isLoading) {
     return (
-      <Alert>
-        <AlertDescription>{t('common.loading')}</AlertDescription>
-      </Alert>
+      <div
+        aria-busy="true"
+        aria-label={t('common.loading')}
+        className="mx-auto max-w-2xl space-y-4"
+      >
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-64" />
+      </div>
     )
   }
 
   if (error || !expense) {
     return (
       <Alert variant="destructive">
-        <AlertDescription>{t('expenses.errorLoading')}</AlertDescription>
+        <AlertDescription>
+          {getProblemMessage(error, t('expenses.errorLoading'))}
+        </AlertDescription>
       </Alert>
     )
   }
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
-      <h1 className="text-2xl font-bold">{t('expenses.edit')}</h1>
+      <PageHeader title={t('expenses.edit')} />
 
       {updateMutation.error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('expenses.errorSaving')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(updateMutation.error, t('expenses.errorSaving'))}
+          </AlertDescription>
         </Alert>
       )}
 
@@ -87,21 +82,6 @@ export function ExpenseEditPage() {
         submitting={updateMutation.isPending}
         submitLabel={t('common.save')}
       />
-
-      <Dialog open={!!pendingData} onOpenChange={() => setPendingData(null)}>
-        <DialogContent>
-          <DialogTitle>{t('expenses.confirmEdit')}</DialogTitle>
-          <DialogDescription>
-            {t('expenses.confirmEditDescription')}
-          </DialogDescription>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setPendingData(null)}>
-              {t('common.cancel')}
-            </Button>
-            <Button onClick={handleConfirmSave}>{t('common.confirm')}</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }

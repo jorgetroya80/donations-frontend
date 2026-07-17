@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
+import { PageHeader } from '@/components/page-header'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import { useToast } from '@/components/ui/toast'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import { DonationForm } from './donation-form'
 import type { CreateDonationFormData } from './donation-schema'
 import { useCreateDonation } from './use-donations'
@@ -10,6 +13,7 @@ import { useCreateDonation } from './use-donations'
 export function DonationCreatePage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const toast = useToast()
   const createMutation = useCreateDonation()
 
   const [duplicateWarning, setDuplicateWarning] = useState(false)
@@ -35,6 +39,7 @@ export function DonationCreatePage() {
       return
     }
 
+    toast.add({ title: t('donations.successCreated') })
     navigate('/donations')
   }
 
@@ -52,16 +57,22 @@ export function DonationCreatePage() {
       confirmDuplicate: true,
     })
 
+    toast.add({ title: t('donations.successCreated') })
     navigate('/donations')
   }
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
-      <h1 className="text-2xl font-bold">{t('donations.new')}</h1>
+      <PageHeader title={t('donations.new')} />
 
       {createMutation.error && !duplicateWarning && (
         <Alert variant="destructive">
-          <AlertDescription>{t('donations.errorSaving')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(
+              createMutation.error,
+              t('donations.errorSaving')
+            )}
+          </AlertDescription>
         </Alert>
       )}
 

@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { parseApiFieldErrors } from '@/lib/parse-api-field-errors'
 import {
   type CreateExpenseFormData,
   createExpenseSchema,
@@ -21,7 +22,7 @@ import {
 
 interface ExpenseFormProps {
   defaultValues?: Partial<CreateExpenseFormData>
-  onSubmit: (data: CreateExpenseFormData) => void
+  onSubmit: (data: CreateExpenseFormData) => void | Promise<void>
   onCancel?: () => void
   submitting?: boolean
   submitLabel: string
@@ -36,10 +37,21 @@ export function ExpenseForm({
 }: ExpenseFormProps) {
   const { t } = useTranslation()
 
+  const categoryItems = Object.fromEntries(
+    expenseCategories.map((cat) => [cat, t(`expenses.categories.${cat}`)])
+  )
+  const paymentMethodItems = Object.fromEntries(
+    paymentMethods.map((method) => [
+      method,
+      t(`expenses.paymentMethods.${method}`),
+    ])
+  )
+
   const {
     register,
     handleSubmit,
     control,
+    setError,
     formState: { errors },
   } = useForm<CreateExpenseFormData>({
     resolver: zodResolver(createExpenseSchema),
@@ -54,8 +66,19 @@ export function ExpenseForm({
     },
   })
 
+  async function submitHandler(data: CreateExpenseFormData) {
+    try {
+      await onSubmit(data)
+    } catch (err) {
+      const fields = parseApiFieldErrors(err)
+      for (const [field, message] of Object.entries(fields)) {
+        setError(field as keyof CreateExpenseFormData, { message })
+      }
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(submitHandler)} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="amount">{t('expenses.amount')}</Label>
@@ -108,9 +131,8 @@ export function ExpenseForm({
             name="category"
             render={({ field }) => (
               <Select
-                value={
-                  field.value ? t(`expenses.categories.${field.value}`) : ''
-                }
+                items={categoryItems}
+                value={field.value ?? null}
                 onValueChange={field.onChange}
               >
                 <SelectTrigger
@@ -151,9 +173,8 @@ export function ExpenseForm({
             name="paymentMethod"
             render={({ field }) => (
               <Select
-                value={
-                  field.value ? t(`expenses.paymentMethods.${field.value}`) : ''
-                }
+                items={paymentMethodItems}
+                value={field.value ?? null}
                 onValueChange={field.onChange}
               >
                 <SelectTrigger

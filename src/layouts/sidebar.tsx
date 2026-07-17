@@ -33,7 +33,8 @@ function getStoredCollapsed(): boolean {
 
 interface SidebarProps {
   collapsed: boolean
-  onToggle: () => void
+  onToggle?: () => void
+  onNavigate?: () => void
 }
 
 interface NavItem {
@@ -79,7 +80,7 @@ const navItems: NavItem[] = [
 
 export { getStoredCollapsed, SIDEBAR_KEY }
 
-export function Sidebar({ collapsed, onToggle }: SidebarProps) {
+export function Sidebar({ collapsed, onToggle, onNavigate }: SidebarProps) {
   const { t } = useTranslation()
   const { user } = useAuth()
 
@@ -116,6 +117,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
                   key={item.to}
                   to={item.to}
                   end={item.to === '/'}
+                  onClick={onNavigate}
                   className={({ isActive }) =>
                     cn(
                       'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
@@ -140,6 +142,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
                         <NavLink
                           to={item.to}
                           end={item.to === '/'}
+                          onClick={onNavigate}
                           className={({ isActive }) =>
                             cn(
                               'flex w-full items-center justify-center rounded-md py-2 text-sm font-medium transition-colors',
@@ -165,17 +168,19 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
             })}
       </nav>
 
-      <div className="border-t p-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="w-full"
-          onClick={onToggle}
-          aria-label={collapsed ? t('sidebar.expand') : t('sidebar.collapse')}
-        >
-          {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
-        </Button>
-      </div>
+      {onToggle && (
+        <div className="border-t p-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full"
+            onClick={onToggle}
+            aria-label={collapsed ? t('sidebar.expand') : t('sidebar.collapse')}
+          >
+            {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+          </Button>
+        </div>
+      )}
     </aside>
   )
 }

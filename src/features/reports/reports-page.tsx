@@ -1,7 +1,11 @@
 import dayjs from 'dayjs'
+import { FileBarChart } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DateRangePicker } from '@/components/date-range-picker'
+import { EmptyState } from '@/components/empty-state'
+import { PageHeader } from '@/components/page-header'
+import { TableSkeleton } from '@/components/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -12,8 +16,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { TabList } from '@/components/ui/tabs'
 import { DonorPicker } from '@/features/donors/donor-picker'
 import { currentMonthRange, formatCurrency } from '@/lib/formatters'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import {
   useDonationReport,
   useDonorStatement,
@@ -46,15 +52,13 @@ function DonationSummaryTab() {
 
       {error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('reports.errorLoading')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(error, t('reports.errorLoading'))}
+          </AlertDescription>
         </Alert>
       )}
 
-      {isLoading && (
-        <Alert>
-          <AlertDescription>{t('common.loading')}</AlertDescription>
-        </Alert>
-      )}
+      {isLoading && <TableSkeleton rows={3} />}
 
       {data && (data.totalsByType ?? []).length > 0 ? (
         <Card>
@@ -88,7 +92,12 @@ function DonationSummaryTab() {
           </CardContent>
         </Card>
       ) : (
-        data && <p className="text-muted-foreground">{t('reports.noData')}</p>
+        data && (
+          <EmptyState
+            icon={<FileBarChart size={40} />}
+            message={t('reports.noData')}
+          />
+        )
       )}
     </div>
   )
@@ -114,15 +123,13 @@ function ExpenseSummaryTab() {
 
       {error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('reports.errorLoading')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(error, t('reports.errorLoading'))}
+          </AlertDescription>
         </Alert>
       )}
 
-      {isLoading && (
-        <Alert>
-          <AlertDescription>{t('common.loading')}</AlertDescription>
-        </Alert>
-      )}
+      {isLoading && <TableSkeleton rows={3} />}
 
       {data && (data.totalsByCategory ?? []).length > 0 ? (
         <Card>
@@ -158,7 +165,12 @@ function ExpenseSummaryTab() {
           </CardContent>
         </Card>
       ) : (
-        data && <p className="text-muted-foreground">{t('reports.noData')}</p>
+        data && (
+          <EmptyState
+            icon={<FileBarChart size={40} />}
+            message={t('reports.noData')}
+          />
+        )
       )}
     </div>
   )
@@ -188,15 +200,13 @@ function DonorStatementTab() {
 
       {error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('reports.errorLoading')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(error, t('reports.errorLoading'))}
+          </AlertDescription>
         </Alert>
       )}
 
-      {isLoading && (
-        <Alert>
-          <AlertDescription>{t('common.loading')}</AlertDescription>
-        </Alert>
-      )}
+      {isLoading && <TableSkeleton rows={3} />}
 
       {!donorId && (
         <p className="text-muted-foreground">{t('reports.noDonorSelected')}</p>
@@ -245,7 +255,10 @@ function DonorStatementTab() {
       ) : (
         data &&
         (data.donations ?? []).length === 0 && (
-          <p className="text-muted-foreground">{t('reports.noData')}</p>
+          <EmptyState
+            icon={<FileBarChart size={40} />}
+            message={t('reports.noData')}
+          />
         )
       )}
     </div>
@@ -264,30 +277,13 @@ export function ReportsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">{t('reports.title')}</h1>
+      <PageHeader title={t('reports.title')} />
 
-      <div className="border-b">
-        <nav className="-mb-px flex gap-4" role="tablist">
-          {tabs.map((tab) => (
-            <button
-              key={tab.key}
-              id={`tab-${tab.key}`}
-              type="button"
-              role="tab"
-              aria-selected={activeTab === tab.key}
-              aria-controls={`panel-${tab.key}`}
-              onClick={() => setActiveTab(tab.key)}
-              className={`border-b-2 px-1 py-2 text-sm font-medium transition-colors ${
-                activeTab === tab.key
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              {t(tab.labelKey)}
-            </button>
-          ))}
-        </nav>
-      </div>
+      <TabList
+        tabs={tabs.map((tab) => ({ key: tab.key, label: t(tab.labelKey) }))}
+        value={activeTab}
+        onChange={setActiveTab}
+      />
 
       <div
         role="tabpanel"

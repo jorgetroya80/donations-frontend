@@ -5,7 +5,9 @@ import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
 import { DateRangePicker } from '@/components/date-range-picker'
 import { EmptyState } from '@/components/empty-state'
-import { Skeleton } from '@/components/skeleton'
+import { PageHeader } from '@/components/page-header'
+import { TableSkeleton } from '@/components/skeleton'
+import { SortableTh } from '@/components/sortable-th'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -18,6 +20,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { currentMonthRange, formatCurrency } from '@/lib/formatters'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import { useSort } from '@/lib/use-sort'
 import { useDonations } from './use-donations'
 
@@ -42,7 +45,7 @@ export function DonationsPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold">{t('donations.title')}</h1>
+        <PageHeader title={t('donations.title')} />
         <div className="flex items-center gap-2">
           <DateRangePicker
             from={range.from}
@@ -61,23 +64,13 @@ export function DonationsPage() {
 
       {error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('donations.errorLoading')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(error, t('donations.errorLoading'))}
+          </AlertDescription>
         </Alert>
       )}
 
-      {isLoading && (
-        <div
-          aria-busy="true"
-          aria-label={t('common.loading')}
-          className="space-y-2"
-        >
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
-        </div>
-      )}
+      {isLoading && <TableSkeleton />}
 
       {data && (data.content ?? []).length === 0 && (
         <EmptyState
@@ -95,38 +88,20 @@ export function DonationsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead
-                  className="cursor-pointer"
-                  onClick={() => toggleSort('donationDate')}
-                  tabIndex={0}
-                  aria-sort={ariaSort('donationDate')}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      toggleSort('donationDate')
-                    }
-                  }}
+                <SortableTh
+                  ariaSort={ariaSort('donationDate')}
+                  onSort={() => toggleSort('donationDate')}
+                  indicator={sortIndicator('donationDate')}
                 >
                   {t('donations.date')}
-                  <span aria-hidden="true">
-                    {sortIndicator('donationDate')}
-                  </span>
-                </TableHead>
-                <TableHead
-                  className="cursor-pointer"
-                  onClick={() => toggleSort('amount')}
-                  tabIndex={0}
-                  aria-sort={ariaSort('amount')}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      toggleSort('amount')
-                    }
-                  }}
+                </SortableTh>
+                <SortableTh
+                  ariaSort={ariaSort('amount')}
+                  onSort={() => toggleSort('amount')}
+                  indicator={sortIndicator('amount')}
                 >
                   {t('donations.amount')}
-                  <span aria-hidden="true">{sortIndicator('amount')}</span>
-                </TableHead>
+                </SortableTh>
                 <TableHead>{t('donations.type')}</TableHead>
                 <TableHead>{t('donations.paymentMethod')}</TableHead>
                 <TableHead>{t('donations.donor')}</TableHead>

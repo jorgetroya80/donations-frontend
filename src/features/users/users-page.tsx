@@ -3,7 +3,9 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
 import { EmptyState } from '@/components/empty-state'
-import { Skeleton } from '@/components/skeleton'
+import { PageHeader } from '@/components/page-header'
+import { TableSkeleton } from '@/components/skeleton'
+import { SortableTh } from '@/components/sortable-th'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -15,6 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import { useSort } from '@/lib/use-sort'
 import { useUsers } from './use-users'
 
@@ -37,7 +40,7 @@ export function UsersPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold">{t('users.title')}</h1>
+        <PageHeader title={t('users.title')} />
         <Button onClick={() => navigate('/users/new')}>
           <Plus size={16} />
           {t('users.new')}
@@ -46,23 +49,13 @@ export function UsersPage() {
 
       {error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('users.errorLoading')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(error, t('users.errorLoading'))}
+          </AlertDescription>
         </Alert>
       )}
 
-      {isLoading && (
-        <div
-          aria-busy="true"
-          aria-label={t('common.loading')}
-          className="space-y-2"
-        >
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
-        </div>
-      )}
+      {isLoading && <TableSkeleton />}
 
       {data && rows.length === 0 && (
         <EmptyState
@@ -77,21 +70,13 @@ export function UsersPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead
-                  className="cursor-pointer"
-                  onClick={() => toggleSort('username')}
-                  tabIndex={0}
-                  aria-sort={ariaSort('username')}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      toggleSort('username')
-                    }
-                  }}
+                <SortableTh
+                  ariaSort={ariaSort('username')}
+                  onSort={() => toggleSort('username')}
+                  indicator={sortIndicator('username')}
                 >
                   {t('users.username')}
-                  <span aria-hidden="true">{sortIndicator('username')}</span>
-                </TableHead>
+                </SortableTh>
                 <TableHead>{t('users.roles')}</TableHead>
                 <TableHead>{t('users.status')}</TableHead>
                 <TableHead className="w-16">{t('common.actions')}</TableHead>

@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { PageHeader } from '@/components/page-header'
 import { useAuth } from '@/features/auth/auth-context'
 import {
   canManageUsers,
@@ -19,7 +20,7 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">{t('nav.dashboard')}</h1>
+      <PageHeader title={t('nav.dashboard')} />
 
       {showFinancial && <FinancialOverview />}
       {showUserStats && <UserStats />}

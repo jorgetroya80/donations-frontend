@@ -1,76 +1,71 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
+import { Skeleton } from '@/components/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { useToast } from '@/components/ui/toast'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import { useUpdateUser, useUser } from './use-users'
 
 type UserRole = 'ADMIN' | 'TREASURER' | 'PASTOR' | 'OPERATOR'
 
+import { PageHeader } from '@/components/page-header'
 import { UserForm } from './user-form'
 import type { UpdateUserFormData } from './user-schema'
 
 export function UserEditPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const toast = useToast()
   const { id } = useParams<{ id: string }>()
   const userId = Number(id)
 
   const { data: user, isLoading, error } = useUser(userId)
   const updateMutation = useUpdateUser(userId)
 
-  const [pendingData, setPendingData] = useState<UpdateUserFormData | null>(
-    null
-  )
-
-  function handleFormSubmit(data: UpdateUserFormData) {
-    setPendingData(data)
-  }
-
-  async function handleConfirmSave() {
-    if (!pendingData) return
-
+  async function handleFormSubmit(data: UpdateUserFormData) {
     await updateMutation.mutateAsync({
-      username: pendingData.username,
-      password: pendingData.password || undefined,
-      roles: pendingData.roles as UserRole[],
-      active: pendingData.active,
+      username: data.username,
+      password: data.password || undefined,
+      roles: data.roles as UserRole[],
+      active: data.active,
     })
 
-    setPendingData(null)
+    toast.add({ title: t('users.successUpdated') })
     navigate('/users')
   }
 
   if (isLoading) {
     return (
-      <Alert>
-        <AlertDescription>{t('common.loading')}</AlertDescription>
-      </Alert>
+      <div
+        aria-busy="true"
+        aria-label={t('common.loading')}
+        className="mx-auto max-w-2xl space-y-4"
+      >
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-64" />
+      </div>
     )
   }
 
   if (error || !user) {
     return (
       <Alert variant="destructive">
-        <AlertDescription>{t('users.errorLoading')}</AlertDescription>
+        <AlertDescription>
+          {getProblemMessage(error, t('users.errorLoading'))}
+        </AlertDescription>
       </Alert>
     )
   }
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
-      <h1 className="text-2xl font-bold">{t('users.edit')}</h1>
+      <PageHeader title={t('users.edit')} />
 
       {updateMutation.error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('users.errorSaving')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(updateMutation.error, t('users.errorSaving'))}
+          </AlertDescription>
         </Alert>
       )}
 
@@ -87,21 +82,6 @@ export function UserEditPage() {
         submitting={updateMutation.isPending}
         submitLabel={t('common.save')}
       />
-
-      <Dialog open={!!pendingData} onOpenChange={() => setPendingData(null)}>
-        <DialogContent>
-          <DialogTitle>{t('users.confirmEdit')}</DialogTitle>
-          <DialogDescription>
-            {t('users.confirmEditDescription')}
-          </DialogDescription>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setPendingData(null)}>
-              {t('common.cancel')}
-            </Button>
-            <Button onClick={handleConfirmSave}>{t('common.confirm')}</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }

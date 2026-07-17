@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { DonorPicker } from '@/features/donors/donor-picker'
+import { parseApiFieldErrors } from '@/lib/parse-api-field-errors'
 import {
   type CreateDonationFormData,
   createDonationSchema,
@@ -22,7 +23,7 @@ import {
 
 interface DonationFormProps {
   defaultValues?: Partial<CreateDonationFormData>
-  onSubmit: (data: CreateDonationFormData) => void
+  onSubmit: (data: CreateDonationFormData) => void | Promise<void>
   onCancel?: () => void
   submitting?: boolean
   submitLabel: string
@@ -37,10 +38,21 @@ export function DonationForm({
 }: DonationFormProps) {
   const { t } = useTranslation()
 
+  const donationTypeItems = Object.fromEntries(
+    donationTypes.map((type) => [type, t(`donations.types.${type}`)])
+  )
+  const paymentMethodItems = Object.fromEntries(
+    paymentMethods.map((method) => [
+      method,
+      t(`donations.paymentMethods.${method}`),
+    ])
+  )
+
   const {
     register,
     handleSubmit,
     control,
+    setError,
     formState: { errors },
   } = useForm<CreateDonationFormData>({
     resolver: zodResolver(createDonationSchema),
@@ -55,8 +67,19 @@ export function DonationForm({
     },
   })
 
+  async function submitHandler(data: CreateDonationFormData) {
+    try {
+      await onSubmit(data)
+    } catch (err) {
+      const fields = parseApiFieldErrors(err)
+      for (const [field, message] of Object.entries(fields)) {
+        setError(field as keyof CreateDonationFormData, { message })
+      }
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(submitHandler)} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="amount">{t('donations.amount')}</Label>
@@ -109,7 +132,8 @@ export function DonationForm({
             name="donationType"
             render={({ field }) => (
               <Select
-                value={field.value ? t(`donations.types.${field.value}`) : ''}
+                items={donationTypeItems}
+                value={field.value ?? null}
                 onValueChange={field.onChange}
               >
                 <SelectTrigger
@@ -150,11 +174,8 @@ export function DonationForm({
             name="paymentMethod"
             render={({ field }) => (
               <Select
-                value={
-                  field.value
-                    ? t(`donations.paymentMethods.${field.value}`)
-                    : ''
-                }
+                items={paymentMethodItems}
+                value={field.value ?? null}
                 onValueChange={field.onChange}
               >
                 <SelectTrigger

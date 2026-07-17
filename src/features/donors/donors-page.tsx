@@ -3,7 +3,9 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
 import { EmptyState } from '@/components/empty-state'
-import { Skeleton } from '@/components/skeleton'
+import { PageHeader } from '@/components/page-header'
+import { TableSkeleton } from '@/components/skeleton'
+import { SortableTh } from '@/components/sortable-th'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -15,6 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { getProblemMessage } from '@/lib/get-problem-message'
 import { useSort } from '@/lib/use-sort'
 import { useDonors } from './use-donors'
 
@@ -32,7 +35,7 @@ export function DonorsPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold">{t('donors.title')}</h1>
+        <PageHeader title={t('donors.title')} />
         <Button onClick={() => navigate('/donors/new')}>
           <Plus size={16} />
           {t('donors.new')}
@@ -41,23 +44,13 @@ export function DonorsPage() {
 
       {error && (
         <Alert variant="destructive">
-          <AlertDescription>{t('donors.errorLoading')}</AlertDescription>
+          <AlertDescription>
+            {getProblemMessage(error, t('donors.errorLoading'))}
+          </AlertDescription>
         </Alert>
       )}
 
-      {isLoading && (
-        <div
-          aria-busy="true"
-          aria-label={t('common.loading')}
-          className="space-y-2"
-        >
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
-        </div>
-      )}
+      {isLoading && <TableSkeleton />}
 
       {data && (data.content ?? []).length === 0 && (
         <EmptyState
@@ -75,21 +68,13 @@ export function DonorsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead
-                  className="cursor-pointer"
-                  onClick={() => toggleSort('fullName')}
-                  tabIndex={0}
-                  aria-sort={ariaSort('fullName')}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      toggleSort('fullName')
-                    }
-                  }}
+                <SortableTh
+                  ariaSort={ariaSort('fullName')}
+                  onSort={() => toggleSort('fullName')}
+                  indicator={sortIndicator('fullName')}
                 >
                   {t('donors.fullName')}
-                  <span aria-hidden="true">{sortIndicator('fullName')}</span>
-                </TableHead>
+                </SortableTh>
                 <TableHead>{t('donors.nationalId')}</TableHead>
                 <TableHead>{t('donors.email')}</TableHead>
                 <TableHead>{t('donors.phone')}</TableHead>
