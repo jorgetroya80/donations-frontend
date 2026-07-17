@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { useToast } from '@/components/ui/toast'
 import { ExpenseForm } from './expense-form'
 import type { CreateExpenseFormData } from './expense-schema'
 import { useCreateExpense } from './use-expenses'
@@ -8,6 +9,7 @@ import { useCreateExpense } from './use-expenses'
 export function ExpenseCreatePage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const toast = useToast()
   const createMutation = useCreateExpense()
 
   async function handleSubmit(data: CreateExpenseFormData) {
@@ -20,6 +22,7 @@ export function ExpenseCreatePage() {
       paymentMethod: data.paymentMethod,
     })
 
+    toast.add({ title: t('expenses.successCreated') })
     navigate('/expenses')
   }
 

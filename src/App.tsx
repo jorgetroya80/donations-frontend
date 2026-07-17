@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router'
 import { AppRoutes } from '@/app-routes'
 import { ErrorBoundary } from '@/components/error-boundary'
 import { Skeleton } from '@/components/skeleton'
+import { Toaster, ToastProvider } from '@/components/ui/toast'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { AuthProvider } from '@/features/auth/auth-context'
 import { ThemeProvider } from '@/features/theme/theme-context'
@@ -24,13 +25,16 @@ export default function App() {
       <ThemeProvider>
         <AuthProvider>
           <TooltipProvider>
-            <BrowserRouter>
-              <ErrorBoundary>
-                <Suspense fallback={<Skeleton />}>
-                  <AppRoutes />
-                </Suspense>
-              </ErrorBoundary>
-            </BrowserRouter>
+            <ToastProvider>
+              <BrowserRouter>
+                <ErrorBoundary>
+                  <Suspense fallback={<Skeleton />}>
+                    <AppRoutes />
+                  </Suspense>
+                </ErrorBoundary>
+              </BrowserRouter>
+              <Toaster />
+            </ToastProvider>
           </TooltipProvider>
         </AuthProvider>
       </ThemeProvider>

@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { useToast } from '@/components/ui/toast'
 import { DonorForm } from './donor-form'
 import type { CreateDonorFormData } from './donor-schema'
 import { useCreateDonor } from './use-donors'
@@ -8,6 +9,7 @@ import { useCreateDonor } from './use-donors'
 export function DonorCreatePage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const toast = useToast()
   const createMutation = useCreateDonor()
 
   async function handleSubmit(data: CreateDonorFormData) {
@@ -19,6 +21,7 @@ export function DonorCreatePage() {
       address: data.address || undefined,
     })
 
+    toast.add({ title: t('donors.successCreated') })
     navigate('/donors')
   }
 

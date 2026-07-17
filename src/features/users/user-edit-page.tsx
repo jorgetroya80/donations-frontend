@@ -1,15 +1,7 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { useToast } from '@/components/ui/toast'
 import { useUpdateUser, useUser } from './use-users'
 
 type UserRole = 'ADMIN' | 'TREASURER' | 'PASTOR' | 'OPERATOR'
@@ -20,31 +12,22 @@ import type { UpdateUserFormData } from './user-schema'
 export function UserEditPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const toast = useToast()
   const { id } = useParams<{ id: string }>()
   const userId = Number(id)
 
   const { data: user, isLoading, error } = useUser(userId)
   const updateMutation = useUpdateUser(userId)
 
-  const [pendingData, setPendingData] = useState<UpdateUserFormData | null>(
-    null
-  )
-
-  function handleFormSubmit(data: UpdateUserFormData) {
-    setPendingData(data)
-  }
-
-  async function handleConfirmSave() {
-    if (!pendingData) return
-
+  async function handleFormSubmit(data: UpdateUserFormData) {
     await updateMutation.mutateAsync({
-      username: pendingData.username,
-      password: pendingData.password || undefined,
-      roles: pendingData.roles as UserRole[],
-      active: pendingData.active,
+      username: data.username,
+      password: data.password || undefined,
+      roles: data.roles as UserRole[],
+      active: data.active,
     })
 
-    setPendingData(null)
+    toast.add({ title: t('users.successUpdated') })
     navigate('/users')
   }
 
@@ -87,21 +70,6 @@ export function UserEditPage() {
         submitting={updateMutation.isPending}
         submitLabel={t('common.save')}
       />
-
-      <Dialog open={!!pendingData} onOpenChange={() => setPendingData(null)}>
-        <DialogContent>
-          <DialogTitle>{t('users.confirmEdit')}</DialogTitle>
-          <DialogDescription>
-            {t('users.confirmEditDescription')}
-          </DialogDescription>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setPendingData(null)}>
-              {t('common.cancel')}
-            </Button>
-            <Button onClick={handleConfirmSave}>{t('common.confirm')}</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }

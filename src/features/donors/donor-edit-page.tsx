@@ -1,15 +1,7 @@
-import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { useToast } from '@/components/ui/toast'
 import { DonorForm } from './donor-form'
 import type { CreateDonorFormData } from './donor-schema'
 import { useDonor, useUpdateDonor } from './use-donors'
@@ -17,26 +9,14 @@ import { useDonor, useUpdateDonor } from './use-donors'
 export function DonorEditPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const toast = useToast()
   const { id } = useParams<{ id: string }>()
   const donorId = Number(id)
 
   const { data: donor, isLoading, error } = useDonor(donorId)
   const updateMutation = useUpdateDonor(donorId)
 
-  const [showConfirm, setShowConfirm] = useState(false)
-  const confirmResolveRef = useRef<((value: boolean) => void) | null>(null)
-
-  function waitForConfirmation(): Promise<boolean> {
-    return new Promise((resolve) => {
-      confirmResolveRef.current = resolve
-      setShowConfirm(true)
-    })
-  }
-
   async function handleFormSubmit(data: CreateDonorFormData) {
-    const confirmed = await waitForConfirmation()
-    if (!confirmed) return
-
     await updateMutation.mutateAsync({
       fullName: data.fullName,
       nationalId: data.nationalId,
@@ -45,6 +25,7 @@ export function DonorEditPage() {
       address: data.address || undefined,
     })
 
+    toast.add({ title: t('donors.successUpdated') })
     navigate('/donors')
   }
 
@@ -86,42 +67,6 @@ export function DonorEditPage() {
         onCancel={() => navigate('/donors')}
         submitting={updateMutation.isPending}
       />
-
-      <Dialog
-        open={showConfirm}
-        onOpenChange={(open) => {
-          if (!open) {
-            setShowConfirm(false)
-            confirmResolveRef.current?.(false)
-          }
-        }}
-      >
-        <DialogContent>
-          <DialogTitle>{t('donors.confirmEdit')}</DialogTitle>
-          <DialogDescription>
-            {t('donors.confirmEditDescription')}
-          </DialogDescription>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setShowConfirm(false)
-                confirmResolveRef.current?.(false)
-              }}
-            >
-              {t('common.cancel')}
-            </Button>
-            <Button
-              onClick={() => {
-                setShowConfirm(false)
-                confirmResolveRef.current?.(true)
-              }}
-            >
-              {t('common.confirm')}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }
