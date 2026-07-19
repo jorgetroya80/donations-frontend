@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import { FileBarChart } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router'
 import { DateRangePicker } from '@/components/date-range-picker'
 import { EmptyState } from '@/components/empty-state'
 import { PageHeader } from '@/components/page-header'
@@ -179,7 +180,28 @@ function ExpenseSummaryTab() {
 function DonorStatementTab() {
   const { t } = useTranslation()
   const [range, setRange] = useState(currentMonthRange)
-  const [donorId, setDonorId] = useState<number | null>(null)
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const rawDonorId = searchParams.get('donorId')
+  const parsedDonorId = rawDonorId === null ? Number.NaN : Number(rawDonorId)
+  const donorId =
+    Number.isInteger(parsedDonorId) && parsedDonorId > 0 ? parsedDonorId : null
+
+  function setDonorId(id: number | null) {
+    setSearchParams(
+      (prev) => {
+        const params = new URLSearchParams(prev)
+        if (id === null) {
+          params.delete('donorId')
+        } else {
+          params.set('donorId', String(id))
+        }
+        return params
+      },
+      { replace: true }
+    )
+  }
+
   const { data, isLoading, error } = useDonorStatement(donorId, {
     from: formatDate(range.from),
     to: formatDate(range.to),
@@ -273,7 +295,27 @@ const tabs: { key: Tab; labelKey: string }[] = [
 
 export function ReportsPage() {
   const { t } = useTranslation()
-  const [activeTab, setActiveTab] = useState<Tab>('donations')
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const tabParam = searchParams.get('tab')
+  const activeTab: Tab = tabs.some((tab) => tab.key === tabParam)
+    ? (tabParam as Tab)
+    : 'donations'
+
+  function selectTab(tab: Tab) {
+    // Tabs feel like places: push (default) so Back steps between them.
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev)
+      if (tab === 'donations') {
+        params.delete('tab')
+      } else {
+        params.set('tab', tab)
+      }
+      // Leaving the donor-statement tab drops the selection, as before.
+      params.delete('donorId')
+      return params
+    })
+  }
 
   return (
     <div className="space-y-6">
@@ -282,7 +324,7 @@ export function ReportsPage() {
       <TabList
         tabs={tabs.map((tab) => ({ key: tab.key, label: t(tab.labelKey) }))}
         value={activeTab}
-        onChange={setActiveTab}
+        onChange={selectTab}
       />
 
       <div

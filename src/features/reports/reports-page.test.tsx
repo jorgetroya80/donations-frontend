@@ -1,11 +1,23 @@
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { useLocation } from 'react-router'
 import { describe, expect, it } from 'vitest'
 import { renderWithProviders } from '@/test/test-utils'
 import { ReportsPage } from './reports-page'
 
-function renderPage() {
-  return renderWithProviders(<ReportsPage />)
+function LocationProbe() {
+  const { pathname, search } = useLocation()
+  return <div data-testid="location">{pathname + search}</div>
+}
+
+function renderPage(route = '/reports') {
+  return renderWithProviders(
+    <>
+      <ReportsPage />
+      <LocationProbe />
+    </>,
+    { route }
+  )
 }
 
 describe('ReportsPage', () => {
@@ -111,6 +123,70 @@ describe('ReportsPage', () => {
     expect(
       screen.getByText('Seleccione un donante para ver su estado de cuenta')
     ).toBeInTheDocument()
+  })
+
+  it('writes the tab to the URL and keeps the default tab clean', async () => {
+    const user = userEvent.setup()
+    renderPage()
+    expect(screen.getByTestId('location')).toHaveTextContent(/^\/reports$/)
+
+    await user.click(screen.getByText('Resumen de gastos'))
+    expect(screen.getByTestId('location')).toHaveTextContent(
+      '/reports?tab=expenses'
+    )
+
+    await user.click(screen.getByText('Resumen de donaciones'))
+    expect(screen.getByTestId('location')).toHaveTextContent(/^\/reports$/)
+  })
+
+  it('initializes the active tab from the URL', () => {
+    renderPage('/reports?tab=donor-statement')
+    expect(
+      screen.getByRole('tab', { name: 'Estado de cuenta del donante' })
+    ).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByPlaceholderText('Buscar donante…')).toBeInTheDocument()
+  })
+
+  it('falls back to the donations tab for an invalid tab param', () => {
+    renderPage('/reports?tab=bogus')
+    expect(
+      screen.getByRole('tab', { name: 'Resumen de donaciones' })
+    ).toHaveAttribute('aria-selected', 'true')
+  })
+
+  it('writes the selected donor to the URL', async () => {
+    const user = userEvent.setup()
+    renderPage('/reports?tab=donor-statement')
+
+    const input = screen.getByPlaceholderText('Buscar donante…')
+    await user.click(input)
+    await user.type(input, 'Juan')
+    await user.click(await screen.findByRole('option', { name: /Juan Pérez/ }))
+
+    await waitFor(() => {
+      expect(screen.getByTestId('location')).toHaveTextContent(
+        '/reports?tab=donor-statement&donorId=1'
+      )
+    })
+  })
+
+  it('loads the donor statement from a deep link', async () => {
+    renderPage('/reports?tab=donor-statement&donorId=1')
+
+    await waitFor(() => {
+      expect(screen.getByText('Diezmo')).toBeInTheDocument()
+    })
+    expect(screen.getByText('Total general')).toBeInTheDocument()
+  })
+
+  it('clears the donor param when switching tabs', async () => {
+    const user = userEvent.setup()
+    renderPage('/reports?tab=donor-statement&donorId=1')
+
+    await user.click(screen.getByText('Resumen de gastos'))
+    expect(screen.getByTestId('location')).toHaveTextContent(
+      /^\/reports\?tab=expenses$/
+    )
   })
 
   it('shows active tab styling', () => {
