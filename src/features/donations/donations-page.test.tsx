@@ -1,11 +1,17 @@
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { http } from 'msw'
+import { HttpResponse, http } from 'msw'
+import { useLocation } from 'react-router'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { server } from '@/test/msw-server'
 import { problemDetailResponse } from '@/test/problem-detail'
 import { renderWithProviders } from '@/test/test-utils'
 import { DonationsPage } from './donations-page'
+
+function LocationProbe() {
+  const { pathname, search } = useLocation()
+  return <div data-testid="location">{pathname + search}</div>
+}
 
 beforeEach(() => {
   localStorage.setItem(
@@ -149,6 +155,63 @@ describe('DonationsPage', () => {
       expect(
         screen.getByRole('columnheader', { name: /Fecha/ })
       ).toHaveAttribute('aria-sort', 'ascending')
+    })
+  })
+
+  it('writes sort to the URL and clears the page param', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <>
+        <DonationsPage />
+        <LocationProbe />
+      </>,
+      { route: '/donations?page=3' }
+    )
+
+    await waitFor(() => {
+      expect(screen.getByText('Juan Pérez')).toBeInTheDocument()
+    })
+
+    await user.click(screen.getByText(/Fecha/))
+
+    await waitFor(() => {
+      expect(screen.getByTestId('location')).toHaveTextContent(
+        '/donations?sort=donationDate%2Casc'
+      )
+    })
+  })
+
+  it('initializes sort from the URL', async () => {
+    renderWithProviders(<DonationsPage />, {
+      route: '/donations?sort=amount,asc',
+    })
+
+    await waitFor(() => {
+      expect(screen.getByText('Juan Pérez')).toBeInTheDocument()
+    })
+
+    expect(screen.getByRole('columnheader', { name: /Monto/ })).toHaveAttribute(
+      'aria-sort',
+      'ascending'
+    )
+  })
+
+  it('requests the page from the URL (1-based param, 0-based API)', async () => {
+    let requestedPage: string | null = null
+    server.use(
+      http.get('*/api/v1/donations', ({ request }) => {
+        requestedPage = new URL(request.url).searchParams.get('page')
+        return HttpResponse.json({
+          content: [],
+          page: { number: 2, totalPages: 3, size: 10, totalElements: 25 },
+        })
+      })
+    )
+
+    renderWithProviders(<DonationsPage />, { route: '/donations?page=3' })
+
+    await waitFor(() => {
+      expect(requestedPage).toBe('2')
     })
   })
 
