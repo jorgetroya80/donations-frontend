@@ -1,5 +1,4 @@
 import { Pencil, Plus } from 'lucide-react'
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
 import { EmptyState } from '@/components/empty-state'
@@ -18,16 +17,17 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { getProblemMessage } from '@/lib/get-problem-message'
+import { usePageParam } from '@/lib/use-page-param'
 import { useSort } from '@/lib/use-sort'
 import { useDonors } from './use-donors'
 
 export function DonorsPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const [page, setPage] = useState(0)
+  const { page, setPage } = usePageParam()
   const { sort, toggleSort, sortIndicator, ariaSort } = useSort(
     'fullName,asc',
-    () => setPage(0)
+    ['fullName']
   )
 
   const { data, isLoading, error } = useDonors({ page, size: 10, sort })
@@ -127,7 +127,7 @@ export function DonorsPage() {
                 variant="outline"
                 size="sm"
                 disabled={(data.page?.number ?? 0) === 0}
-                onClick={() => setPage((p) => p - 1)}
+                onClick={() => setPage(page - 1)}
               >
                 {t('donors.previous')}
               </Button>
@@ -137,7 +137,7 @@ export function DonorsPage() {
                 disabled={
                   (data.page?.number ?? 0) >= (data.page?.totalPages ?? 0) - 1
                 }
-                onClick={() => setPage((p) => p + 1)}
+                onClick={() => setPage(page + 1)}
               >
                 {t('donors.next')}
               </Button>

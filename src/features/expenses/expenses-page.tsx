@@ -21,16 +21,17 @@ import {
 } from '@/components/ui/table'
 import { currentMonthRange, formatCurrency } from '@/lib/formatters'
 import { getProblemMessage } from '@/lib/get-problem-message'
+import { usePageParam } from '@/lib/use-page-param'
 import { useSort } from '@/lib/use-sort'
 import { useExpenses } from './use-expenses'
 
 export function ExpensesPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const [page, setPage] = useState(0)
+  const { page, setPage } = usePageParam()
   const { sort, toggleSort, sortIndicator, ariaSort } = useSort(
     'expenseDate,desc',
-    () => setPage(0)
+    ['expenseDate', 'amount']
   )
   const [range, setRange] = useState(currentMonthRange)
 
@@ -157,7 +158,7 @@ export function ExpensesPage() {
                 variant="outline"
                 size="sm"
                 disabled={(data.page?.number ?? 0) === 0}
-                onClick={() => setPage((p) => p - 1)}
+                onClick={() => setPage(page - 1)}
               >
                 {t('expenses.previous')}
               </Button>
@@ -167,7 +168,7 @@ export function ExpensesPage() {
                 disabled={
                   (data.page?.number ?? 0) >= (data.page?.totalPages ?? 0) - 1
                 }
-                onClick={() => setPage((p) => p + 1)}
+                onClick={() => setPage(page + 1)}
               >
                 {t('expenses.next')}
               </Button>
