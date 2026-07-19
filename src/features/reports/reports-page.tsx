@@ -303,6 +303,8 @@ export function ReportsPage() {
     : 'donations'
 
   function selectTab(tab: Tab) {
+    // Re-clicking the active tab must not stack duplicate history entries.
+    if (tab === activeTab) return
     // Tabs feel like places: push (default) so Back steps between them.
     setSearchParams((prev) => {
       const params = new URLSearchParams(prev)

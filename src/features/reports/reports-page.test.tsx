@@ -203,6 +203,22 @@ describe('ReportsPage', () => {
     ).toHaveAttribute('aria-selected', 'true')
   })
 
+  it('does not push a history entry when the active tab is re-clicked', async () => {
+    const user = userEvent.setup()
+    renderPage()
+
+    await user.click(screen.getByText('Resumen de gastos'))
+    await user.click(screen.getByText('Resumen de gastos'))
+
+    // One Back must return to the donations tab; a duplicate push for the
+    // re-click would leave us stuck on ?tab=expenses.
+    await user.click(screen.getByRole('button', { name: 'history-back' }))
+    expect(screen.getByTestId('location')).toHaveTextContent(/^\/reports$/)
+    expect(
+      screen.getByRole('tab', { name: 'Resumen de donaciones' })
+    ).toHaveAttribute('aria-selected', 'true')
+  })
+
   it('replaces history on donor selection so Back does not restore it', async () => {
     const user = userEvent.setup()
     renderPage()
