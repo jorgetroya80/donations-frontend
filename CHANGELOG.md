@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.1...donations-frontend-v0.3.2) (2026-07-19)
+
+
+### Features
+
+* persist list, sort, and report state in URL search params ([#158](https://github.com/jorgetroya80/donations-frontend/issues/158)) ([bbb4225](https://github.com/jorgetroya80/donations-frontend/commit/bbb4225e276dfb8578235163a82c70d5fcfac724))
+
 ## [0.3.1](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.0...donations-frontend-v0.3.1) (2026-07-17)
 
 
