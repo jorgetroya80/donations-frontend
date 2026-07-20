@@ -1,7 +1,7 @@
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { HttpResponse, http } from 'msw'
-import { useLocation } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { server } from '@/test/msw-server'
 import { problemDetailResponse } from '@/test/problem-detail'
@@ -10,7 +10,15 @@ import { DonationsPage } from './donations-page'
 
 function LocationProbe() {
   const { pathname, search } = useLocation()
-  return <div data-testid="location">{pathname + search}</div>
+  const navigate = useNavigate()
+  return (
+    <>
+      <div data-testid="location">{pathname + search}</div>
+      <button type="button" onClick={() => navigate(-1)}>
+        history-back
+      </button>
+    </>
+  )
 }
 
 beforeEach(() => {
@@ -179,6 +187,35 @@ describe('DonationsPage', () => {
         '/donations?sort=donationDate%2Casc'
       )
     })
+  })
+
+  it('replaces history on sort change so Back does not undo it', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <>
+        <DonationsPage />
+        <LocationProbe />
+      </>,
+      { route: '/donations' }
+    )
+
+    await waitFor(() => {
+      expect(screen.getByText('Juan Pérez')).toBeInTheDocument()
+    })
+
+    await user.click(screen.getByText(/Fecha/))
+    await waitFor(() => {
+      expect(screen.getByTestId('location')).toHaveTextContent(
+        '/donations?sort=donationDate%2Casc'
+      )
+    })
+
+    // Sort used replace: the history stack has a single entry, so going
+    // back is a no-op instead of restoring the pre-sort URL.
+    await user.click(screen.getByRole('button', { name: 'history-back' }))
+    expect(screen.getByTestId('location')).toHaveTextContent(
+      '/donations?sort=donationDate%2Casc'
+    )
   })
 
   it('initializes sort from the URL', async () => {

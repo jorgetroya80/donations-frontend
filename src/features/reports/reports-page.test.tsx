@@ -1,13 +1,21 @@
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { useLocation } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { describe, expect, it } from 'vitest'
 import { renderWithProviders } from '@/test/test-utils'
 import { ReportsPage } from './reports-page'
 
 function LocationProbe() {
   const { pathname, search } = useLocation()
-  return <div data-testid="location">{pathname + search}</div>
+  const navigate = useNavigate()
+  return (
+    <>
+      <div data-testid="location">{pathname + search}</div>
+      <button type="button" onClick={() => navigate(-1)}>
+        history-back
+      </button>
+    </>
+  )
 }
 
 function renderPage(route = '/reports') {
@@ -177,6 +185,81 @@ describe('ReportsPage', () => {
       expect(screen.getByText('Diezmo')).toBeInTheDocument()
     })
     expect(screen.getByText('Total general')).toBeInTheDocument()
+  })
+
+  it('pushes history on tab switch so Back returns to the previous tab', async () => {
+    const user = userEvent.setup()
+    renderPage()
+
+    await user.click(screen.getByText('Resumen de gastos'))
+    expect(screen.getByTestId('location')).toHaveTextContent(
+      '/reports?tab=expenses'
+    )
+
+    await user.click(screen.getByRole('button', { name: 'history-back' }))
+    expect(screen.getByTestId('location')).toHaveTextContent(/^\/reports$/)
+    expect(
+      screen.getByRole('tab', { name: 'Resumen de donaciones' })
+    ).toHaveAttribute('aria-selected', 'true')
+  })
+
+  it('does not push a history entry when the active tab is re-clicked', async () => {
+    const user = userEvent.setup()
+    renderPage()
+
+    await user.click(screen.getByText('Resumen de gastos'))
+    await user.click(screen.getByText('Resumen de gastos'))
+
+    // One Back must return to the donations tab; a duplicate push for the
+    // re-click would leave us stuck on ?tab=expenses.
+    await user.click(screen.getByRole('button', { name: 'history-back' }))
+    expect(screen.getByTestId('location')).toHaveTextContent(/^\/reports$/)
+    expect(
+      screen.getByRole('tab', { name: 'Resumen de donaciones' })
+    ).toHaveAttribute('aria-selected', 'true')
+  })
+
+  it('replaces history on donor selection so Back does not restore it', async () => {
+    const user = userEvent.setup()
+    renderPage()
+
+    // Push entry: donations tab -> donor-statement tab
+    await user.click(screen.getByText('Estado de cuenta del donante'))
+
+    const input = screen.getByPlaceholderText('Buscar donante…')
+    await user.click(input)
+    await user.type(input, 'Juan')
+    await user.click(await screen.findByRole('option', { name: /Juan Pérez/ }))
+
+    await waitFor(() => {
+      expect(screen.getByTestId('location')).toHaveTextContent(
+        '/reports?tab=donor-statement&donorId=1'
+      )
+    })
+
+    // Back skips the donorId tweak entirely and lands on the previous tab.
+    await user.click(screen.getByRole('button', { name: 'history-back' }))
+    expect(screen.getByTestId('location')).toHaveTextContent(/^\/reports$/)
+  })
+
+  it('removes the donor param when the donor is cleared', async () => {
+    const user = userEvent.setup()
+    renderPage('/reports?tab=donor-statement&donorId=1')
+
+    await waitFor(() => {
+      expect(screen.getByText('Diezmo')).toBeInTheDocument()
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Quitar donante' }))
+
+    await waitFor(() => {
+      expect(screen.getByTestId('location')).toHaveTextContent(
+        /^\/reports\?tab=donor-statement$/
+      )
+    })
+    expect(
+      screen.getByText('Seleccione un donante para ver su estado de cuenta')
+    ).toBeInTheDocument()
   })
 
   it('clears the donor param when switching tabs', async () => {
