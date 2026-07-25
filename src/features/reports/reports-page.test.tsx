@@ -34,7 +34,7 @@ describe('ReportsPage', () => {
     expect(screen.getByText('Reportes')).toBeInTheDocument()
     expect(screen.getByText('Resumen de donaciones')).toBeInTheDocument()
     expect(screen.getByText('Resumen de gastos')).toBeInTheDocument()
-    expect(screen.getByText('Estado de cuenta del donante')).toBeInTheDocument()
+    expect(screen.getByText('Resumen donativos por donante')).toBeInTheDocument()
   })
 
   it('shows donation summary tab by default with data', async () => {
@@ -59,7 +59,7 @@ describe('ReportsPage', () => {
   it('switches to donor statement tab and shows donor picker input', async () => {
     const user = userEvent.setup()
     renderPage()
-    await user.click(screen.getByText('Estado de cuenta del donante'))
+    await user.click(screen.getByText('Resumen donativos por donante'))
     expect(
       screen.getByText('Seleccione un donante para ver su estado de cuenta')
     ).toBeInTheDocument()
@@ -69,7 +69,7 @@ describe('ReportsPage', () => {
   it('loads donor statement when donor selected from picker', async () => {
     const user = userEvent.setup()
     renderPage()
-    await user.click(screen.getByText('Estado de cuenta del donante'))
+    await user.click(screen.getByText('Resumen donativos por donante'))
 
     const input = screen.getByPlaceholderText('Buscar donante…')
 
@@ -94,7 +94,7 @@ describe('ReportsPage', () => {
   it('shows no donors found message when search matches nothing', async () => {
     const user = userEvent.setup()
     renderPage()
-    await user.click(screen.getByText('Estado de cuenta del donante'))
+    await user.click(screen.getByText('Resumen donativos por donante'))
 
     const input = screen.getByPlaceholderText('Buscar donante…')
     await user.click(input)
@@ -108,7 +108,7 @@ describe('ReportsPage', () => {
   it('hides statement when donor is cleared after selection', async () => {
     const user = userEvent.setup()
     renderPage()
-    await user.click(screen.getByText('Estado de cuenta del donante'))
+    await user.click(screen.getByText('Resumen donativos por donante'))
 
     const input = screen.getByPlaceholderText('Buscar donante…')
     await user.click(input)
@@ -150,7 +150,7 @@ describe('ReportsPage', () => {
   it('initializes the active tab from the URL', () => {
     renderPage('/reports?tab=donor-statement')
     expect(
-      screen.getByRole('tab', { name: 'Estado de cuenta del donante' })
+      screen.getByRole('tab', { name: 'Resumen donativos por donante' })
     ).toHaveAttribute('aria-selected', 'true')
     expect(screen.getByPlaceholderText('Buscar donante…')).toBeInTheDocument()
   })
@@ -224,7 +224,7 @@ describe('ReportsPage', () => {
     renderPage()
 
     // Push entry: donations tab -> donor-statement tab
-    await user.click(screen.getByText('Estado de cuenta del donante'))
+    await user.click(screen.getByText('Resumen donativos por donante'))
 
     const input = screen.getByPlaceholderText('Buscar donante…')
     await user.click(input)
