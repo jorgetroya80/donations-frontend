@@ -7,9 +7,9 @@ import {
   useState,
 } from 'react'
 
-const AUTH_STORAGE_KEY = 'auth_user'
+import { FORCE_ROTATION_EVENT } from '@/lib/auth-events'
 
-export const FORCE_ROTATION_EVENT = 'auth:force-rotation'
+const AUTH_STORAGE_KEY = 'auth_user'
 
 interface AuthUser {
   username: string
