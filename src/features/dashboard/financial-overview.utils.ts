@@ -1,9 +1,5 @@
 import dayjs from 'dayjs'
 
-export function formatDate(d: Date) {
-  return dayjs(d).format('YYYY-MM-DD')
-}
-
 export function previousRange(from: Date, to: Date) {
   const days = dayjs(to).diff(dayjs(from), 'day') + 1
   return {

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import { describe, expect, it } from 'vitest'
-import { currentMonthRange, formatCurrency } from './formatters'
+import { currentMonthRange, formatCurrency, formatDate } from './formatters'
 
 const fmt = (s: string) => s.replace(/\s/g, ' ')
 
@@ -23,6 +23,12 @@ describe('formatCurrency', () => {
 
   it('formats large amount with grouping separators', () => {
     expect(fmt(formatCurrency(1234567.89))).toBe('1.234.567,89 €')
+  })
+})
+
+describe('formatDate', () => {
+  it('formats a Date as YYYY-MM-DD', () => {
+    expect(formatDate(new Date('2026-04-01T12:00:00'))).toBe('2026-04-01')
   })
 })
 

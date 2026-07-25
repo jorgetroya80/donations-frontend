@@ -17,9 +17,8 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DonorPicker } from '@/features/donors'
-import { currentMonthRange, formatCurrency } from '@/lib/formatters'
+import { currentMonthRange, formatCurrency, formatDate } from '@/lib/formatters'
 import { getProblemMessage } from '@/lib/get-problem-message'
-import { formatDate } from './format-date'
 import { useDonorStatement } from './use-reports'
 
 export function DonorStatementTab() {

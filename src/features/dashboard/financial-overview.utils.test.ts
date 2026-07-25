@@ -1,15 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import {
-  calcPctChange,
-  formatDate,
-  previousRange,
-} from './financial-overview.utils'
-
-describe('formatDate', () => {
-  it('formats a Date as YYYY-MM-DD', () => {
-    expect(formatDate(new Date('2026-04-01T12:00:00'))).toBe('2026-04-01')
-  })
-})
+import { calcPctChange, previousRange } from './financial-overview.utils'
 
 describe('previousRange', () => {
   it('returns the equal-length period immediately before the given range', () => {

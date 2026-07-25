@@ -14,9 +14,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { currentMonthRange, formatCurrency } from '@/lib/formatters'
+import { currentMonthRange, formatCurrency, formatDate } from '@/lib/formatters'
 import { getProblemMessage } from '@/lib/get-problem-message'
-import { formatDate } from './format-date'
 import { useDonationReport } from './use-reports'
 
 export function DonationSummaryTab() {
