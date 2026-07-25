@@ -18,7 +18,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { TabList } from '@/components/ui/tabs'
-import { DonorPicker } from '@/features/donors/donor-picker'
+import { DonorPicker } from '@/features/donors'
 import { currentMonthRange, formatCurrency } from '@/lib/formatters'
 import { getProblemMessage } from '@/lib/get-problem-message'
 import {
