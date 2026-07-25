@@ -17,7 +17,7 @@ type ComparisonDatum = {
   previous: number
 } & Record<string, ReactNode>
 
-interface ComparisonBarChartProps {
+export interface ComparisonBarChartProps {
   data: ComparisonDatum[]
   config: ChartConfig
   categoryKey: string
