@@ -16,13 +16,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { useAuth } from '@/features/auth/auth-context'
 import { getProblemMessage } from '@/lib/get-problem-message'
+import { canViewReports } from '@/lib/permissions'
 import { usePageParam } from '@/lib/use-page-param'
 import { useSort } from '@/lib/use-sort'
 import { useDonors } from './use-donors'
 
 export function DonorsPage() {
   const { t } = useTranslation()
+  const { user } = useAuth()
   const navigate = useNavigate()
   const { page, setPage } = usePageParam()
   const { sort, toggleSort, sortIndicator, ariaSort } = useSort(
@@ -98,16 +101,20 @@ export function DonorsPage() {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-1">
-                      <Link
-                        to={`/reports?tab=donor-statement&donorId=${donor.id}`}
-                        className={buttonVariants({
-                          variant: 'ghost',
-                          size: 'icon',
-                        })}
-                        aria-label={t('donors.statementLabel')}
-                      >
-                        <FileBarChart size={14} aria-hidden="true" />
-                      </Link>
+                      {canViewReports(user) && (
+                        <Link
+                          to={`/reports?tab=donor-statement&donorId=${donor.id}`}
+                          className={buttonVariants({
+                            variant: 'ghost',
+                            size: 'icon',
+                          })}
+                          aria-label={t('donors.statementLabel', {
+                            name: donor.fullName,
+                          })}
+                        >
+                          <FileBarChart size={14} aria-hidden="true" />
+                        </Link>
+                      )}
                       <Link
                         to={`/donors/${donor.id}/edit`}
                         className={buttonVariants({

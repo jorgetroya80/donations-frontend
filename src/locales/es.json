@@ -110,7 +110,7 @@
     "previous": "Anterior",
     "next": "Siguiente",
     "editLabel": "Editar donante {{name}}",
-    "statementLabel": "Ver donaciones"
+    "statementLabel": "Ver donaciones de {{name}}"
   },
   "expenses": {
     "title": "Gastos",
