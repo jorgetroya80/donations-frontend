@@ -1,67 +1,19 @@
-import dayjs from 'dayjs'
 import { ArrowDownRight, ArrowUpRight, BarChart3, Scale } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Bar, BarChart, XAxis, YAxis } from 'recharts'
 import { DateRangePicker } from '@/components/date-range-picker'
 import { EmptyState } from '@/components/empty-state'
 import { Skeleton } from '@/components/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  type ChartConfig,
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
-} from '@/components/ui/chart'
+import type { ChartConfig } from '@/components/ui/chart'
 import { useDonationReport, useExpenseReport } from '@/features/reports'
-import { currentMonthRange, formatCurrency } from '@/lib/formatters'
+import { currentMonthRange } from '@/lib/formatters'
 import { getProblemMessage } from '@/lib/get-problem-message'
+import { ComparisonBarChart } from './comparison-bar-chart'
+import { formatDate, previousRange } from './financial-overview.utils'
+import { StatCard } from './stat-card'
 import { useBalance } from './use-dashboard-data'
-
-function formatDate(d: Date) {
-  return dayjs(d).format('YYYY-MM-DD')
-}
-
-function previousRange(from: Date, to: Date) {
-  const days = dayjs(to).diff(dayjs(from), 'day') + 1
-  return {
-    from: dayjs(from).subtract(days, 'day').format('YYYY-MM-DD'),
-    to: dayjs(from).subtract(1, 'day').format('YYYY-MM-DD'),
-  }
-}
-
-function calcPctChange(
-  current: number | null | undefined,
-  previous: number | null | undefined
-): number | null {
-  if (current == null || previous == null || previous === 0) return null
-  return ((current - previous) / Math.abs(previous)) * 100
-}
-
-function PctChange({
-  current,
-  previous,
-  inverted = false,
-}: {
-  current: number | null | undefined
-  previous: number | null | undefined
-  inverted?: boolean
-}) {
-  const pct = calcPctChange(current, previous)
-  if (pct == null) return null
-  const isPositive = pct > 0
-  const isGood = inverted ? !isPositive : isPositive
-  return (
-    <span
-      className={`mt-1 text-xs font-medium ${isGood ? 'text-success' : 'text-destructive'}`}
-    >
-      {isPositive ? '↑' : '↓'} {Math.abs(pct).toFixed(1)}%
-    </span>
-  )
-}
 
 const donationTypes = ['TITHE', 'OFFERING', 'SPECIAL_OFFERING', 'OTHER']
 
@@ -157,66 +109,28 @@ export function FinancialOverview() {
       )}
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <Card className="@container">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
-              {t('dashboard.totalIncome')}
-            </CardTitle>
-            <ArrowUpRight size={16} className="text-success" />
-          </CardHeader>
-          <CardContent>
-            <p className="font-bold text-2xl @max-3xs:text-lg">
-              {balance.data
-                ? formatCurrency(balance.data.totalIncome ?? 0)
-                : '—'}
-            </p>
-            <PctChange
-              current={balance.data?.totalIncome}
-              previous={prevBalance.data?.totalIncome}
-            />
-          </CardContent>
-        </Card>
-
-        <Card className="@container">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
-              {t('dashboard.totalExpenses')}
-            </CardTitle>
-            <ArrowDownRight size={16} className="text-destructive" />
-          </CardHeader>
-          <CardContent>
-            <p className="font-bold text-2xl @max-3xs:text-lg">
-              {balance.data
-                ? formatCurrency(balance.data.totalExpenses ?? 0)
-                : '—'}
-            </p>
-            <PctChange
-              current={balance.data?.totalExpenses}
-              previous={prevBalance.data?.totalExpenses}
-              inverted
-            />
-          </CardContent>
-        </Card>
-
-        <Card className="@container">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
-              {t('dashboard.netBalance')}
-            </CardTitle>
-            <Scale size={16} className="text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="font-bold text-2xl @max-3xs:text-lg">
-              {balance.data
-                ? formatCurrency(balance.data.netBalance ?? 0)
-                : '—'}
-            </p>
-            <PctChange
-              current={balance.data?.netBalance}
-              previous={prevBalance.data?.netBalance}
-            />
-          </CardContent>
-        </Card>
+        <StatCard
+          label={t('dashboard.totalIncome')}
+          icon={<ArrowUpRight size={16} className="text-success" />}
+          value={balance.data ? (balance.data.totalIncome ?? 0) : undefined}
+          current={balance.data?.totalIncome}
+          previous={prevBalance.data?.totalIncome}
+        />
+        <StatCard
+          label={t('dashboard.totalExpenses')}
+          icon={<ArrowDownRight size={16} className="text-destructive" />}
+          value={balance.data ? (balance.data.totalExpenses ?? 0) : undefined}
+          current={balance.data?.totalExpenses}
+          previous={prevBalance.data?.totalExpenses}
+          inverted
+        />
+        <StatCard
+          label={t('dashboard.netBalance')}
+          icon={<Scale size={16} className="text-muted-foreground" />}
+          value={balance.data ? (balance.data.netBalance ?? 0) : undefined}
+          current={balance.data?.netBalance}
+          previous={prevBalance.data?.netBalance}
+        />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
@@ -228,73 +142,23 @@ export function FinancialOverview() {
             {titheData.length > 0 || otherDonationsData.length > 0 ? (
               <div className="space-y-4">
                 {titheData.length > 0 && (
-                  <ChartContainer
+                  <ComparisonBarChart
+                    data={titheData}
                     config={comparisonConfig}
+                    categoryKey="type"
+                    categoryWidth={120}
                     className="max-h-20"
-                  >
-                    <BarChart data={titheData} layout="vertical">
-                      <YAxis
-                        dataKey="type"
-                        type="category"
-                        width={120}
-                        tickLine={false}
-                        axisLine={false}
-                      />
-                      <XAxis type="number" hide />
-                      <ChartTooltip
-                        content={
-                          <ChartTooltipContent
-                            formatter={(v) => formatCurrency(v as number)}
-                          />
-                        }
-                      />
-                      <Bar
-                        dataKey="current"
-                        fill="var(--color-current)"
-                        radius={4}
-                      />
-                      <Bar
-                        dataKey="previous"
-                        fill="var(--color-previous)"
-                        radius={4}
-                      />
-                    </BarChart>
-                  </ChartContainer>
+                  />
                 )}
                 {otherDonationsData.length > 0 && (
-                  <ChartContainer
+                  <ComparisonBarChart
+                    data={otherDonationsData}
                     config={comparisonConfig}
+                    categoryKey="type"
+                    categoryWidth={120}
+                    showLegend
                     className="max-h-45"
-                  >
-                    <BarChart data={otherDonationsData} layout="vertical">
-                      <YAxis
-                        dataKey="type"
-                        type="category"
-                        width={120}
-                        tickLine={false}
-                        axisLine={false}
-                      />
-                      <XAxis type="number" hide />
-                      <ChartTooltip
-                        content={
-                          <ChartTooltipContent
-                            formatter={(v) => formatCurrency(v as number)}
-                          />
-                        }
-                      />
-                      <ChartLegend content={<ChartLegendContent />} />
-                      <Bar
-                        dataKey="current"
-                        fill="var(--color-current)"
-                        radius={4}
-                      />
-                      <Bar
-                        dataKey="previous"
-                        fill="var(--color-previous)"
-                        radius={4}
-                      />
-                    </BarChart>
-                  </ChartContainer>
+                  />
                 )}
               </div>
             ) : (
@@ -312,36 +176,14 @@ export function FinancialOverview() {
           </CardHeader>
           <CardContent>
             {expenseChartData.length > 0 ? (
-              <ChartContainer config={comparisonConfig} className="max-h-75">
-                <BarChart data={expenseChartData} layout="vertical">
-                  <YAxis
-                    dataKey="category"
-                    type="category"
-                    width={100}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <XAxis type="number" hide />
-                  <ChartTooltip
-                    content={
-                      <ChartTooltipContent
-                        formatter={(value) => formatCurrency(value as number)}
-                      />
-                    }
-                  />
-                  <ChartLegend content={<ChartLegendContent />} />
-                  <Bar
-                    dataKey="current"
-                    fill="var(--color-current)"
-                    radius={4}
-                  />
-                  <Bar
-                    dataKey="previous"
-                    fill="var(--color-previous)"
-                    radius={4}
-                  />
-                </BarChart>
-              </ChartContainer>
+              <ComparisonBarChart
+                data={expenseChartData}
+                config={comparisonConfig}
+                categoryKey="category"
+                categoryWidth={100}
+                showLegend
+                className="max-h-75"
+              />
             ) : (
               <EmptyState
                 icon={<BarChart3 size={40} />}
