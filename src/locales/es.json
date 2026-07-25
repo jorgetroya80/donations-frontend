@@ -182,7 +182,7 @@
     "title": "Reportes",
     "donationSummary": "Resumen de donaciones",
     "expenseSummary": "Resumen de gastos",
-    "donorStatement": "Estado de cuenta del donante",
+    "donorStatement": "Resumen donativos por donante",
     "type": "Tipo",
     "category": "Categoría",
     "total": "Total",
