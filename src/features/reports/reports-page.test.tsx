@@ -187,6 +187,14 @@ describe('ReportsPage', () => {
     expect(screen.getByText('Total general')).toBeInTheDocument()
   })
 
+  it('preselects the donor name in the picker from a deep link', async () => {
+    renderPage('/reports?tab=donor-statement&donorId=1')
+
+    await waitFor(() => {
+      expect(screen.getByDisplayValue('Juan Pérez')).toBeInTheDocument()
+    })
+  })
+
   it('pushes history on tab switch so Back returns to the previous tab', async () => {
     const user = userEvent.setup()
     renderPage()
