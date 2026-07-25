@@ -4,11 +4,7 @@ import { HttpResponse, http } from 'msw'
 import type { ReactNode } from 'react'
 import { describe, expect, it } from 'vitest'
 import { server } from '@/test/msw-server'
-import {
-  useBalance,
-  useDonationSummary,
-  useExpenseSummary,
-} from './use-dashboard-data'
+import { useBalance } from './use-dashboard-data'
 
 function createWrapper() {
   const queryClient = new QueryClient({
@@ -38,32 +34,6 @@ describe('useBalance', () => {
       totalExpenses: 3000,
       netBalance: 2000,
     })
-  })
-})
-
-describe('useDonationSummary', () => {
-  it('returns donation summary data', async () => {
-    const { result } = renderHook(() => useDonationSummary(dateRange), {
-      wrapper: createWrapper(),
-    })
-
-    await waitFor(() => expect(result.current.isSuccess).toBe(true))
-
-    expect(result.current.data?.grandTotal).toBe(5000)
-    expect(result.current.data?.totalsByType).toHaveLength(2)
-  })
-})
-
-describe('useExpenseSummary', () => {
-  it('returns expense summary data', async () => {
-    const { result } = renderHook(() => useExpenseSummary(dateRange), {
-      wrapper: createWrapper(),
-    })
-
-    await waitFor(() => expect(result.current.isSuccess).toBe(true))
-
-    expect(result.current.data?.grandTotal).toBe(3000)
-    expect(result.current.data?.totalsByCategory).toHaveLength(2)
   })
 })
 

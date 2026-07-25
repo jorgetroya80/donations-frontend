@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { DonorPicker } from '@/features/donors/donor-picker'
+import { DonorPicker } from '@/features/donors'
 import { parseApiFieldErrors } from '@/lib/parse-api-field-errors'
 import {
   type CreateDonationFormData,
