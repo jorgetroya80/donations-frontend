@@ -17,12 +17,8 @@
     "typecheck": "tsc --noEmit -p tsconfig.app.json"
   },
   "lint-staged": {
-    "**/*.{cjs,css,js,json,mjs}": [
-      "biome format --write --staged"
-    ],
-    "src/**/*.{ts,tsx}": [
-      "biome lint --write --staged"
-    ]
+    "**/*.{cjs,css,js,json,mjs}": ["biome format --write --staged"],
+    "src/**/*.{ts,tsx}": ["biome lint --write --staged"]
   },
   "dependencies": {
     "@base-ui/react": "1.4.1",
@@ -52,6 +48,7 @@
   "devDependencies": {
     "@babel/core": "7.29.6",
     "@biomejs/biome": "2.4.12",
+    "@rolldown/plugin-babel": "0.2.3",
     "@tailwindcss/vite": "4.2.2",
     "@testing-library/jest-dom": "6.9.1",
     "@testing-library/react": "16.3.2",
