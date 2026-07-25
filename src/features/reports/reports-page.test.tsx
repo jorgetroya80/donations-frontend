@@ -34,7 +34,9 @@ describe('ReportsPage', () => {
     expect(screen.getByText('Reportes')).toBeInTheDocument()
     expect(screen.getByText('Resumen de donaciones')).toBeInTheDocument()
     expect(screen.getByText('Resumen de gastos')).toBeInTheDocument()
-    expect(screen.getByText('Resumen donativos por donante')).toBeInTheDocument()
+    expect(
+      screen.getByText('Resumen donativos por donante')
+    ).toBeInTheDocument()
   })
 
   it('shows donation summary tab by default with data', async () => {
