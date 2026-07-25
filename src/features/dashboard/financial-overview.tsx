@@ -16,13 +16,10 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart'
+import { useDonationReport, useExpenseReport } from '@/features/reports'
 import { currentMonthRange, formatCurrency } from '@/lib/formatters'
 import { getProblemMessage } from '@/lib/get-problem-message'
-import {
-  useBalance,
-  useDonationSummary,
-  useExpenseSummary,
-} from './use-dashboard-data'
+import { useBalance } from './use-dashboard-data'
 
 function formatDate(d: Date) {
   return dayjs(d).format('YYYY-MM-DD')
@@ -90,11 +87,11 @@ export function FinancialOverview() {
   const prevDateParams = previousRange(range.from, range.to)
 
   const balance = useBalance(dateParams)
-  const donations = useDonationSummary(dateParams)
-  const expenses = useExpenseSummary(dateParams)
-  const prevDonations = useDonationSummary(prevDateParams)
+  const donations = useDonationReport(dateParams)
+  const expenses = useExpenseReport(dateParams)
+  const prevDonations = useDonationReport(prevDateParams)
   const prevBalance = useBalance(prevDateParams)
-  const prevExpenses = useExpenseSummary(prevDateParams)
+  const prevExpenses = useExpenseReport(prevDateParams)
 
   const isLoading =
     balance.isLoading || donations.isLoading || expenses.isLoading
