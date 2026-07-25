@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.4](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.3...donations-frontend-v0.3.4) (2026-07-25)
+
+
+### Features
+
+* **donors:** add per-donor statement link to the reports donor-statement tab ([#164](https://github.com/jorgetroya80/donations-frontend/issues/164)) ([16ef7b5](https://github.com/jorgetroya80/donations-frontend/commit/16ef7b588938b57c50306666463ba498ae68f49e))
+
 ## [0.3.3](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.2...donations-frontend-v0.3.3) (2026-07-20)
 
 
