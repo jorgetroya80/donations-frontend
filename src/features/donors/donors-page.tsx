@@ -1,4 +1,4 @@
-import { Pencil, Plus } from 'lucide-react'
+import { FileBarChart, Pencil, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
 import { EmptyState } from '@/components/empty-state'
@@ -79,7 +79,7 @@ export function DonorsPage() {
                 <TableHead>{t('donors.email')}</TableHead>
                 <TableHead>{t('donors.phone')}</TableHead>
                 <TableHead>{t('donors.status')}</TableHead>
-                <TableHead className="w-16">{t('common.actions')}</TableHead>
+                <TableHead className="w-24">{t('common.actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -97,18 +97,30 @@ export function DonorsPage() {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Link
-                      to={`/donors/${donor.id}/edit`}
-                      className={buttonVariants({
-                        variant: 'ghost',
-                        size: 'icon',
-                      })}
-                      aria-label={t('donors.editLabel', {
-                        name: donor.fullName,
-                      })}
-                    >
-                      <Pencil size={14} aria-hidden="true" />
-                    </Link>
+                    <div className="flex gap-1">
+                      <Link
+                        to={`/reports?tab=donor-statement&donorId=${donor.id}`}
+                        className={buttonVariants({
+                          variant: 'ghost',
+                          size: 'icon',
+                        })}
+                        aria-label={t('donors.statementLabel')}
+                      >
+                        <FileBarChart size={14} aria-hidden="true" />
+                      </Link>
+                      <Link
+                        to={`/donors/${donor.id}/edit`}
+                        className={buttonVariants({
+                          variant: 'ghost',
+                          size: 'icon',
+                        })}
+                        aria-label={t('donors.editLabel', {
+                          name: donor.fullName,
+                        })}
+                      >
+                        <Pencil size={14} aria-hidden="true" />
+                      </Link>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}

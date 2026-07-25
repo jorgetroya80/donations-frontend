@@ -109,7 +109,8 @@
     "page": "Página {{page}} de {{total}}",
     "previous": "Anterior",
     "next": "Siguiente",
-    "editLabel": "Editar donante {{name}}"
+    "editLabel": "Editar donante {{name}}",
+    "statementLabel": "Ver donaciones"
   },
   "expenses": {
     "title": "Gastos",

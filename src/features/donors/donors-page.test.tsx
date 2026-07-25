@@ -127,6 +127,25 @@ describe('DonorsPage', () => {
     })
   })
 
+  it('shows statement links to the report donor-statement tab for each row', async () => {
+    renderWithProviders(<DonorsPage />)
+    await waitFor(() => {
+      expect(screen.getByText('Juan Pérez')).toBeInTheDocument()
+    })
+    const statementLinks = screen.getAllByRole('link', {
+      name: 'Ver donaciones',
+    })
+    expect(statementLinks).toHaveLength(2)
+    expect(statementLinks[0]).toHaveAttribute(
+      'href',
+      '/reports?tab=donor-statement&donorId=1'
+    )
+    expect(statementLinks[1]).toHaveAttribute(
+      'href',
+      '/reports?tab=donor-statement&donorId=2'
+    )
+  })
+
   it('edit links have descriptive aria-labels', async () => {
     renderWithProviders(<DonorsPage />)
     await waitFor(() => {
