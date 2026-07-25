@@ -109,7 +109,8 @@
     "page": "Página {{page}} de {{total}}",
     "previous": "Anterior",
     "next": "Siguiente",
-    "editLabel": "Editar donante {{name}}"
+    "editLabel": "Editar donante {{name}}",
+    "statementLabel": "Ver donaciones de {{name}}"
   },
   "expenses": {
     "title": "Gastos",
@@ -181,7 +182,7 @@
     "title": "Reportes",
     "donationSummary": "Resumen de donaciones",
     "expenseSummary": "Resumen de gastos",
-    "donorStatement": "Estado de cuenta del donante",
+    "donorStatement": "Resumen donativos por donante",
     "type": "Tipo",
     "category": "Categoría",
     "total": "Total",

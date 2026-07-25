@@ -7,7 +7,7 @@ import { DonorsPage } from './donors-page'
 beforeEach(() => {
   localStorage.setItem(
     'auth_user',
-    JSON.stringify({ username: 'admin', roles: ['ADMIN'] })
+    JSON.stringify({ username: 'treasurer', roles: ['TREASURER'] })
   )
 })
 
@@ -125,6 +125,43 @@ describe('DonorsPage', () => {
         screen.getByRole('columnheader', { name: /Nombre completo/ })
       ).toHaveAttribute('aria-sort', 'descending')
     })
+  })
+
+  it('shows statement links to the report donor-statement tab for each row', async () => {
+    renderWithProviders(<DonorsPage />)
+    await waitFor(() => {
+      expect(screen.getByText('Juan Pérez')).toBeInTheDocument()
+    })
+    const statementLinks = screen.getAllByRole('link', {
+      name: /Ver donaciones/,
+    })
+    expect(statementLinks).toHaveLength(2)
+    expect(statementLinks[0]).toHaveAttribute(
+      'href',
+      '/reports?tab=donor-statement&donorId=1'
+    )
+    expect(statementLinks[1]).toHaveAttribute(
+      'href',
+      '/reports?tab=donor-statement&donorId=2'
+    )
+  })
+
+  it('hides statement links for users without report access', async () => {
+    localStorage.setItem(
+      'auth_user',
+      JSON.stringify({ username: 'operator', roles: ['OPERATOR'] })
+    )
+    renderWithProviders(<DonorsPage />)
+    await waitFor(() => {
+      expect(screen.getByText('Juan Pérez')).toBeInTheDocument()
+    })
+    expect(
+      screen.queryByRole('link', { name: /Ver donaciones/ })
+    ).not.toBeInTheDocument()
+    // Edit links remain available to data recorders.
+    expect(
+      screen.getAllByRole('link', { name: /Editar donante/ })
+    ).toHaveLength(2)
   })
 
   it('edit links have descriptive aria-labels', async () => {
