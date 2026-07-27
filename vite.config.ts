@@ -6,9 +6,10 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
 
 const PORT = 3000
-// Below the current entry chunk on purpose, so oversized chunks are visible
-// at build time instead of passing silently under Vite's 500 kB default.
-const CHUNK_SIZE_WARNING_KB = 300
+// Just above the recharts chart chunk, which is the largest chunk we can't
+// shrink without replacing the library. Low enough to catch real growth,
+// reachable enough that a green build still means something.
+const CHUNK_SIZE_WARNING_KB = 360
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -22,6 +23,23 @@ export default defineConfig({
   ],
   build: {
     chunkSizeWarningLimit: CHUNK_SIZE_WARNING_KB,
+    rolldownOptions: {
+      output: {
+        // React changes far less often than app code, so keeping it out of
+        // the entry chunk stops every deploy from invalidating it. Same total
+        // bytes on first load — this only helps repeat visits.
+        // react/react-dom/scheduler must stay in one group: splitting them
+        // apart risks cross-chunk circular initialization at runtime.
+        advancedChunks: {
+          groups: [
+            {
+              name: 'react-vendor',
+              test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/,
+            },
+          ],
+        },
+      },
+    },
   },
   resolve: {
     alias: {

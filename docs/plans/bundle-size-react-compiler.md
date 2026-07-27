@@ -207,3 +207,28 @@ None blocking. Three observations noted during the audit, deliberately **not** a
 - The `formatters-*` chunk is 91 KB of react-day-picker named after a 20-line utility file — misleading when reading build output.
 - The three font subsets in `dist/` (latin, latin-ext, cyrillic) are correctly `unicode-range`-gated, so only latin is ever fetched. Dead weight in the Docker image, not on the wire — not worth optimizing.
 - Six duplicated `useState(currentMonthRange)` blocks across pages, and the date range is the only list filter _not_ mirrored into the URL while `page`/`sort` are — so shared report links silently drop the range.
+
+---
+
+## Revision: the 300 kB budget was unreachable
+
+Task 4 set `chunkSizeWarningLimit: 300` deliberately below the entry chunk, so the build would report the current state as non-compliant. That was a reasonable one-time signal and a bad standing configuration: **no chunking change can reach 300 kB** while recharts is in use. The `comparison-bar-chart` chunk is 339 kB raw and that weight is intrinsic to the library. A budget that can never go green trains people to ignore build output, which is worse than having no budget.
+
+Two changes:
+
+**The React core moved to its own chunk** via `build.rolldownOptions.output.advancedChunks`, grouping `react`, `react-dom` and `scheduler` together. They must stay in one group — splitting them apart is the standard way to hit cross-chunk circular-initialization errors, which appear at runtime rather than at build. `react-router` and `@tanstack/react-query` are deliberately excluded: they change more often than React, so including them would dilute the caching benefit. Note that rolldown's sibling `codeSplitting` option silently overrides `advancedChunks` if both are set.
+
+**The budget moved to 360**, just above the chart chunk, so a green build means something and real growth still trips it.
+
+### This is a caching change, not a payload reduction
+
+| | Raw | Gzip |
+|---|---:|---:|
+| Before — entry alone | 408.5 kB | 129.5 kB |
+| After — entry + react-vendor + rolldown-runtime | 420.2 kB | 133.7 kB |
+
+First load costs **+11.7 kB raw / +4.2 kB gzip** (chunk boilerplate plus a 694-byte rolldown runtime chunk). The return is that app-only deploys no longer invalidate React: repeat visitors reuse **57.7 kB gzip** of `react-vendor` instead of re-downloading it inside a rehashed entry chunk. Do not describe this as a bundle size win — total shipped bytes went slightly up.
+
+This partially revises the "do not add `manualChunks`" decision above. That decision stands for its actual target: hoisting recharts into a chunk `/login` must download would undo the route splitting. Splitting React out of the entry is different, since the entry loads on every route anyway.
+
+Verified on the **production** build (`pnpm run preview` — `advancedChunks` does not apply in dev): app boots, console clean, all chunks 200, React state confirmed working. The API on `:8081` was down, so only the login route was exercised end-to-end; that is sufficient to catch circular-init failures, since React initializes on any route.
