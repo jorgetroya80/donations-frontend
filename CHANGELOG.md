@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.6](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.5...donations-frontend-v0.3.6) (2026-07-27)
+
+
+### Bug Fixes
+
+* **calendar:** attach day button ref so keyboard navigation moves focus ([#169](https://github.com/jorgetroya80/donations-frontend/issues/169)) ([cde0184](https://github.com/jorgetroya80/donations-frontend/commit/cde01844eee255220a76733de5b9afcce115981f)), closes [#166](https://github.com/jorgetroya80/donations-frontend/issues/166)
+
 ## [0.3.5](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.4...donations-frontend-v0.3.5) (2026-07-27)
 
 
