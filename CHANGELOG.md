@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.5](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.4...donations-frontend-v0.3.5) (2026-07-27)
+
+
+### Features
+
+* split recharts off the dashboard render path and enable React Compiler ([#167](https://github.com/jorgetroya80/donations-frontend/issues/167)) ([f8464c0](https://github.com/jorgetroya80/donations-frontend/commit/f8464c056f90e0e55f8769bdc3a10598cc4e5f36))
+
 ## [0.3.4](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.3...donations-frontend-v0.3.4) (2026-07-25)
 
 
