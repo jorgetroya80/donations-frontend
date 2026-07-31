@@ -49,6 +49,24 @@ describe('TabList', () => {
     expect(screen.getByRole('tab', { name: 'Uno' })).toHaveFocus()
   })
 
+  it('moves selection and focus backwards with ArrowLeft', async () => {
+    const user = userEvent.setup()
+    render(<Harness />)
+
+    screen.getByRole('tab', { name: 'Uno' }).focus()
+
+    // Wraps around backwards from the first tab
+    await user.keyboard('{ArrowLeft}')
+    expect(screen.getByRole('tab', { name: 'Tres' })).toHaveAttribute(
+      'aria-selected',
+      'true'
+    )
+    expect(screen.getByRole('tab', { name: 'Tres' })).toHaveFocus()
+
+    await user.keyboard('{ArrowLeft}')
+    expect(screen.getByRole('tab', { name: 'Dos' })).toHaveFocus()
+  })
+
   it('selects a tab on click', async () => {
     const user = userEvent.setup()
     render(<Harness />)
