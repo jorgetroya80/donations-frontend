@@ -24,9 +24,10 @@ export function TabList<T extends string>({
     if (next === null) return
 
     event.preventDefault()
-    const key = tabs[next].key
-    onChange(key)
-    document.getElementById(`tab-${key}`)?.focus()
+    const nextTab = tabs[next]
+    if (!nextTab) return
+    onChange(nextTab.key)
+    document.getElementById(`tab-${nextTab.key}`)?.focus()
   }
 
   return (

@@ -24,7 +24,7 @@ describe('useUsers', () => {
     })
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(result.current.data?.content).toHaveLength(2)
-    expect(result.current.data?.content?.[0].username).toBe('admin')
+    expect(result.current.data?.content?.[0]?.username).toBe('admin')
     expect(result.current.data?.page?.totalElements).toBe(2)
   })
 })

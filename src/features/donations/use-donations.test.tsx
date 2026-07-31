@@ -88,7 +88,7 @@ describe('useDonors', () => {
     })
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(result.current.data?.content).toHaveLength(2)
-    expect(result.current.data?.content?.[0].fullName).toBe('Juan Pérez')
+    expect(result.current.data?.content?.[0]?.fullName).toBe('Juan Pérez')
   })
 })
 
