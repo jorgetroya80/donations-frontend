@@ -6,7 +6,9 @@ The request was to "review TypeScript configuration against the current version 
 
 1. **`strict` is not enabled in any tsconfig.** The codebase is nonetheless already strict-clean — `tsc --strict` produces **0 errors**, and there is not a single `any`, `@ts-ignore`, or `@ts-expect-error` in `src/`. That safety is maintained by discipline alone, with no compiler guardrail. Any future PR can silently introduce implicit `any` or null-unsafe code.
 2. **CI type-checks only one of the two projects.** `pnpm run typecheck` is `tsc --noEmit -p tsconfig.app.json`, so `tsconfig.node.json` (i.e. `vite.config.ts`) is never checked in CI. `vitest.config.ts` belongs to **no project at all** and is unchecked everywhere.
-3. **`ignoreDeprecations: "6.0"` is dead config** in both `tsconfig.json` and `tsconfig.app.json`. TS 6.0 deprecates only `target: es3/es5`, `module: none/amd/system/umd`, `moduleResolution: node/node10/classic`, and `import ... assert {}` syntax. This project uses none of them — the option silences nothing and misleads the next reader into thinking a deprecation is pending.
+3. **`ignoreDeprecations: "6.0"` is masking a TS 7.0 blocker** in both `tsconfig.json` and `tsconfig.app.json`. TS 6.0 deprecates `target: es3/es5`, `module: none/amd/system/umd`, `moduleResolution: node/node10/classic`, `import ... assert {}` syntax — **and `baseUrl`**, which this project sets. Removing `ignoreDeprecations` surfaces `TS5101: Option 'baseUrl' is deprecated and will stop functioning in TypeScript 7.0`.
+
+   > **Correction (found during implementation).** This item originally claimed `ignoreDeprecations` was dead config silencing nothing. That was wrong. The initial review checked for a declarative `deprecatedInVersion` marker on each option definition and found none; but TS 6.0 enforces the `baseUrl` deprecation *imperatively* inside its options validator, so that check was a false negative. The option was doing real work. See Task 1.2 for the resolution.
 4. **`lib` omits `DOM.Iterable`**, so iterating DOM collections (`NodeList`, `FormData`, `URLSearchParams`) doesn't type-check.
 
 **Intended outcome:** the compiler enforces the strictness the code already meets, CI checks every TypeScript file in the repo, and the config contains nothing untrue.
@@ -57,10 +59,12 @@ Add `"strict": true` to `compilerOptions` in each, inside the existing `/* Linti
 
 Files: `tsconfig.json`, `tsconfig.app.json`
 
-Delete the `"ignoreDeprecations": "6.0"` line from both.
+Delete the `"ignoreDeprecations": "6.0"` line from both. This surfaces `TS5101` on `baseUrl`, so **also delete `"baseUrl": "."` from both** — fixing the deprecation at the source rather than re-hiding it.
 
-- **Acceptance:** no `TS5101`/`TS5107` deprecation errors appear.
-- **Verify:** `npx tsc --build --force` exits 0. If a deprecation error _does_ surface, stop and report it rather than re-adding the option — that would mean a genuinely deprecated setting is in use and should be fixed at the source.
+Removing `baseUrl` is safe here because the `paths` values are already config-relative (`"@/*": ["./src/*"]`), which is exactly the form TS 6 resolves against the tsconfig's own directory when no `baseUrl` is set. The bundler is unaffected either way: Vite and Vitest resolve the `@` alias independently via `resolve.alias` in `vite.config.ts` and `vitest.config.ts`.
+
+- **Acceptance:** no `TS5101`/`TS5107` deprecation errors appear; `@/…` imports still resolve.
+- **Verify:** `npx tsc --build --force` exits 0. Prove alias resolution is real rather than silently degraded with a negative control — a file importing both a valid `@/lib/utils` and a bogus `@/lib/does-not-exist` must error on *only* the bogus one (`TS2307`).
 
 ### Task 1.3 — Add `DOM.Iterable` to the app `lib`
 
