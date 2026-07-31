@@ -40,10 +40,10 @@ describe('AppLayout mobile navigation', () => {
     await user.click(screen.getByRole('button', { name: 'Abrir menú' }))
     expect(screen.getAllByRole('complementary')).toHaveLength(2)
 
-    const drawer = screen.getAllByRole('complementary')[1]
+    const drawer = screen.getAllByRole('complementary')[1]!
     const links = drawer.querySelectorAll('a')
     expect(links.length).toBeGreaterThan(0)
-    await user.click(links[0])
+    await user.click(links[0]!)
 
     await waitFor(() => {
       expect(screen.getAllByRole('complementary')).toHaveLength(1)

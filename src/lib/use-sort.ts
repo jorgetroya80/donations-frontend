@@ -44,6 +44,6 @@ export function useSort(defaultSort: string, sortableFields: string[]) {
 }
 
 function isValidSort(value: string, sortableFields: string[]) {
-  const [field, dir] = value.split(',')
+  const [field = '', dir] = value.split(',')
   return sortableFields.includes(field) && (dir === 'asc' || dir === 'desc')
 }

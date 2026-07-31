@@ -22,14 +22,14 @@ async function fillAndSubmitForm(user: ReturnType<typeof userEvent.setup>) {
   const triggers = screen.getAllByRole('combobox')
 
   // Select donation type
-  fireEvent.click(triggers[0])
+  fireEvent.click(triggers[0]!)
   await waitFor(() => {
     expect(screen.getByText('Diezmo')).toBeInTheDocument()
   })
   fireEvent.click(screen.getByText('Diezmo'))
 
   // Select payment method
-  fireEvent.click(triggers[1])
+  fireEvent.click(triggers[1]!)
   await waitFor(() => {
     expect(screen.getByText('Efectivo')).toBeInTheDocument()
   })
