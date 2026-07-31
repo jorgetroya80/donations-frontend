@@ -9,7 +9,9 @@ The request was to "review TypeScript configuration against the current version 
 3. **`ignoreDeprecations: "6.0"` is masking a TS 7.0 blocker** in both `tsconfig.json` and `tsconfig.app.json`. TS 6.0 deprecates `target: es3/es5`, `module: none/amd/system/umd`, `moduleResolution: node/node10/classic`, `import ... assert {}` syntax — **and `baseUrl`**, which this project sets. Removing `ignoreDeprecations` surfaces `TS5101: Option 'baseUrl' is deprecated and will stop functioning in TypeScript 7.0`.
 
    > **Correction (found during implementation).** This item originally claimed `ignoreDeprecations` was dead config silencing nothing. That was wrong. The initial review checked for a declarative `deprecatedInVersion` marker on each option definition and found none; but TS 6.0 enforces the `baseUrl` deprecation *imperatively* inside its options validator, so that check was a false negative. The option was doing real work. See Task 1.2 for the resolution.
-4. **`lib` omits `DOM.Iterable`**, so iterating DOM collections (`NodeList`, `FormData`, `URLSearchParams`) doesn't type-check.
+4. ~~**`lib` omits `DOM.Iterable`**, so iterating DOM collections (`NodeList`, `FormData`, `URLSearchParams`) doesn't type-check.~~ **Retracted — not a real gap.**
+
+   > **Correction (found during implementation).** This was true through TS 5.x but is false for the TS 6.0.3 this project runs. TS 6 ships an empty `lib.dom.iterable.d.ts` — *"This file's contents are now included in the main types file"* — with the iterator declarations already in `lib.dom.d.ts`, making the option a no-op. Verified: a file iterating `NodeList`, `URLSearchParams` and `FormData` type-checks identically with and without it. The option was added in Task 1.3 and removed again once measured; `lib` ends unchanged from `main`. The mistake was asserting from general TypeScript knowledge instead of testing against the installed compiler — the same error that produced the `baseUrl` miss above, in the opposite direction.
 
 **Intended outcome:** the compiler enforces the strictness the code already meets, CI checks every TypeScript file in the repo, and the config contains nothing untrue.
 
@@ -66,14 +68,11 @@ Removing `baseUrl` is safe here because the `paths` values are already config-re
 - **Acceptance:** no `TS5101`/`TS5107` deprecation errors appear; `@/…` imports still resolve.
 - **Verify:** `npx tsc --build --force` exits 0. Prove alias resolution is real rather than silently degraded with a negative control — a file importing both a valid `@/lib/utils` and a bogus `@/lib/does-not-exist` must error on *only* the bogus one (`TS2307`).
 
-### Task 1.3 — Add `DOM.Iterable` to the app `lib`
+### ~~Task 1.3 — Add `DOM.Iterable` to the app `lib`~~ (dropped)
 
-File: `tsconfig.app.json`
+File: `tsconfig.app.json` — **no change; `lib` stays `["ES2023", "DOM"]`.**
 
-Change `"lib": ["ES2023", "DOM"]` to `"lib": ["ES2023", "DOM", "DOM.Iterable"]`.
-
-- **Acceptance:** typecheck still passes; DOM collection iteration now type-checks.
-- **Verify:** `npx tsc --build --force` exits 0.
+This task was executed as planned, then reverted once measured. `DOM.Iterable` is inert in TS 6.0 (see the retraction on gap 4 in Context). Verify the option is genuinely unnecessary rather than trusting either claim: type-check a file that iterates `NodeList`, `URLSearchParams` and `FormData` under `--lib ES2023,DOM` — it must report zero errors.
 
 ### Task 1.4 — Bring `vitest.config.ts` into the node project
 
