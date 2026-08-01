@@ -36,6 +36,18 @@ describe('FinancialOverview', () => {
     })
   })
 
+  it('reserves a stable height on both chart cards', () => {
+    const { container } = renderWithProviders(<FinancialOverview />)
+
+    // The empty state is shorter than a rendered chart, so without a floor
+    // the cards grow when a range with data is picked. 300px covers the
+    // tallest chart box (max-h-75) in either card.
+    const contents = container.querySelectorAll(
+      '[data-slot="card-content"].min-h-75'
+    )
+    expect(contents).toHaveLength(2)
+  })
+
   it('renders card titles', () => {
     renderWithProviders(<FinancialOverview />)
 

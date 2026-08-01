@@ -131,7 +131,7 @@ export function FinancialOverview() {
           <CardHeader>
             <CardTitle>{t('dashboard.donationsByType')}</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="min-h-75">
             {titheData.length > 0 || otherDonationsData.length > 0 ? (
               <div className="space-y-4">
                 {titheData.length > 0 && (
@@ -167,7 +167,7 @@ export function FinancialOverview() {
           <CardHeader>
             <CardTitle>{t('dashboard.expensesByCategory')}</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="min-h-75">
             {expenseChartData.length > 0 ? (
               <ComparisonBarChart
                 data={expenseChartData}
