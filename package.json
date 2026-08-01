@@ -10,6 +10,7 @@
     "check:ci": "biome check src/",
     "dev": "vite",
     "lint": "biome lint --write src/",
+    "lighthouse": "mkdir -p .lighthouse && npx -y lighthouse@13 http://localhost:4173 --preset=desktop --output=json --output=html --output-path=./.lighthouse/report --chrome-flags=--headless",
     "preview": "vite preview",
     "start": "vite",
     "test": "vitest run",
