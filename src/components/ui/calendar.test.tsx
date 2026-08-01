@@ -1,4 +1,4 @@
-import { render, waitFor } from '@testing-library/react'
+import { act, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { Calendar } from './calendar'
@@ -22,7 +22,13 @@ function renderCalendar() {
     return button
   }
 
-  return { container, dayButton }
+  // DayPicker tracks the focused day in state, so a bare .focus() updates it
+  // outside React's knowledge and warns. act() flushes that update.
+  function focusDay(isoDate: string) {
+    act(() => dayButton(isoDate).focus())
+  }
+
+  return { container, dayButton, focusDay }
 }
 
 describe('Calendar keyboard navigation', () => {
@@ -40,9 +46,9 @@ describe('Calendar keyboard navigation', () => {
     ['{End}', '2026-01-17'],
   ])('moves DOM focus to %s -> %s', async (key, expected) => {
     const user = userEvent.setup()
-    const { dayButton } = renderCalendar()
+    const { dayButton, focusDay } = renderCalendar()
 
-    dayButton(START).focus()
+    focusDay(START)
     await user.keyboard(key)
 
     expect(dayButton(expected)).toHaveFocus()
@@ -53,9 +59,9 @@ describe('Calendar keyboard navigation', () => {
     ['{PageDown}', '2026-02-14'],
   ])('navigates months with %s and focuses %s', async (key, expected) => {
     const user = userEvent.setup()
-    const { dayButton } = renderCalendar()
+    const { dayButton, focusDay } = renderCalendar()
 
-    dayButton(START).focus()
+    focusDay(START)
     await user.keyboard(key)
 
     await waitFor(() => {
@@ -65,9 +71,9 @@ describe('Calendar keyboard navigation', () => {
 
   it('moves the focused gridcell marker along with DOM focus', async () => {
     const user = userEvent.setup()
-    const { dayButton } = renderCalendar()
+    const { dayButton, focusDay } = renderCalendar()
 
-    dayButton(START).focus()
+    focusDay(START)
     await user.keyboard('{ArrowRight}')
 
     const moved = dayButton('2026-01-15')
