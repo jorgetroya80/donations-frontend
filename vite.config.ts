@@ -3,9 +3,22 @@ import babel from '@rolldown/plugin-babel'
 import tailwindcss from '@tailwindcss/vite'
 import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import { visualizer } from 'rollup-plugin-visualizer'
-import { defineConfig } from 'vite'
+import { defineConfig, type ProxyOptions } from 'vite'
 
 const PORT = 3000
+// Shared by dev and preview so a production build can be measured against the
+// local API. Without it `vite preview` has no /api and only /login is reachable.
+const apiProxy: Record<string, ProxyOptions> = {
+  '/api': {
+    target: 'http://localhost:8081',
+    changeOrigin: true,
+    configure: (proxy) => {
+      proxy.on('proxyReq', (proxyReq) => {
+        proxyReq.removeHeader('origin')
+      })
+    },
+  },
+}
 // Just above the recharts chart chunk, which is the largest chunk we can't
 // shrink without replacing the library. Low enough to catch real growth,
 // reachable enough that a green build still means something.
@@ -48,16 +61,9 @@ export default defineConfig({
   },
   server: {
     port: PORT,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8081',
-        changeOrigin: true,
-        configure: (proxy) => {
-          proxy.on('proxyReq', (proxyReq) => {
-            proxyReq.removeHeader('origin')
-          })
-        },
-      },
-    },
+    proxy: apiProxy,
+  },
+  preview: {
+    proxy: apiProxy,
   },
 })
