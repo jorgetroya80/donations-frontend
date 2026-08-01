@@ -20,6 +20,22 @@ describe('FinancialOverview', () => {
     expect(screen.getByText(/2[.\s]?000/)).toBeInTheDocument()
   })
 
+  it('renders the stat cards while loading rather than a skeleton above them', async () => {
+    renderWithProviders(<FinancialOverview />)
+
+    // The cards are in the tree from the first paint, showing placeholders.
+    expect(screen.getByText('Ingresos totales')).toBeInTheDocument()
+    expect(screen.getAllByText('—')).toHaveLength(3)
+
+    // So no extra loading block sits above them: one that unmounts on load
+    // would pull the whole dashboard upwards and shift the layout.
+    expect(screen.queryByLabelText('Cargando...')).not.toBeInTheDocument()
+
+    await waitFor(() => {
+      expect(screen.getByText(/5[.\s]?000/)).toBeInTheDocument()
+    })
+  })
+
   it('renders card titles', () => {
     renderWithProviders(<FinancialOverview />)
 

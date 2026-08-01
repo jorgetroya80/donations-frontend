@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DateRangePicker } from '@/components/date-range-picker'
 import { EmptyState } from '@/components/empty-state'
-import { Skeleton } from '@/components/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { ChartConfig } from '@/components/ui/chart'
@@ -102,13 +101,7 @@ export function FinancialOverview() {
         </Alert>
       )}
 
-      {isLoading && (
-        <div aria-busy="true" aria-label={t('common.loading')}>
-          <Skeleton />
-        </div>
-      )}
-
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-3" aria-busy={isLoading}>
         <StatCard
           label={t('dashboard.totalIncome')}
           icon={<ArrowUpRight size={16} className="text-success" />}
