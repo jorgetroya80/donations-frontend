@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.7](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.6...donations-frontend-v0.3.7) (2026-08-01)
+
+
+### Features
+
+* **dashboard:** eliminate measured layout shifts and redundant refetches ([#173](https://github.com/jorgetroya80/donations-frontend/issues/173)) ([60a3de5](https://github.com/jorgetroya80/donations-frontend/commit/60a3de504e5fdb5a17696e8ddabc7b3290d49437))
+
 ## [0.3.6](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.5...donations-frontend-v0.3.6) (2026-07-27)
 
 
