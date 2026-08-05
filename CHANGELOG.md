@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.8](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.7...donations-frontend-v0.3.8) (2026-08-05)
+
+
+### Bug Fixes
+
+* **deps:** patch all 16 open Dependabot advisories ([#175](https://github.com/jorgetroya80/donations-frontend/issues/175)) ([d0c55cf](https://github.com/jorgetroya80/donations-frontend/commit/d0c55cf0e6e50a8ee18dde6711e3d43e0dbee7f9))
+
 ## [0.3.7](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.6...donations-frontend-v0.3.7) (2026-08-01)
 
 
