@@ -78,7 +78,7 @@ export function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-muted">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-center text-2xl">
+          <CardTitle className="text-center text-display-md">
             {t('auth.login')}
           </CardTitle>
         </CardHeader>

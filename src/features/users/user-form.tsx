@@ -151,7 +151,7 @@ export function UserForm({
                         )
                       }
                       aria-invalid={!!errors.roles}
-                      className="size-4 rounded border-input accent-primary outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                      className="size-4 rounded-xs border-input accent-primary outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
                     />
                     {t(`users.roleNames.${role}`)}
                   </label>
@@ -172,7 +172,7 @@ export function UserForm({
           type="checkbox"
           id="active"
           {...register('active')}
-          className="size-4 rounded border-input accent-primary outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+          className="size-4 rounded-xs border-input accent-primary outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
         />
         <Label htmlFor="active">{t('users.active')}</Label>
       </div>
