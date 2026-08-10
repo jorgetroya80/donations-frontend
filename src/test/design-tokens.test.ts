@@ -103,6 +103,19 @@ describe('design tokens', () => {
           contrast(tokens['--muted-foreground']!, tokens['--background']!)
         ).toBeGreaterThanOrEqual(AA)
       })
+
+      // Skeletons, chart placeholders, card and dialog footers and calendar
+      // ranges are all bg-muted. If the muted surface collapses into the
+      // surface beneath it they stop being visible at all — which is what
+      // happened when muted and card were first mapped to the same value.
+      it.each([
+        '--background',
+        '--card',
+      ] as const)('keeps the muted surface distinct from %s', (beneath) => {
+        expect(contrast(tokens['--muted']!, tokens[beneath]!)).toBeGreaterThan(
+          1.1
+        )
+      })
     })
   }
 
