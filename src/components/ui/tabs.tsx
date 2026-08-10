@@ -50,7 +50,7 @@ export function TabList<T extends string>({
             className={cn(
               'border-b-2 px-1 py-2 text-sm font-medium transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring/50',
               value === tab.key
-                ? 'border-primary text-primary'
+                ? 'border-primary text-foreground'
                 : 'border-transparent text-muted-foreground hover:text-foreground'
             )}
           >
