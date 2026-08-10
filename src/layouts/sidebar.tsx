@@ -102,7 +102,7 @@ export function Sidebar({ collapsed, onToggle, onNavigate }: SidebarProps) {
       >
         <Church size={24} className="text-primary shrink-0" />
         {!collapsed && (
-          <span className="truncate font-semibold">{t('app.name')}</span>
+          <span className="truncate font-medium">{t('app.name')}</span>
         )}
       </div>
 

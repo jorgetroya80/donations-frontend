@@ -1,3 +1,3 @@
 export function PageHeader({ title }: { title: string }) {
-  return <h1 className="text-2xl font-bold">{title}</h1>
+  return <h1 className="text-display-md">{title}</h1>
 }
