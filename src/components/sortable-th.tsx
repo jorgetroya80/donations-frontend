@@ -21,7 +21,7 @@ export function SortableTh({
       <button
         type="button"
         onClick={onSort}
-        className="flex cursor-pointer items-center gap-1 rounded-sm font-medium transition-colors outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+        className="flex cursor-pointer items-center gap-1 rounded-sm font-medium transition-colors outline-none max-md:min-h-9 hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
       >
         {children}
         <span aria-hidden="true">{indicator}</span>
