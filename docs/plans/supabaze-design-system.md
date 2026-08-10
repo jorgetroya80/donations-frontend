@@ -496,7 +496,15 @@ A second walk with an `ADMIN` session covered `/users`, `/users/new` and `/users
 
 Also noted: the `rounded-xs` applied to the user-form checkboxes has no rendered effect, because browsers draw native checkboxes from the platform control and ignore `border-radius`. It is harmless and on-token, but it fixed nothing visible. The checkbox rows themselves were 14–20px tall at 375px — under both the DESIGN.md floor and WCAG 2.2 SC 2.5.8's 24px minimum — and were raised to 36px.
 
-**Not verified:** `/reports` and its three tabs, plus `/donations`, `/donors` and `/expenses`, are not reachable by the `ADMIN` role, whose sidebar exposes only Inicio and Usuarios. Those routes were verified in the earlier `tesorero` walk, but that walk predates the muted-surface and emerald-text fixes. The tab-label fix in particular has not been seen rendered.
+A third walk, back on `tesorero`, re-covered the routes the `ADMIN` role cannot reach — `/reports`, `/donations`, `/donors`, `/expenses` — after the muted-surface and emerald-text fixes had landed. All clean:
+
+- Active reports tab renders ink text (17.93:1) with the emerald underline retained; inactive tabs render muted (4.95:1). The two states still differ by both text colour and rule.
+- One filled emerald button per route; no emerald text anywhere.
+- `EmptyState` CTA renders outline on the empty donations list.
+- Muted surface lifts clearly from the page in both themes (light `0.9461` against `1.0`; dark `0.3012` against `0.2264`).
+- At 375px dark: nothing below 36px, and no page-level horizontal scroll — the wide table scrolls inside its own container.
+
+Every route in the application has now been seen rendered, in both themes, with the final tokens.
 
 ### Contrast, final state
 
