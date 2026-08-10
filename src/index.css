@@ -7,6 +7,34 @@
 @theme inline {
   --font-heading: var(--font-sans);
   --font-sans: "Geist Variable", sans-serif;
+
+  /* DESIGN.md display tier - weight 500 with negative tracking that
+     tightens proportionally as the size grows. Never exceed 500. */
+  --text-display-xxl: 64px;
+  --text-display-xxl--line-height: 1.1;
+  --text-display-xxl--letter-spacing: -1.92px;
+  --text-display-xxl--font-weight: 500;
+  --text-display-xl: 48px;
+  --text-display-xl--line-height: 1.1;
+  --text-display-xl--letter-spacing: -1.44px;
+  --text-display-xl--font-weight: 500;
+  --text-display-lg: 36px;
+  --text-display-lg--line-height: 1.15;
+  --text-display-lg--letter-spacing: -0.72px;
+  --text-display-lg--font-weight: 500;
+  --text-display-md: 28px;
+  --text-display-md--line-height: 1.2;
+  --text-display-md--letter-spacing: -0.42px;
+  --text-display-md--font-weight: 500;
+
+  /* DESIGN.md heading tier - zero tracking below 28px */
+  --text-heading-lg: 22px;
+  --text-heading-lg--line-height: 1.2;
+  --text-heading-lg--font-weight: 500;
+  --text-heading-md: 18px;
+  --text-heading-md--line-height: 1.4;
+  --text-heading-md--font-weight: 500;
+
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -116,6 +144,9 @@
   h2,
   h3 {
     text-wrap: balance;
+    /* DESIGN.md caps the display tier at weight 500 - the calibrated
+       mid-weight breaks at 600 and above. */
+    font-weight: 500;
   }
 }
 
