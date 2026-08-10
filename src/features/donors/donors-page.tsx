@@ -95,7 +95,7 @@ export function DonorsPage() {
                   <TableCell>{donor.email ?? '—'}</TableCell>
                   <TableCell>{donor.phone ?? '—'}</TableCell>
                   <TableCell>
-                    <Badge variant={donor.active ? 'default' : 'secondary'}>
+                    <Badge variant={donor.active ? 'secondary' : 'outline'}>
                       {donor.active ? t('donors.active') : t('donors.inactive')}
                     </Badge>
                   </TableCell>
