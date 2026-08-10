@@ -1,4 +1,4 @@
-# PRD: Supabaze Design System Adoption
+# PRD: Supabase Design System Adoption
 
 ## Problem Statement
 
@@ -122,7 +122,7 @@ If a visual regression tool is added later, this is the work that would most ben
 - Replacing `@base-ui/react` or introducing a different component library.
 - Copy changes, layout restructuring, and information-architecture changes.
 - Promoting `accent-purple`, `accent-violet`, `accent-yellow`, `accent-pink`, `accent-indigo`, or `accent-crimson` to system colors. `DESIGN.md` reserves them for chart points and third-party logos.
-- Editing `DESIGN.md`. It is the input to this work, not an output of it.
+- Editing `DESIGN.md`. It is the input to this work, not an output of it. The one exception is a spelling correction — the document was generated with the brand name misspelled "Supabaze", corrected to "Supabase" across all three files. No token value, component spec, or design decision was touched.
 
 ## Further Notes
 

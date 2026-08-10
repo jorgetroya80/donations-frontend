@@ -1,6 +1,6 @@
-# Plan: Supabaze Design System Adoption
+# Plan: Supabase Design System Adoption
 
-> Source PRD: docs/PRD-supabaze-design-system.md
+> Source PRD: docs/PRD-supabase-design-system.md
 > Design language reference: DESIGN.md
 
 ## Architectural decisions
