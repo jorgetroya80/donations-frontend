@@ -489,7 +489,28 @@ Walked with an authenticated `tesorero` session at 375 / 768 / 1280, in both the
 | `--destructive` on new surfaces | 4.76:1 on canvas and card, 4.56:1 on muted (light); 5.89:1 and 5.63:1 (dark) — all AA |
 | Dashboard CLS on reload | 0.00001 — the commit `60a3de5` fix survives |
 
-**Not verified:** `/users`, `/users/new` and `/users/:id/edit` are admin-gated and the session used was `tesorero`.
+A second walk with an `ADMIN` session covered `/users`, `/users/new` and `/users/:id/edit`, and surfaced two further regressions — both caused by the token swap and both invisible to the test suite, the build and the greps.
+
+- **Emerald rendered as text.** Making `--primary` emerald turned three `text-primary` usages into emerald text on the white canvas at **1.99:1**, failing WCAG AA for text by a wide margin: the `link` button variant (the dashboard's "Administrar usuarios"), the `link` badge variant, and the active tab label on reports. DESIGN.md agrees this is wrong — its `button-link` component specifies `textColor: {colors.ink}`. Emerald is a fill the brand puts dark text *on*, never a text colour. All three now use `foreground`; the active tab keeps its emerald underline so the two states still differ by both text colour and rule. The sidebar `Church` icon keeps `text-primary`, which is the wordmark accent DESIGN.md explicitly sanctions.
+- **Muted surfaces collapsed.** Covered above; found on `/users`, where the `secondary` role badges were invisible against the page.
+
+Also noted: the `rounded-xs` applied to the user-form checkboxes has no rendered effect, because browsers draw native checkboxes from the platform control and ignore `border-radius`. It is harmless and on-token, but it fixed nothing visible. The checkbox rows themselves were 14–20px tall at 375px — under both the DESIGN.md floor and WCAG 2.2 SC 2.5.8's 24px minimum — and were raised to 36px.
+
+**Not verified:** `/reports` and its three tabs, plus `/donations`, `/donors` and `/expenses`, are not reachable by the `ADMIN` role, whose sidebar exposes only Inicio and Usuarios. Those routes were verified in the earlier `tesorero` walk, but that walk predates the muted-surface and emerald-text fixes. The tab-label fix in particular has not been seen rendered.
+
+### Contrast, final state
+
+| Pair | Ratio |
+| --- | --- |
+| ink on emerald (filled button) | 8.98:1 |
+| ink on canvas (light body) | 17.93:1 |
+| ink-mute on canvas (light) | 4.95:1 |
+| white on canvas-night (dark body) | 17.04:1 |
+| ink-mute-2 on canvas-night (dark) | 6.06:1 |
+| ink on hairline-cool (light badge) | 15.31:1 |
+| white on derived `#2e2e2e` (dark badge) | 13.58:1 |
+| link text, before fix | 2.00:1 — failed |
+| link text, after fix | 17.93:1 |
 
 ## Raised, not actioned
 
