@@ -37,15 +37,13 @@ function parseBlock(selector: string): Record<string, string> {
 
 /** oklch() -> linear sRGB, per the Oklab spec. */
 function toLinearRgb(oklch: string): [number, number, number] {
-  const match = oklch.match(
-    /oklch\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)/
-  )
+  const match = oklch.match(/oklch\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)/)
   if (!match) throw new Error(`Cannot parse ${oklch}`)
-  const [L, C, H] = [
-    Number(match[1]),
-    Number(match[2]),
-    Number(match[3]),
-  ] as [number, number, number]
+  const [L, C, H] = [Number(match[1]), Number(match[2]), Number(match[3])] as [
+    number,
+    number,
+    number,
+  ]
 
   const hRad = (H * Math.PI) / 180
   const a = C * Math.cos(hRad)
