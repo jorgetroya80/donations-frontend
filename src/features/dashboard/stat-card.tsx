@@ -61,7 +61,7 @@ export function StatCard({
         {icon}
       </CardHeader>
       <CardContent>
-        <p className="font-bold text-2xl @max-3xs:text-lg">
+        <p className="text-display-md @max-3xs:text-heading-md">
           {value != null ? formatCurrency(value) : '—'}
         </p>
         <PctChange current={current} previous={previous} inverted={inverted} />

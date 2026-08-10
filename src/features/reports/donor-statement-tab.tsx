@@ -108,7 +108,7 @@ export function DonorStatementTab() {
                     </TableCell>
                   </TableRow>
                 ))}
-                <TableRow className="font-bold">
+                <TableRow className="font-medium">
                   <TableCell colSpan={3}>{t('reports.grandTotal')}</TableCell>
                   <TableCell className="text-right">
                     {formatCurrency(data.total ?? 0)}

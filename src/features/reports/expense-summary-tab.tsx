@@ -69,7 +69,7 @@ export function ExpenseSummaryTab() {
                     </TableCell>
                   </TableRow>
                 ))}
-                <TableRow className="font-bold">
+                <TableRow className="font-medium">
                   <TableCell>{t('reports.grandTotal')}</TableCell>
                   <TableCell className="text-right">
                     {formatCurrency(data.grandTotal ?? 0)}

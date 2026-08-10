@@ -14,7 +14,7 @@ export function UserStats() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold">{t('dashboard.userManagement')}</h2>
+      <h2 className="text-heading-md">{t('dashboard.userManagement')}</h2>
 
       {error && (
         <Alert variant="destructive">
@@ -32,7 +32,7 @@ export function UserStats() {
           <Users size={16} className="text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <p className="text-2xl font-bold">
+          <p className="text-display-md">
             {isLoading ? '...' : (data?.totalUsers ?? '—')}
           </p>
           <Button
