@@ -83,9 +83,7 @@ export function FinancialOverview() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-heading-md">
-          {t('dashboard.financialOverview')}
-        </h2>
+        <h2 className="text-heading-md">{t('dashboard.financialOverview')}</h2>
         <DateRangePicker
           from={range.from}
           to={range.to}
