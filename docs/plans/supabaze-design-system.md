@@ -469,6 +469,34 @@ Two things the plan did not anticipate, both fixed in place:
 - **Touch targets were below the DESIGN.md floor.** Buttons and inputs were 32px, against a 36px requirement on mobile. Added `max-md` height variants to `button.tsx`, `input.tsx` and the default-size select trigger, leaving desktop heights alone.
 - **A formatting change escaped the commit hook.** `lint-staged` runs `biome lint` on `ts/tsx`, not `biome check`, so a reflow caused by a shortened class only surfaced at `check:ci`. Same gap class as the known import-sorting issue; not fixed here.
 
+Two further defects surfaced only once the app was walked with a real session, both invisible to the per-file audit:
+
+- **`EmptyState` rendered a filled button.** Donations, donors, expenses and users each showed two emerald buttons in one viewport whenever the list was empty, because the empty-state CTA duplicates the page header action. The Task 8 audit counted buttons per file and missed the composed one. Fixed at the source: the CTA is now `outline`.
+- **The touch-target fix was incomplete.** Task 4 raised only the `default` and `icon` sizes to 36px on mobile and the criterion was marked met on that basis. The `sm` size, used for list pagination, was still 28px and the column-sort control 20px. All button sizes and the sort control now meet the floor below 768px.
+
+## Verification record
+
+Walked with an authenticated `tesorero` session at 375 / 768 / 1280, in both themes.
+
+| Check | Result |
+| --- | --- |
+| Dashboard tokens | h1 28px/500/-0.42px, cards 12px, stat figures 28px/500, h2 18px/500 |
+| Emerald scarcity | exactly 1 filled button on every route reached |
+| Table chrome | row borders resolve to hairline `#dfdfdf`, headers to ink |
+| Badges | fully rounded |
+| Form controls | inputs, selects and textareas at 6px |
+| Touch targets at 375px | no control below 36px |
+| `--destructive` on new surfaces | 4.76:1 on canvas and card, 4.56:1 on muted (light); 5.89:1 and 5.63:1 (dark) — all AA |
+| Dashboard CLS on reload | 0.00001 — the commit `60a3de5` fix survives |
+
+**Not verified:** `/users`, `/users/new` and `/users/:id/edit` are admin-gated and the session used was `tesorero`.
+
+## Raised, not actioned
+
+**Emerald status badges compete with the CTA.** `donors-page` and `users-page` render the active-status badge as `variant="default"`, which was near-black before and is now emerald. A populated donors list shows ten emerald pills alongside the single emerald CTA, against DESIGN.md's instruction that the primary "should appear sparingly". DESIGN.md does define a green pill, but scopes it to "new" or featured indicators, and offers `pill-tag-soft` for neutral pills. Every other badge in the app is already `secondary`.
+
+Left alone deliberately: switching them changes what the colour *means* (green reads as healthy/active), and if both active and inactive became `secondary` they would stop being distinguishable — a working alternative is active `secondary` plus inactive `outline`. That is a product decision, not a styling one.
+
 ## Note on file location
 
 The `agent-skills:plan` convention writes to `tasks/plan.md` and `tasks/todo.md`. This plan is in `docs/plans/` instead, matching the 44 existing plans in this repository, with the task checklist inline rather than in a separate file. The `/build` command expects the `tasks/` paths, so point it at this file explicitly.
