@@ -139,7 +139,10 @@ export function UserForm({
             return (
               <div className="flex flex-wrap gap-3">
                 {userRoles.map((role) => (
-                  <label key={role} className="flex items-center gap-2 text-sm">
+                  <label
+                    key={role}
+                    className="flex items-center gap-2 text-sm max-md:min-h-9"
+                  >
                     <input
                       type="checkbox"
                       checked={value.includes(role)}
@@ -167,7 +170,7 @@ export function UserForm({
         )}
       </fieldset>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 max-md:min-h-9">
         <input
           type="checkbox"
           id="active"
