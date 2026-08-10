@@ -456,8 +456,18 @@ No new code. Run the audit greps, the full gate, and compare coverage against th
 
 ## Open questions
 
-1. **Focus ring color.** The plan sets `--ring` to emerald, which is the conventional choice, but DESIGN.md never specifies a focus treatment. An emerald ring around an emerald button may read poorly. Decide during Task 4 with the button in front of us rather than now.
-2. **`--radius-xs` has no consumer** after Task 5 except the `user-form.tsx` checkboxes. Keep it declared for completeness, or drop it until something needs it? Leaning toward keeping — it is one line and DESIGN.md defines it.
+Both resolved during implementation.
+
+1. **Focus ring color.** ~~Decide during Task 4.~~ **Resolved:** the emerald ring is effectively invisible against the emerald fill — confirmed by screenshot at Task 4. `--ring` stays emerald globally, since it reads well on inputs and every other control, and the filled button variant alone rings in `foreground`: near-black on the white canvas, white on canvas-night, visible in both.
+2. **`--radius-xs` has no consumer.** ~~Keep or drop?~~ **Resolved:** kept. Task 8 gave it a consumer — the `user-form.tsx` checkboxes, which were on Tailwind's bare `rounded` rather than a token.
+
+## Discovered during implementation
+
+Two things the plan did not anticipate, both fixed in place:
+
+- **tailwind-merge did not recognise the custom font sizes.** It only knows Tailwind's built-in size names, so it read `text-display-md` as a colour utility and left `CardTitle`'s `text-base` in place — the login title picked up the display tracking and weight but stayed at 16px. Fixed by registering the DESIGN.md scale via `extendTailwindMerge` in `src/lib/utils.ts`. Any component with a built-in `text-*` class would have hit this.
+- **Touch targets were below the DESIGN.md floor.** Buttons and inputs were 32px, against a 36px requirement on mobile. Added `max-md` height variants to `button.tsx`, `input.tsx` and the default-size select trigger, leaving desktop heights alone.
+- **A formatting change escaped the commit hook.** `lint-staged` runs `biome lint` on `ts/tsx`, not `biome check`, so a reflow caused by a shortened class only surfaced at `check:ci`. Same gap class as the known import-sorting issue; not fixed here.
 
 ## Note on file location
 

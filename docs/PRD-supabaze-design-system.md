@@ -20,7 +20,7 @@ Four ambiguities in `DESIGN.md` were resolved with the product owner before this
 | --- | --- |
 | `DESIGN.md` ships no dark palette, but the app has full dark mode | Keep dark mode. Derive dark surfaces from the `canvas-night` (`#1c1c1c`) and `canvas-night-soft` (`#202020`) tokens `DESIGN.md` already defines for code blocks and inverted cards |
 | How far the restyle reaches | Tokens, UI primitives, and every feature screen |
-| Emerald CTA label color | Near-black `#171717` on emerald, per `DESIGN.md`. Contrast is approximately 10:1 and passes WCAG AA. The white-on-emerald alternative measures approximately 2:1 and fails AA, so the `DESIGN.md` choice is both on-brand and the accessible one |
+| Emerald CTA label color | Near-black `#171717` on emerald, per `DESIGN.md`. Contrast measures 8.98:1 and passes WCAG AA. The white-on-emerald alternative measures 2.00:1 and fails AA, so the `DESIGN.md` choice is both on-brand and the accessible one |
 | Border radius scale | Adopt the `DESIGN.md` scale of 4/6/8/12/16px, replacing the multiplier chain |
 
 ## User Stories
