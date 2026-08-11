@@ -3,6 +3,8 @@ import { readFileSync } from 'node:fs'
 
 import { describe, expect, it } from 'vitest'
 
+import { cn } from '@/lib/utils'
+
 // Read from disk rather than importing: vitest runs with `css: false`, which
 // stubs every CSS import — including `?raw` — to an empty string. The path is
 // resolved from the repo root because import.meta.url is an http:// URL under
@@ -123,5 +125,24 @@ describe('design tokens', () => {
     expect(Object.keys(themes.dark).sort()).toEqual(
       Object.keys(themes.light).sort()
     )
+  })
+
+  // The text scale lives in index.css, but tailwind-merge needs the same names
+  // listed again in cn(). If the two drift, a custom size stops overriding a
+  // built-in one and the element silently keeps the wrong font-size while
+  // still picking up the right tracking and weight. Nothing throws, so only
+  // this test catches it.
+  describe('text scale', () => {
+    const declared = [...CSS.matchAll(/--text-([\w-]+):\s*\d/g)]
+      .map((match) => match[1])
+      .filter((name): name is string => !!name && !name.includes('--'))
+
+    it('declares a scale to check', () => {
+      expect(declared.length).toBeGreaterThan(0)
+    })
+
+    it.each(declared)('registers text-%s with tailwind-merge', (name) => {
+      expect(cn('text-base', `text-${name}`)).toBe(`text-${name}`)
+    })
   })
 })
