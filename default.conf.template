@@ -15,11 +15,7 @@ server {
     # level 9) instead of compressing the same immutable bytes per request.
     gzip_static on;
 
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-    add_header X-XSS-Protection "1; mode=block" always;
-    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'" always;
+    include /etc/nginx/security-headers.conf;
 
     location /api/ {
         proxy_pass ${API_UPSTREAM};
@@ -41,14 +37,7 @@ server {
         # no-cache means "revalidate", not "don't store" - no-store would kill
         # bfcache. Revalidation is a 304 in the normal case.
         add_header Cache-Control "no-cache" always;
-
-        # nginx add_header does not merge across levels: declaring one here
-        # drops every header set on the server block, so they are repeated.
-        add_header X-Frame-Options "SAMEORIGIN" always;
-        add_header X-Content-Type-Options "nosniff" always;
-        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-        add_header X-XSS-Protection "1; mode=block" always;
-        add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'" always;
+        include /etc/nginx/security-headers.conf;
     }
 
     location ~* \.(?:css|js|svg|png|jpg|jpeg|gif|ico|woff2?)$ {
