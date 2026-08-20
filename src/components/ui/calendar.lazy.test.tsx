@@ -18,6 +18,16 @@ describe('Calendar (lazy)', () => {
     expect(
       container.querySelector('[data-slot="calendar-fallback"]')
     ).toHaveClass('p-2')
+
+    // Measured against the rendered calendar: 196px wide (7 cells) by 278px
+    // tall at six week rows. These are the whole point of the fallback - if
+    // they drift the popover resizes when the chunk lands.
+    for (const placeholder of placeholders) {
+      expect(placeholder).toHaveClass(
+        'h-[278px]',
+        'w-[calc(var(--cell-size)*7)]'
+      )
+    }
   })
 
   it('renders one placeholder month by default', () => {
