@@ -7,21 +7,21 @@ Each task is a vertical slice: it changes something, and it ends with a number o
 
 ## Phase 1 — nginx caching + compression (`perf(nginx):`)
 
-- [ ] **1.1 `Cache-Control: no-cache` on the HTML entry point** — `default.conf.template`.
+- [x] **1.1 `Cache-Control: no-cache` on the HTML entry point** — `default.conf.template`.
       Accept: `curl -sI /` and `curl -sI /donations` both return `cache-control: no-cache`.
       Accept: hashed assets keep `public, immutable, max-age=31536000`.
       Accept: the five security headers (CSP, X-Frame-Options, X-Content-Type-Options,
       Referrer-Policy, X-XSS-Protection) still present on the HTML response — `add_header`
       does not merge across nginx levels, so a new block silently drops them.
-- [ ] **1.2 Raise gzip level and widen the type list** — `default.conf.template`:
+- [x] **1.2 Raise gzip level and widen the type list** — `default.conf.template`:
       `gzip_comp_level 6`, add `text/javascript`, `font/woff2`, `application/wasm`.
       Accept: served size of the entry chunk matches `gzip -9`/`gzip -6`, not `gzip -1`.
       Baseline to beat: 167,853 B served vs 142,495 B at `gzip -9` (raw 449,635 B).
-- [ ] **1.3 Precompress assets at build time** — inline `writeBundle` plugin in `vite.config.ts`
+- [x] **1.3 Precompress assets at build time** — inline `writeBundle` plugin in `vite.config.ts`
       using `node:zlib` at level 9, plus `gzip_static on` in nginx. No new dependency.
       Accept: `dist/assets/*.js.gz` exist after `pnpm run build`; nginx serves them
       (byte-identical to the local `.gz`, zero per-request CPU).
-- [ ] **1.4 Checkpoint — measure in Docker before opening the PR.**
+- [x] **1.4 Checkpoint — measure in Docker before opening the PR.**
       `pnpm run build && docker build -t df-perf . && docker run --rm -p 8081:80 -e PORT=80 df-perf`
       Record before/after bytes for the entry chunk in the PR description.
 - [ ] **1.5 Flag Cloudflare Brotli to Jorge** — dashboard toggle, not a repo change (~57 KB,
@@ -33,22 +33,22 @@ Each task is a vertical slice: it changes something, and it ends with a number o
 
 ## Phase 2 — lazy-load the calendar (`perf(calendar):`)
 
-- [ ] **2.1 Grep every `Calendar` import site** before touching anything. Only
+- [x] **2.1 Grep every `Calendar` import site** before touching anything. Only
       `src/components/date-range-picker.tsx` is in scope; leave other call sites alone.
 - [ ] **2.2 Measure the real popover box** — open the two-month calendar and read its
       rendered dimensions from the DOM. The Suspense fallback is sized from this number,
       not guessed.
-- [ ] **2.3 New `src/components/ui/calendar.lazy.tsx`** — mirror
+- [x] **2.3 New `src/components/ui/calendar.lazy.tsx`** — mirror
       `src/features/dashboard/comparison-bar-chart.lazy.tsx`: same exported component name,
       `type`-only props import, local `Suspense` with a box-matched fallback.
-- [ ] **2.4 Point `date-range-picker.tsx` at the lazy wrapper.** Trigger button stays eager.
+- [x] **2.4 Point `date-range-picker.tsx` at the lazy wrapper.** Trigger button stays eager.
       `dayjs` stays eager — the trigger label needs it.
-- [ ] **2.5 Prefetch on `onMouseEnter`/`onFocus`** of the trigger so the chunk is usually
+- [x] **2.5 Prefetch on `onMouseEnter`/`onFocus`** of the trigger so the chunk is usually
       resident before the popover opens.
-- [ ] **2.6 Checkpoint.** `pnpm run test` green, including all 10 keyboard-nav tests in
+- [x] **2.6 Checkpoint.** `pnpm run test` green, including all 10 keyboard-nav tests in
       `src/components/ui/calendar.test.tsx` — if the lazy boundary breaks them the wrapper
       is wrong; do not weaken the tests. Then `pnpm run typecheck`, `pnpm run check:ci`.
-- [ ] **2.7 Confirm the bundle actually moved** — `pnpm run analyze`; `date-range-picker-*.js`
+- [x] **2.7 Confirm the bundle actually moved** — `pnpm run analyze`; `date-range-picker-*.js`
       (93.19 KB raw / 29.05 KB gzip) must leave the eager graph of `/`, `/donations`,
       `/expenses`, `/reports`.
 - [ ] **2.8 Browser check** — open the picker on `/` and `/donations`, pick a range, confirm
@@ -56,7 +56,7 @@ Each task is a vertical slice: it changes something, and it ends with a number o
 
 ## Phase 3 — font preload (`perf(fonts):`) — optional, revert if it does not pay
 
-- [ ] **3.1 Emit the preload tag from a Vite `transformIndexHtml` hook** reading the hashed
+- [x] **3.1 Emit the preload tag from a Vite `transformIndexHtml` hook** reading the hashed
       woff2 filename out of the bundle. Never hardcode the hash. `crossorigin` is required
       even same-origin, or the font double-fetches.
 - [ ] **3.2 Checkpoint** — production trace showing the font starting alongside the CSS
@@ -82,6 +82,22 @@ Each task is a vertical slice: it changes something, and it ends with a number o
 - [ ] Update #172 with measured results, including the won't-do decisions — the issue exists
       partly so refuted findings are not re-raised.
 - [ ] Delete the local `feat-exp-web-perf` branch (superseded by PR #173, released in 0.3.8).
+
+## Measured so far (branch `feat-web-perf-followup`)
+
+| What | Before | After |
+|---|---:|---:|
+| Entry chunk over the wire | 98,926 B (`gzip -1`) | 84,607 B (build-time `gzip -9`, served via `gzip_static`) |
+| `date-range-picker` chunk, eager | 93.19 kB / 29.06 kB gzip | 22.53 kB / 9.04 kB gzip |
+| Calendar (`react-day-picker`) | eager on 4 routes | 72.64 kB / 21.40 kB gzip, on demand |
+| Font request start (preview) | after CSS parse (387 ms in prod) | 12 ms, same burst as CSS and entry JS |
+| `/login` Lighthouse (preview, desktop) | 100 / LCP 0.6 s / CLS 0 | 100 / LCP 0.6 s / CLS 0 — no regression |
+
+nginx headers verified against `nginx:1.27-alpine` serving the real `dist`: `/` and
+`/donations` both return `cache-control: no-cache` plus all five security headers; assets
+keep `public, immutable` and are served as the build-time `.gz` byte for byte.
+
+Test suite: 401 passed (4 added), typecheck and Biome clean.
 
 ## Measurement caveats
 
