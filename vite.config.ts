@@ -1,4 +1,4 @@
-import { writeFileSync } from 'node:fs'
+import { readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { gzipSync } from 'node:zlib'
 import babel from '@rolldown/plugin-babel'
@@ -34,19 +34,23 @@ const COMPRESSIBLE = /\.(?:js|css|svg)$/
 // on, so it serves these instead of recompressing immutable bytes per request
 // — and at a level the per-request path can't afford. Assets are content
 // hashed, so the .gz never goes stale.
+//
+// Each .gz is compressed from the file on disk, not from the in-memory chunk:
+// gzip_static serves the .gz whenever it exists, without ever comparing it to
+// the plain file, so anything that rewrites a file after this hook would
+// otherwise ship silently stale bytes.
 function gzipAssets() {
   return {
     name: 'gzip-assets',
     apply: 'build',
     writeBundle(options, bundle) {
-      for (const [fileName, chunk] of Object.entries(bundle)) {
+      for (const fileName of Object.keys(bundle)) {
         if (!COMPRESSIBLE.test(fileName)) continue
 
-        const source = chunk.type === 'chunk' ? chunk.code : chunk.source
-        const raw = Buffer.from(source)
+        const target = path.join(options.dir ?? 'dist', fileName)
+        const raw = readFileSync(target)
         if (raw.byteLength < GZIP_MIN_BYTES) continue
 
-        const target = path.join(options.dir ?? 'dist', fileName)
         writeFileSync(`${target}.gz`, gzipSync(raw, { level: 9 }))
       }
     },
