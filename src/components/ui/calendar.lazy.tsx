@@ -29,9 +29,15 @@ export function Calendar({ className, ...props }: CalendarProps) {
   )
 }
 
-// Mirrors the real calendar's box: same padding, same --cell-size, and a block
-// per month sized to the grid it will hold — a caption row, a weekday row and
-// six week rows, with the gap-4 between caption and grid.
+// Mirrors the real calendar's box, measured from the rendered DOM rather than
+// derived: a month is 196px wide (7 cells at --cell-size 28) and 278px tall at
+// six week rows — caption 28, gap 16, weekday row 18, six rows of 36 — over the
+// footer line and the root's p-2.
+//
+// A month with five week rows is 242px, and the row count isn't knowable until
+// the chunk lands, so this sizes for six. The popover can therefore shrink by a
+// row on arrival but never grow, which is the direction that doesn't cover what
+// the user is looking at.
 function CalendarFallback({
   months,
   className,
@@ -49,10 +55,11 @@ function CalendarFallback({
         {Array.from({ length: months }, (_, i) => (
           <div
             key={i}
-            className="h-[calc(var(--cell-size)*8+1rem)] w-[calc(var(--cell-size)*7)] animate-pulse rounded-md bg-muted"
+            className="h-[278px] w-[calc(var(--cell-size)*7)] animate-pulse rounded-md bg-muted"
           />
         ))}
       </div>
+      <div className="h-4" />
     </div>
   )
 }

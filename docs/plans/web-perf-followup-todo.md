@@ -35,7 +35,7 @@ Each task is a vertical slice: it changes something, and it ends with a number o
 
 - [x] **2.1 Grep every `Calendar` import site** before touching anything. Only
       `src/components/date-range-picker.tsx` is in scope; leave other call sites alone.
-- [ ] **2.2 Measure the real popover box** — open the two-month calendar and read its
+- [x] **2.2 Measure the real popover box** — open the two-month calendar and read its
       rendered dimensions from the DOM. The Suspense fallback is sized from this number,
       not guessed.
 - [x] **2.3 New `src/components/ui/calendar.lazy.tsx`** — mirror
@@ -51,7 +51,7 @@ Each task is a vertical slice: it changes something, and it ends with a number o
 - [x] **2.7 Confirm the bundle actually moved** — `pnpm run analyze`; `date-range-picker-*.js`
       (93.19 KB raw / 29.05 KB gzip) must leave the eager graph of `/`, `/donations`,
       `/expenses`, `/reports`.
-- [ ] **2.8 Browser check** — open the picker on `/` and `/donations`, pick a range, confirm
+- [x] **2.8 Browser check** — open the picker on `/` and `/donations`, pick a range, confirm
       the query refires and the popover does not resize when the chunk lands.
 
 ## Phase 3 — font preload (`perf(fonts):`) — optional, revert if it does not pay
@@ -65,14 +65,14 @@ Each task is a vertical slice: it changes something, and it ends with a number o
 
 ## Phase 4 — measure, then decide
 
-- [ ] **4.1 Production INP on the date picker** — after Phase 2 lands, since it changes the
+- [x] **4.1 Production INP on the date picker** — after Phase 2 lands, since it changes the
       load path. Under 200 ms → close 4.2 unchanged.
-- [ ] **4.2 Calendar focus reflow** (`src/components/ui/calendar.tsx:198-201`) — only if 4.1
+- [x] **4.2 Calendar focus reflow** (`src/components/ui/calendar.tsx:198-201`) — only if 4.1
       says it is genuinely slow. The behaviour is an accessibility requirement (`cde0184`)
       and 9 of 10 tests fail without it.
-- [ ] **4.3 Sidebar prefetch** (`src/layouts/sidebar.tsx:114`) — measure a cold sidebar
+- [x] **4.3 Sidebar prefetch** (`src/layouts/sidebar.tsx:114`) — measure a cold sidebar
       navigation; act only if the chunk hop is a material share of the total.
-- [ ] **4.4 Lazy `AppLayout`** — recommend closing as won't-do. It introduces a waterfall for
+- [x] **4.4 Lazy `AppLayout`** — recommend closing as won't-do. It introduces a waterfall for
       already-authenticated arrivals and recovers well under the 35 KB first estimated.
 - [ ] **4.5 Open a separate issue for a `web-vitals` field beacon.** CrUX has nothing for this
       origin; every number in #172 is lab data.
@@ -98,6 +98,34 @@ nginx headers verified against `nginx:1.27-alpine` serving the real `dist`: `/` 
 keep `public, immutable` and are served as the build-time `.gz` byte for byte.
 
 Test suite: 401 passed (4 added), typecheck and Biome clean.
+
+### Authenticated session, production build on `vite preview`
+
+Measured against the local API with a real login, unthrottled desktop.
+
+| Check | Result |
+|---|---|
+| Popover box, fallback vs calendar | 604 px → 569 px. Shrinks by one week row, never grows. |
+| Calendar chunk on trigger hover | fetched on `mouseover`, 5 ms; one frame of fallback still shows because React's `lazy` awaits its own promise |
+| Range change on `/` | six-query fan-out refires with the new dates, **CLS 0** |
+| Range change on `/donations` | applies to the list, no shift |
+| **INP, opening the picker** | **40 ms**, zero long tasks |
+| **INP, clicking a day** | **48 ms**, zero long tasks |
+| Cold sidebar nav to `/expenses` | chunk starts +0 ms, API fires +7 ms — the serialization is real but 7 ms locally |
+| Dashboard load | CLS 0, no shifts recorded |
+
+**4.1/4.2 decision — close, change nothing.** The audit's 280 ms came from the dev server at
+4× CPU throttle. A production build measures 40–48 ms with no long task, so the ~70 focus
+effects are not worth touching accessibility-critical code for. Caveat: unthrottled desktop;
+even at 4× this stays around 200 ms, and the `cde0184` focus behaviour is required by 9 of
+the 10 keyboard tests.
+
+**4.3 decision — defer.** The chunk → mount → query ordering is confirmed, but locally it
+costs 7 ms. On a real network hover prefetch would save roughly one RTT for a small chunk.
+Not worth coupling the sidebar to route module paths until a production number says otherwise.
+
+**4.4 decision — won't do**, per the audit's own reasoning: it introduces a waterfall for
+already-authenticated arrivals and recovers well under the 35 KB first estimated.
 
 ## Measurement caveats
 
