@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.9](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.8...donations-frontend-v0.3.9) (2026-08-20)
+
+
+### Performance Improvements
+
+* cache HTML, compress properly, and split the calendar chunk ([#178](https://github.com/jorgetroya80/donations-frontend/issues/178)) ([c08a7d1](https://github.com/jorgetroya80/donations-frontend/commit/c08a7d1ac8dbbd1ef488f4ceb4d9756fdc529ed5))
+
 ## [0.3.8](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.7...donations-frontend-v0.3.8) (2026-08-05)
 
 
