@@ -3,7 +3,7 @@ import { CalendarIcon } from 'lucide-react'
 import { useState } from 'react'
 import { type DateRange } from 'react-day-picker'
 import { useTranslation } from 'react-i18next'
-import { Calendar } from '@/components/ui/calendar'
+import { Calendar, prefetchCalendar } from '@/components/ui/calendar.lazy'
 import {
   Popover,
   PopoverContent,
@@ -37,6 +37,10 @@ export function DateRangePicker({ from, to, onChange }: DateRangePickerProps) {
             type="button"
             aria-expanded={open}
             aria-haspopup="dialog"
+            // The calendar is code split. Warming it on intent means the
+            // chunk is usually resident by the time the popover opens.
+            onMouseEnter={() => void prefetchCalendar()}
+            onFocus={() => void prefetchCalendar()}
             className={cn(
               'bg-background inline-flex shrink-0 items-center justify-start gap-2 rounded-lg border px-3 py-1.5 text-left text-sm font-normal',
               'hover:bg-accent hover:text-accent-foreground',
