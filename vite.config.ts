@@ -1,9 +1,11 @@
+import { writeFileSync } from 'node:fs'
 import path from 'node:path'
+import { gzipSync } from 'node:zlib'
 import babel from '@rolldown/plugin-babel'
 import tailwindcss from '@tailwindcss/vite'
 import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import { visualizer } from 'rollup-plugin-visualizer'
-import { defineConfig, type ProxyOptions } from 'vite'
+import { defineConfig, type Plugin, type ProxyOptions } from 'vite'
 
 const PORT = 3000
 // Shared by dev and preview so a production build can be measured against the
@@ -24,12 +26,40 @@ const apiProxy: Record<string, ProxyOptions> = {
 // reachable enough that a green build still means something.
 const CHUNK_SIZE_WARNING_KB = 360
 
+// Matches gzip_min_length in default.conf.template.
+const GZIP_MIN_BYTES = 1024
+const COMPRESSIBLE = /\.(?:js|css|svg)$/
+
+// Writes a level-9 .gz next to each compressible asset. nginx has gzip_static
+// on, so it serves these instead of recompressing immutable bytes per request
+// — and at a level the per-request path can't afford. Assets are content
+// hashed, so the .gz never goes stale.
+function gzipAssets() {
+  return {
+    name: 'gzip-assets',
+    apply: 'build',
+    writeBundle(options, bundle) {
+      for (const [fileName, chunk] of Object.entries(bundle)) {
+        if (!COMPRESSIBLE.test(fileName)) continue
+
+        const source = chunk.type === 'chunk' ? chunk.code : chunk.source
+        const raw = Buffer.from(source)
+        if (raw.byteLength < GZIP_MIN_BYTES) continue
+
+        const target = path.join(options.dir ?? 'dist', fileName)
+        writeFileSync(`${target}.gz`, gzipSync(raw, { level: 9 }))
+      }
+    },
+  } satisfies Plugin
+}
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react({}),
     babel({ presets: [reactCompilerPreset()] }),
     tailwindcss(),
+    gzipAssets(),
     // pnpm run analyze
     process.env.ANALYZE &&
       visualizer({ filename: 'dist/stats.html', gzipSize: true }),
