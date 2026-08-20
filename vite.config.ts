@@ -53,12 +53,56 @@ function gzipAssets() {
   } satisfies Plugin
 }
 
+// The only subset this Spanish-only app ever fetches; cyrillic and latin-ext
+// stay behind their unicode-range and must not be preloaded.
+const LATIN_FONT = /geist-latin-wght-normal-[^/]*\.woff2$/
+
+// The font sits at the end of a three-hop chain - html, css, then woff2 - so it
+// is not discoverable until the CSS parses. A preload flattens that. The
+// filename is content hashed, so it is read from the bundle rather than
+// hardcoded.
+function preloadLatinFont(): Plugin {
+  return {
+    name: 'preload-latin-font',
+    apply: 'build',
+    transformIndexHtml: {
+      order: 'post',
+      handler(_html, ctx) {
+        const font = Object.keys(ctx.bundle ?? {}).find((name) =>
+          LATIN_FONT.test(name)
+        )
+        if (!font) {
+          this.warn('No latin geist woff2 in the bundle; skipping preload.')
+          return
+        }
+
+        return [
+          {
+            tag: 'link',
+            // crossorigin is required even same-origin: font requests are
+            // CORS mode, and without it the browser fetches the file twice.
+            attrs: {
+              rel: 'preload',
+              as: 'font',
+              type: 'font/woff2',
+              href: `/${font}`,
+              crossorigin: '',
+            },
+            injectTo: 'head-prepend',
+          },
+        ]
+      },
+    },
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react({}),
     babel({ presets: [reactCompilerPreset()] }),
     tailwindcss(),
+    preloadLatinFont(),
     gzipAssets(),
     // pnpm run analyze
     process.env.ANALYZE &&
