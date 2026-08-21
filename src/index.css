@@ -2,6 +2,12 @@
 @import "tw-animate-css";
 @import "@fontsource-variable/geist";
 
+/* Prose that quotes a utility class should not generate that utility. Both of
+   these discuss the focus-ring classes at length, and that alone was emitting
+   real alpha-reduced ring rules into the bundle that nothing renders. */
+@source not "../docs";
+@source not "../tests";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -59,7 +65,10 @@
   --success: oklch(0.627 0.194 149.214);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  /* Focus indicator, WCAG 2.2 SC 1.4.11 (3:1). Measures 7.44:1 on
+     --background and 6.82:1 on --muted. Must be painted at full opacity:
+     any alpha drops it under 3:1. See docs/plans/focus-ring-wcag.md. */
+  --ring: oklch(0.45 0 0);
   --chart-1: oklch(0.65 0.18 230);
   --chart-2: oklch(0.65 0.18 142);
   --chart-3: oklch(0.65 0.2 60);
@@ -87,7 +96,8 @@
   --success: oklch(0.792 0.209 151.711);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  /* 11.33:1 on --card, 12.52:1 on --background. */
+  --ring: oklch(0.85 0 0);
   --chart-1: oklch(0.72 0.18 230);
   --chart-2: oklch(0.72 0.18 142);
   --chart-3: oklch(0.72 0.2 60);
@@ -97,7 +107,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring;
   }
   body {
     @apply bg-background text-foreground;

@@ -44,7 +44,7 @@ export function DateRangePicker({ from, to, onChange }: DateRangePickerProps) {
             className={cn(
               'bg-background inline-flex shrink-0 items-center justify-start gap-2 rounded-lg border px-3 py-1.5 text-left text-sm font-normal',
               'hover:bg-accent hover:text-accent-foreground',
-              'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-3 focus-visible:outline-none'
+              'focus-visible:border-ring focus-visible:ring-ring focus-visible:ring-3 focus-visible:outline-none'
             )}
           />
         }
