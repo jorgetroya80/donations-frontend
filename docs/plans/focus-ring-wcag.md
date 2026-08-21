@@ -41,7 +41,7 @@ Both are neutral greys with zero chroma, consistent with the rest of the palette
 ## Architectural decisions
 
 - **Token first, then call sites, in one commit.** The two changes are not independently shippable (see Problem, point 2). Phase 1 is deliberately larger than the usual task size for this reason.
-- **`ring-3` stays as `ring-3` in Phases 1–2.** Migrating from Tailwind's `ring-*` (a `box-shadow`) to `outline` + `outline-offset` is a separate, riskier change with different clipping behaviour. It is isolated in Phase 3 behind an investigation step so Phase 1 can ship the compliance fix without it.
+- **`ring-3` stays as `ring-3` in Phases 1–2.** Migrating from Tailwind's `ring-*` (a `box-shadow`) to `outline` + `outline-offset` is a separate, riskier change with different clipping behaviour. It was isolated in Phase 4 behind an investigation step so Phase 1 could ship the compliance fix without it — and that investigation closed it: nothing clips, so `ring-3` stays throughout.
 - **`focus-visible:border-ring` is left untouched.** The border change accompanies the ring; it is not the indicator being measured.
 - **No new tokens.** `--ring` already exists and is already referenced by every call site. Adding a `--ring-offset` or similar would widen the blast radius without improving compliance.
 - **No visual redesign.** Every change here is a colour or alpha value on an existing focus treatment.
@@ -173,25 +173,35 @@ Start with an investigation step — this may be a theoretical problem rather th
 
 **Investigation:**
 
-- [ ] Identify controls that render flush against an `overflow-hidden` ancestor — check `CardFooter`, `Table` rows and the toast close button
-- [ ] Screenshot the focused state of each; confirm whether the ring is clipped
-- [ ] If nothing clips, close this phase and record the finding
+- [x] Identify controls that render flush against an `overflow-hidden` ancestor — check `CardFooter`, `Table` rows and the toast close button
+- [x] Screenshot the focused state of each; confirm whether the ring is clipped
+- [x] If nothing clips, close this phase and record the finding
 
-**If migration proceeds — acceptance criteria:**
+**Closed — no migration, no code change.** Nothing in the app clips a focus ring. Every scroll or clip container was enumerated and checked against the 3px ring:
+
+| Container | Computed overflow | Focusables inside | Smallest gap to the edge | Verdict |
+| --- | --- | --- | --- | --- |
+| `Card` | `hidden` | reached through `CardHeader`/`CardContent`/`CardFooter`, all `px-4`/`p-4` | **16px**, measured on `/login` | safe |
+| `Table` container | `x: auto`, `y: auto` | `SortableTh`'s button, inside a `th` with `h-10 px-2` | **8px** left, 9.8px top, 10.8px bottom | safe |
+| `DropdownMenu` content | `x: hidden`, `y: auto` | `DropdownMenuItem` | — | no ring: highlights with `focus:bg-accent`, and carries `outline-hidden` |
+| `Select` content | `x: hidden`, `y: auto` | `SelectItem` | — | no ring, same pattern |
+| `DonorPicker` dropdown | `hidden`, inner list `auto` | `<li role="option">` | — | no ring; highlight is `bg-accent` under `aria-activedescendant` |
+| `app-layout` shells | `hidden` | header (`px-4`), `main` (`p-4 md:p-6`) | ≥16px | safe |
+| `Badge` | `hidden` | none — its ring is painted on the badge itself, and `overflow-hidden` clips a box's children, not its own `box-shadow` | — | not applicable |
+
+Two things worth keeping from the investigation. First, `overflow-x-auto` on the table container makes `overflow-y` compute to `auto` as well, so it clips on **both** axes, not just horizontally — the vertical gaps above are what matter there, and they hold. Second, the tightest margin in the app is the table header's 8px against a 3px ring; that is the number to re-check if the ring ever grows past `ring-3` or `th` padding shrinks below `px-2`.
+
+The `Card` row was measured in the running app; the `Table` row was measured from a faithful reproduction built with the exact class strings from `table.tsx` and `sortable-th.tsx`, because reaching a real table needs a signed-in session.
+
+**If it ever needs revisiting — acceptance criteria:**
 
 - [ ] Focus indicators use `outline: 2px solid` with `outline-offset: 2px` in the shared component base classes
 - [ ] No focus ring is clipped by an `overflow-hidden` ancestor anywhere in the app
 - [ ] The indicator still clears 3:1 against both the control and the surface it offsets onto
 - [ ] No layout shift is introduced (`outline` does not affect layout; confirm no `ring-offset-*` compensation is left behind)
 
-**Verification:**
-
-- [ ] `pnpm run test`
-- [ ] `pnpm run build`
-- [ ] Manual: focused states screenshotted before and after for button, input, select, tab, table header and toast close
-
 **Dependencies:** Phase 1
-**Estimated scope:** Medium if migration proceeds; XS if the investigation closes it
+**Estimated scope:** XS — the investigation closed it
 
 ---
 
