@@ -160,8 +160,12 @@ jsdom has no layout engine, so the target size cannot be asserted in a unit test
 
 - [x] Phases 1–3 merged; tests, typecheck, lint and build all green
 - [ ] Keyboard walkthrough of login, donations list, donation form, users, reports and settings in both themes with no invisible focus stop — only `/login` and the dashboard were walked; the authenticated pages need someone who can sign in
-- [ ] Lighthouse accessibility run shows no focus-contrast findings (note: `pnpm run lighthouse` can only reach `/login` unauthenticated — see `MEMORY.md`)
+- [x] Lighthouse accessibility run shows no focus-contrast findings (note: `pnpm run lighthouse` can only reach `/login` unauthenticated — see `MEMORY.md`)
 - [ ] Review before proceeding to Phase 4
+
+Lighthouse scored accessibility **98** on `/login`, with `color-contrast` and `target-size` both passing and nothing reported against the focus indicator. Read that last part narrowly: axe does not audit focus-indicator contrast at all, so a clean Lighthouse run is consistent with the fix but is not what proves it. The proof is the measured ratios in phases 1 and 2. What Lighthouse does independently confirm is `target-size`, which the phase 3 change moved from failing to passing.
+
+Its one failure is out of scope here and belongs to `docs/plans/accessibility.md`: **`landmark-one-main` — the login page has no `<main>` landmark.**
 
 At this checkpoint the application meets SC 1.4.11 and SC 2.4.7 for the focus indicator. Phase 4 is a robustness improvement, not a compliance requirement.
 
@@ -209,19 +213,29 @@ The `Card` row was measured in the running app; the `Table` row was measured fro
 
 **Description:** Keep the alpha from coming back. The failure mode being fixed is a class string that looks reasonable and reads as intentional, so a lint rule is worth more than a test here.
 
+**Closed — no code change needed.** All three criteria were already satisfied by work done in phases 1 and 2, which is why this phase produced nothing new:
+
+- The guard is `tests/focus-ring.test.ts`, written as the RED step of phase 1 and widened in phase 2. It scans `src/` for `(?:ring|outline)-(?:ring|destructive)/<alpha>` and asserts both `--ring` values.
+- It runs in CI already: `ci.yml` runs `pnpm run test`, and vitest's default discovery picks up `tests/` — no new workflow step.
+- The contrast rationale sits next to both `--ring` declarations in `src/index.css`.
+
+A lint rule was the original idea. A test turned out to be the better fit: it caught two real regressions during this work (the phase 1 RED, then the phase 2 RED), and it can assert the token *values* as well as the absence of the alpha, which a class-name lint rule cannot.
+
 **Acceptance criteria:**
 
-- [ ] A check fails CI when `ring-ring/`, `outline-ring/` or `focus-visible:ring-destructive/` with an alpha suffix is reintroduced under `src/`
-- [ ] The check is wired into the existing CI workflow
-- [ ] The rationale (the contrast numbers) is recorded next to the `--ring` declarations in `src/index.css`
+- [x] A check fails CI when `ring-ring/`, `outline-ring/` or `focus-visible:ring-destructive/` with an alpha suffix is reintroduced under `src/`
+- [x] The check is wired into the existing CI workflow
+- [x] The rationale (the contrast numbers) is recorded next to the `--ring` declarations in `src/index.css`
 
 **Verification:**
 
-- [ ] Introduce `ring-ring/50` on a scratch branch and confirm the check fails
-- [ ] Remove it and confirm the check passes
+- [x] Introduce `ring-ring/50` on a scratch branch and confirm the check fails
+- [x] Remove it and confirm the check passes
+
+Four regression vectors were reintroduced one at a time and reverted; the guard caught every one: `focus-visible:ring-ring/50` in `button.tsx`, `aria-invalid:ring-destructive/20` in `input.tsx`, `outline-ring/50` in the base layer, and lightening `--ring` back to `oklch(0.708 0 0)` without any alpha involved.
 
 **Dependencies:** Phase 1
-**Estimated scope:** Small (1–2 files)
+**Estimated scope:** XS — already delivered by phases 1 and 2
 
 ---
 
