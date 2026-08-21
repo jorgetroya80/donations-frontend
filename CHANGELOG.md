@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.10](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.9...donations-frontend-v0.3.10) (2026-08-21)
+
+
+### Bug Fixes
+
+* **a11y:** meet WCAG 1.4.11 contrast on the focus ring ([#180](https://github.com/jorgetroya80/donations-frontend/issues/180)) ([0162615](https://github.com/jorgetroya80/donations-frontend/commit/01626154053cbe167d4433f6a31a20824567f892))
+* **a11y:** wire login errors to the fields they describe ([#181](https://github.com/jorgetroya80/donations-frontend/issues/181)) ([bbdf493](https://github.com/jorgetroya80/donations-frontend/commit/bbdf4934b71eb86fec2aa3fe0c6806254ce3cd59))
+
 ## [0.3.9](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.8...donations-frontend-v0.3.9) (2026-08-20)
 
 
