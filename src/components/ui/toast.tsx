@@ -34,7 +34,7 @@ function Toaster() {
             />
             <ToastPrimitive.Close
               aria-label={t('common.close')}
-              className="absolute top-2 right-2 rounded-md p-1 text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+              className="absolute top-2 right-2 rounded-md p-1 text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring"
             >
               <XIcon className="size-4" />
             </ToastPrimitive.Close>

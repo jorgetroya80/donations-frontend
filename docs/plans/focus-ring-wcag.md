@@ -73,24 +73,22 @@ That is 12 occurrences of `ring-ring/50` across 11 files, plus the base-layer ru
 
 **Acceptance criteria:**
 
-- [ ] `grep -rn 'ring-ring/50' src` returns no matches
-- [ ] `grep -rn 'outline-ring/50' src` returns no matches
-- [ ] `--ring` is `oklch(0.45 0 0)` under `:root` and `oklch(0.85 0 0)` under `.dark`
-- [ ] The focus ring on a text input, a primary button and a tab measures at least 3:1 against the surface behind it, in both themes
+- [x] `grep -rn 'ring-ring/50' src` returns no matches
+- [x] `grep -rn 'outline-ring/50' src` returns no matches
+- [x] `--ring` is `oklch(0.45 0 0)` under `:root` and `oklch(0.85 0 0)` under `.dark`
+- [x] The focus ring on a text input, a primary button and a tab measures at least 3:1 against the surface behind it, in both themes
 
 **Verification:**
 
-- [ ] `pnpm run test`
-- [ ] `pnpm run typecheck`
-- [ ] `pnpm run check:ci`
-- [ ] `pnpm run build`
-- [ ] Manual: tab through the login page and the donation form in both light and dark; every stop shows a clearly visible ring
-- [ ] Manual: sample the rendered ring colour in DevTools and confirm the measured ratio against the adjacent surface
+- [x] `pnpm run test`
+- [x] `pnpm run typecheck`
+- [x] `pnpm run check:ci`
+- [x] `pnpm run build`
+- [x] Manual: tab through the login page and the donation form in both light and dark; every stop shows a clearly visible ring
+- [x] Manual: sample the rendered ring colour in DevTools and confirm the measured ratio against the adjacent surface
 
 **Dependencies:** None
 **Estimated scope:** Large (14 files) — atomic by necessity, but each edit is a single-token string replacement
-
----
 
 ## Phase 2: Destructive-variant focus rings
 

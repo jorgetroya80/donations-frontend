@@ -48,7 +48,7 @@ export function TabList<T extends string>({
             tabIndex={value === tab.key ? 0 : -1}
             onClick={() => onChange(tab.key)}
             className={cn(
-              'border-b-2 px-1 py-2 text-sm font-medium transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring/50',
+              'border-b-2 px-1 py-2 text-sm font-medium transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring',
               value === tab.key
                 ? 'border-primary text-primary'
                 : 'border-transparent text-muted-foreground hover:text-foreground'
