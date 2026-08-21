@@ -100,12 +100,22 @@ That is 12 occurrences of `ring-ring/50` across 11 files, plus the base-layer ru
 
 Raised to full opacity rather than to the `/70` that would just clear 3:1: it carries the most margin (4.76:1 light, 6.19:1 dark), matches what phase 1 did to `--ring`, and lets one regression test cover both tokens. Doing so also makes the `dark:…-destructive/40` variants redundant — `--destructive` already carries its own dark value — so they were removed.
 
-Two findings recorded but **not** acted on, both companion *borders* left at partial alpha while the ring beside them went to full:
+Two companion *borders* keep a partial alpha while the ring beside them went to full:
 
-- `dark:aria-invalid:border-destructive/50` on inputs — **1.98:1**
+- `dark:aria-invalid:border-destructive/50` on inputs, textarea, select and button — **1.98:1**
 - `focus-visible:border-destructive/40` on the destructive button variant — **2.11:1**
 
-Neither breaks the acceptance criteria: the rings alongside them measure 6.19:1 and 4.76:1, and SC 1.4.11 is satisfied by one sufficient indicator. But raising the rings and leaving these makes the treatment less internally consistent than it was before this change. They are borders, not rings, so they sit outside this plan and want their own decision.
+**Decided: they stay as they are.** This was raised during review as a consistency concern and then looked at properly, which changed the reading.
+
+The split is not "some partial, some not". `aria-invalid:border-destructive` applies at full opacity in *both* themes, and `dark:aria-invalid:border-destructive/50` overrides it in dark only — so the border measures 4.76:1 in light and 1.98:1 in dark. That is a deliberate softening for the dark theme, the same reasoning that gives `--destructive` its own dark value: a full-saturation red border against a near-black card glares.
+
+Three reasons not to touch them:
+
+- No compliance gap. SC 1.4.11 is satisfied by one sufficient indicator, and the rings beside these measure 6.19:1 and 4.76:1. The border is a tint under an indicator, not the indicator.
+- Raising them stacks a full-opacity border under a full-opacity 3px ring. In dark that reads as a block of red.
+- The original objection was about tidiness, not about anything a user would hit. The pattern is in fact coherent: the ring identifies the state, the border follows what each theme can carry.
+
+Note for anyone revisiting this: `tests/focus-ring.test.ts` does **not** guard these. Its regex covers ring tokens only. Changing the decision means widening it to borders.
 
 **Files touched:**
 
