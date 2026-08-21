@@ -36,7 +36,7 @@ Both are neutral greys with zero chroma, consistent with the rest of the palette
 
 - **`--destructive` contrast.** An earlier reading of 4.0:1 was wrong. `oklch(0.577 0.245 27.325)` on white measures **4.76:1**, and the `Alert` description renders it at `/90`, which is **4.52:1**. Both clear the 4.5:1 bar for SC 1.4.3. No change required. The `destructive/20` and `destructive/40` values in this plan are _focus rings_, not text.
 - **AAA criteria.** SC 2.5.5 (44px targets) and SC 1.4.6 (7:1 text) are not part of the AA target agreed for this work.
-- **Control heights.** The 32px control height passes SC 2.5.8 (24px minimum). The 36/40px heights explored in the design canvas are a visual preference, not a compliance requirement.
+- **Control heights.** The 32px control height passes SC 2.5.8 (24px minimum). The 36/40px heights explored in the design canvas are a visual preference, not a compliance requirement. (One control did fail 2.5.8 on *width* — the password reveal button, at 16px. Found and fixed in phase 3.)
 
 ## Architectural decisions
 
@@ -133,7 +133,9 @@ One finding recorded but **not** acted on: in dark mode the invalid *border* is 
 
 What was left was a consistency defect rather than a compliance one, and it was worth fixing on those terms: the reveal button was the only control in the app painting the *browser's* focus ring instead of the app's, and `outline-style: auto` is not obliged to honour `outline-color` in every engine. It now uses the same `focus-visible:ring-3 focus-visible:ring-ring` treatment as every other control. `aria-pressed` was added alongside, as this phase's criteria already called for.
 
-**Found here, deliberately not fixed:** the reveal button's hit target is **16×32 px**. SC 2.5.8 Target Size (Minimum) asks for 24×24, so this is a real AA failure — but it is a layout change, not a focus-ring change, and it sits outside this plan's scope. It needs its own decision.
+**Found here, and fixed on request:** the reveal button's hit target was **16×32 px**, against the 24×24 that SC 2.5.8 Target Size (Minimum) asks for — a real AA failure, found while auditing this control. It is now 32×32, and the icon has not moved: the button was `right-2` at the icon's own 16px width, so the icon sat centred 16px from the input's right edge; it is now `right-0 w-8 justify-center`, which centres it at the same 16px. Only the hit area and the shape of the focus ring changed.
+
+jsdom has no layout engine, so the target size cannot be asserted in a unit test. It was measured in the browser instead: 32×32, icon centre 16px from the input's right edge, button fully inside the input's `pr-8` padding.
 
 **Files touched:**
 
