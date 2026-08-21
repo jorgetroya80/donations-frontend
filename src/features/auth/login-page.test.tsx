@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { http } from 'msw'
+import { delay, HttpResponse, http } from 'msw'
 import { Route, Routes } from 'react-router'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { server } from '@/test/msw-server'
@@ -31,6 +31,62 @@ describe('LoginPage', () => {
     expect(screen.getByLabelText('Usuario')).toBeInTheDocument()
     expect(screen.getByLabelText('Contraseña')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Ingresar' })).toBeInTheDocument()
+  })
+
+  it('renders the title as the page heading', () => {
+    renderWithProviders(<TestApp />, { route: '/login' })
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Iniciar sesión' })
+    ).toBeInTheDocument()
+  })
+
+  it('leaves the fields unassociated while there is no error', () => {
+    renderWithProviders(<TestApp />, { route: '/login' })
+
+    for (const label of ['Usuario', 'Contraseña']) {
+      const field = screen.getByLabelText(label)
+      expect(field).toHaveAttribute('aria-invalid', 'false')
+      expect(field).not.toHaveAttribute('aria-describedby')
+    }
+  })
+
+  it('points both fields at the error once login fails', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<TestApp />, { route: '/login' })
+
+    await user.type(screen.getByLabelText('Usuario'), 'wrong')
+    await user.type(screen.getByLabelText('Contraseña'), 'wrong')
+    await user.click(screen.getByRole('button', { name: 'Ingresar' }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toHaveAttribute('id', 'login-error')
+    })
+    for (const label of ['Usuario', 'Contraseña']) {
+      const field = screen.getByLabelText(label)
+      expect(field).toHaveAttribute('aria-invalid', 'true')
+      expect(field).toHaveAttribute('aria-describedby', 'login-error')
+    }
+  })
+
+  it('marks the submit button busy while it waits on the API', async () => {
+    const user = userEvent.setup()
+    server.use(
+      http.post('*/api/v1/login', async () => {
+        await delay('infinite')
+        return HttpResponse.json({})
+      })
+    )
+    renderWithProviders(<TestApp />, { route: '/login' })
+
+    await user.type(screen.getByLabelText('Usuario'), 'admin')
+    await user.type(screen.getByLabelText('Contraseña'), 'random')
+    await user.click(screen.getByRole('button', { name: 'Ingresar' }))
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: 'Ingresando...' })
+      ).toHaveAttribute('aria-busy', 'true')
+    })
   })
 
   it('redirects to dashboard on successful login', async () => {

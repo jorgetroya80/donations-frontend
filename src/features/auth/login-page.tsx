@@ -1,10 +1,11 @@
 import { login as sdkLogin } from '@jorgetroya80/donations-api-client'
+import { CircleAlert } from 'lucide-react'
 import { type SyntheticEvent, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { client } from '@/lib/api'
@@ -74,18 +75,24 @@ export function LoginPage() {
     }
   }
 
+  const errorId = error ? 'login-error' : undefined
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted">
+    <main className="flex min-h-screen items-center justify-center bg-muted">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-center text-2xl">
+          {/* CardTitle renders a div; the page needs a real h1 (1.3.1).
+              Same classes, minus text-balance — the base layer already
+              applies it to every h1. */}
+          <h1 className="font-heading text-center text-2xl leading-snug font-medium">
             {t('auth.login')}
-          </CardTitle>
+          </h1>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <Alert variant="destructive">
+              <Alert variant="destructive" id="login-error">
+                <CircleAlert aria-hidden="true" />
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
@@ -96,6 +103,8 @@ export function LoginPage() {
                 name="username"
                 required
                 autoComplete="username"
+                aria-invalid={!!error}
+                aria-describedby={errorId}
               />
             </div>
             <div className="space-y-2">
@@ -106,14 +115,21 @@ export function LoginPage() {
                 type="password"
                 required
                 autoComplete="current-password"
+                aria-invalid={!!error}
+                aria-describedby={errorId}
               />
             </div>
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loading}
+              aria-busy={loading}
+            >
               {loading ? t('auth.submitting') : t('auth.submit')}
             </Button>
           </form>
         </CardContent>
       </Card>
-    </div>
+    </main>
   )
 }
