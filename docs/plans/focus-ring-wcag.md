@@ -100,7 +100,12 @@ That is 12 occurrences of `ring-ring/50` across 11 files, plus the base-layer ru
 
 Raised to full opacity rather than to the `/70` that would just clear 3:1: it carries the most margin (4.76:1 light, 6.19:1 dark), matches what phase 1 did to `--ring`, and lets one regression test cover both tokens. Doing so also makes the `dark:…-destructive/40` variants redundant — `--destructive` already carries its own dark value — so they were removed.
 
-One finding recorded but **not** acted on: in dark mode the invalid *border* is `dark:aria-invalid:border-destructive/50`, which measures 1.98:1. The acceptance criterion is met because the ring alongside it measures 6.19:1, but the border is carrying almost nothing there. Worth its own look; it is a border, not a ring, so it sits outside this plan.
+Two findings recorded but **not** acted on, both companion *borders* left at partial alpha while the ring beside them went to full:
+
+- `dark:aria-invalid:border-destructive/50` on inputs — **1.98:1**
+- `focus-visible:border-destructive/40` on the destructive button variant — **2.11:1**
+
+Neither breaks the acceptance criteria: the rings alongside them measure 6.19:1 and 4.76:1, and SC 1.4.11 is satisfied by one sufficient indicator. But raising the rings and leaving these makes the treatment less internally consistent than it was before this change. They are borders, not rings, so they sit outside this plan and want their own decision.
 
 **Files touched:**
 
