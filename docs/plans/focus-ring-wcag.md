@@ -90,11 +90,17 @@ That is 12 occurrences of `ring-ring/50` across 11 files, plus the base-layer ru
 **Dependencies:** None
 **Estimated scope:** Large (14 files) — atomic by necessity, but each edit is a single-token string replacement
 
+---
+
 ## Phase 2: Destructive-variant focus rings
 
 **Description:** The destructive button and the `aria-invalid` state paint their focus ring from `--destructive` at 20% (light) and 40% (dark) alpha, measuring 1.44:1 and 1.98:1. Raise these to a value that clears 3:1 against the surface.
 
-Note that `aria-invalid:ring-destructive/20` also appears on inputs. Decide during implementation whether the invalid-state ring is a focus indicator (must clear 3:1) or a decorative tint layered under a border that already carries the meaning. If the latter, leave the tint and confirm the border alone clears 3:1.
+**Resolved:** the invalid-state ring is a state indicator, not a decorative tint. Observed in the browser, an unfocused input carrying `aria-invalid="true"` paints the ring — it does not wait for focus — so SC 1.4.11 applies to it and the 1.44:1 measurement is a failure. Both call sites are in scope.
+
+Raised to full opacity rather than to the `/70` that would just clear 3:1: it carries the most margin (4.76:1 light, 6.19:1 dark), matches what phase 1 did to `--ring`, and lets one regression test cover both tokens. Doing so also makes the `dark:…-destructive/40` variants redundant — `--destructive` already carries its own dark value — so they were removed.
+
+One finding recorded but **not** acted on: in dark mode the invalid *border* is `dark:aria-invalid:border-destructive/50`, which measures 1.98:1. The acceptance criterion is met because the ring alongside it measures 6.19:1, but the border is carrying almost nothing there. Worth its own look; it is a border, not a ring, so it sits outside this plan.
 
 **Files touched:**
 
@@ -106,20 +112,18 @@ Note that `aria-invalid:ring-destructive/20` also appears on inputs. Decide duri
 
 **Acceptance criteria:**
 
-- [ ] The destructive button's focus ring measures at least 3:1 against the surface behind it, in both themes
-- [ ] A field in the `aria-invalid` state has at least one indicator (ring or border) clearing 3:1
-- [ ] The destructive variants remain visually distinguishable from the default variants
+- [x] The destructive button's focus ring measures at least 3:1 against the surface behind it, in both themes
+- [x] A field in the `aria-invalid` state has at least one indicator (ring or border) clearing 3:1
+- [x] The destructive variants remain visually distinguishable from the default variants
 
 **Verification:**
 
-- [ ] `pnpm run test`
-- [ ] `pnpm run check:ci`
-- [ ] Manual: focus the delete-confirmation button in a dialog; focus a field after submitting an invalid form
+- [x] `pnpm run test`
+- [x] `pnpm run check:ci`
+- [x] Manual: focus the delete-confirmation button in a dialog; focus a field after submitting an invalid form
 
 **Dependencies:** Phase 1
 **Estimated scope:** Medium (5 files)
-
----
 
 ## Phase 3: Controls with no focus style at all
 
@@ -219,5 +223,5 @@ Start with an investigation step — this may be a theoretical problem rather th
 
 ## Open questions
 
-- Is the `aria-invalid` ring intended as a focus indicator or as a decorative tint? Determines whether Phase 2 raises it or leaves it (see Phase 2 note).
+- ~~Is the `aria-invalid` ring intended as a focus indicator or as a decorative tint?~~ Resolved in phase 2: it is a state indicator, painted without focus.
 - Should the ring width stay at `ring-3` (3px)? It is not a compliance factor at AA — SC 2.4.13 (Focus Appearance, AAA) sets a minimum area, but AAA is out of scope.

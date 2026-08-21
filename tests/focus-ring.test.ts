@@ -8,9 +8,11 @@ import { describe, expect, it } from 'vitest'
 // 2.32:1 — both changes have to hold together. Nothing at runtime notices when
 // one drifts back; the ring just quietly stops being visible enough.
 //
-// The destructive-variant rings (`ring-destructive/20`, `/40`) fail the same
-// criterion and are handled in phase 2 of docs/plans/focus-ring-wcag.md.
-const ALPHA_RING = /(?:ring|outline)-ring\/\d+/g
+// The same holds for the destructive ring, which marks the aria-invalid state
+// and is painted whether or not the field has focus: at /20 it measured 1.44:1
+// on the light background, and it needs /70 before it clears 3:1 in both
+// themes. It is painted at full opacity for the same reason as --ring.
+const ALPHA_RING = /(?:ring|outline)-(?:ring|destructive)\/\d+/g
 
 function sourceFiles(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
