@@ -28,6 +28,23 @@ describe('Input', () => {
       ).toBeInTheDocument()
     })
 
+    it('toggle reports its state through aria-pressed', async () => {
+      const user = userEvent.setup()
+      render(<Input type="password" />)
+
+      expect(
+        screen.getByRole('button', { name: 'Mostrar contraseña' })
+      ).toHaveAttribute('aria-pressed', 'false')
+
+      await user.click(
+        screen.getByRole('button', { name: 'Mostrar contraseña' })
+      )
+
+      expect(
+        screen.getByRole('button', { name: 'Ocultar contraseña' })
+      ).toHaveAttribute('aria-pressed', 'true')
+    })
+
     it('clicking toggle twice masks password again', async () => {
       const user = userEvent.setup()
       render(<Input type="password" placeholder="pw" />)

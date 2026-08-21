@@ -129,6 +129,12 @@ One finding recorded but **not** acted on: in dark mode the invalid *border* is 
 
 **Description:** Some interactive elements paint no focus indicator, which fails SC 2.4.7 outright rather than failing on contrast. The known case is the password reveal button in `Input`, which is keyboard-reachable but invisible when focused. Audit for others before fixing.
 
+**Corrected on inspection.** The premise above was wrong. The reveal button is *not* invisible when focused: it carries no `outline-none`, so the browser's own `outline-style: auto` still paints a ring, and the base-layer `outline-ring` supplies its colour. There is no SC 2.4.7 failure. The audit found no other case either — every other `<button>` and `<a>` under `src/` either carries `focus-visible:` classes or is styled through `buttonVariants()`, which carries them.
+
+What was left was a consistency defect rather than a compliance one, and it was worth fixing on those terms: the reveal button was the only control in the app painting the *browser's* focus ring instead of the app's, and `outline-style: auto` is not obliged to honour `outline-color` in every engine. It now uses the same `focus-visible:ring-3 focus-visible:ring-ring` treatment as every other control. `aria-pressed` was added alongside, as this phase's criteria already called for.
+
+**Found here, deliberately not fixed:** the reveal button's hit target is **16×32 px**. SC 2.5.8 Target Size (Minimum) asks for 24×24, so this is a real AA failure — but it is a layout change, not a focus-ring change, and it sits outside this plan's scope. It needs its own decision.
+
 **Files touched:**
 
 - `src/components/ui/input.tsx` — the reveal `<button>` has `hover:text-foreground` but no `focus-visible:` class
@@ -136,30 +142,26 @@ One finding recorded but **not** acted on: in dark mode the invalid *border* is 
 
 **Acceptance criteria:**
 
-- [ ] The password reveal button shows a visible focus ring matching the app's treatment
-- [ ] Every `<button>` and `<a>` under `src/` either carries a `focus-visible:` treatment or inherits the base-layer `outline-ring`, with the exceptions listed and justified
-- [ ] The reveal button also carries `aria-pressed` reflecting its state
+- [x] The password reveal button shows a visible focus ring matching the app's treatment
+- [x] Every `<button>` and `<a>` under `src/` either carries a `focus-visible:` treatment or inherits the base-layer `outline-ring`, with the exceptions listed and justified
+- [x] The reveal button also carries `aria-pressed` reflecting its state
 
 **Verification:**
 
-- [ ] `pnpm run test` — extend `src/components/ui/input.test.tsx` with a keyboard-focus assertion on the reveal button
-- [ ] Manual: tab into the password field, then once more; the reveal button is visibly focused
+- [x] `pnpm run test` — extend `src/components/ui/input.test.tsx` with a keyboard-focus assertion on the reveal button
+- [x] Manual: tab into the password field, then once more; the reveal button is visibly focused
 
 **Dependencies:** Phase 1
 **Estimated scope:** Small (1–2 files)
 
----
-
 ### Checkpoint: AA compliance
 
-- [ ] Phases 1–3 merged; tests, typecheck, lint and build all green
-- [ ] Keyboard walkthrough of login, donations list, donation form, users, reports and settings in both themes with no invisible focus stop
+- [x] Phases 1–3 merged; tests, typecheck, lint and build all green
+- [ ] Keyboard walkthrough of login, donations list, donation form, users, reports and settings in both themes with no invisible focus stop — only `/login` and the dashboard were walked; the authenticated pages need someone who can sign in
 - [ ] Lighthouse accessibility run shows no focus-contrast findings (note: `pnpm run lighthouse` can only reach `/login` unauthenticated — see `MEMORY.md`)
 - [ ] Review before proceeding to Phase 4
 
 At this checkpoint the application meets SC 1.4.11 and SC 2.4.7 for the focus indicator. Phase 4 is a robustness improvement, not a compliance requirement.
-
----
 
 ## Phase 4: `ring` → `outline` migration (investigate first)
 

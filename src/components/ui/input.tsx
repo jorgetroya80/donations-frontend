@@ -26,8 +26,9 @@ function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
           aria-label={
             showPassword ? t('common.hidePassword') : t('common.showPassword')
           }
+          aria-pressed={showPassword}
           onClick={() => setShowPassword((v) => !v)}
-          className="absolute inset-y-0 right-2 flex items-center text-muted-foreground hover:text-foreground"
+          className="focus-visible:border-ring focus-visible:ring-ring absolute inset-y-0 right-2 flex items-center rounded-lg text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-3"
         >
           {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
         </button>
