@@ -2,6 +2,12 @@
 @import "tw-animate-css";
 @import "@fontsource-variable/geist";
 
+/* Prose that quotes a utility class should not generate that utility. Both of
+   these discuss the focus-ring classes at length, and that alone was emitting
+   real alpha-reduced ring rules into the bundle that nothing renders. */
+@source not "../docs";
+@source not "../tests";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

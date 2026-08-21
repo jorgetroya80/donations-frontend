@@ -12,7 +12,11 @@ import { describe, expect, it } from 'vitest'
 // and is painted whether or not the field has focus: at /20 it measured 1.44:1
 // on the light background, and it needs /70 before it clears 3:1 in both
 // themes. It is painted at full opacity for the same reason as --ring.
-const ALPHA_RING = /(?:ring|outline)-(?:ring|destructive)\/\d+/g
+// Both opacity spellings have to be caught. Tailwind accepts the arbitrary
+// form as readily as the bare one, and emits the same thing for it:
+// `ring-ring/[50%]` compiles to color-mix(in oklab, var(--ring) 50%,
+// transparent), which is exactly the 2.32:1 ring this guard exists to stop.
+const ALPHA_RING = /(?:ring|outline)-(?:ring|destructive)\/(?:\d|\[)[^\s'"`]*/g
 
 function sourceFiles(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
