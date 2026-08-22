@@ -1,0 +1,120 @@
+#!/bin/bash
+# Run the agent-harness eval cases, each in a throwaway git worktree.
+#
+#   bash scripts/run-evals.sh                     # all cases
+#   bash scripts/run-evals.sh donor-phone-field   # one case
+#   EVAL_LABEL=baseline bash scripts/run-evals.sh # tag the run for A/B comparison
+#
+# Each case is a markdown file in .claude/evals/cases/ with an optional "## Setup" bash
+# block, a "## Prompt" block and an "## Assertions" bash block. A case passes when every
+# assertion command exits 0.
+#
+# Claude runs with --permission-mode acceptEdits, so it can edit files but not run shell
+# commands. Cases whose assertions need the agent to run tests itself will need
+# EVAL_PERMISSION_MODE=bypassPermissions — only do that knowing it disables every
+# permission check for that run, inside the disposable worktree.
+set -uo pipefail
+
+ROOT=$(git rev-parse --show-toplevel)
+cd "$ROOT" || exit 1
+
+CASES_DIR=.claude/evals/cases
+RESULTS_DIR=.claude/evals/results
+LABEL=${EVAL_LABEL:-run}
+PERMISSION_MODE=${EVAL_PERMISSION_MODE:-acceptEdits}
+STAMP=$(date +%Y%m%d-%H%M%S)
+OUT="$RESULTS_DIR/$LABEL-$STAMP.json"
+
+command -v claude >/dev/null || { echo "claude CLI not on PATH" >&2; exit 1; }
+command -v jq >/dev/null || { echo "jq not on PATH" >&2; exit 1; }
+
+mkdir -p "$RESULTS_DIR"
+
+# Extract the first fenced block that follows a given "## Heading".
+section() {
+  awk -v want="$1" '
+    $0 ~ "^## " want "$" { in_sec = 1; next }
+    in_sec && /^```/     { fence = !fence; if (!fence) exit; next }
+    in_sec && fence      { print }
+  ' "$2"
+}
+
+cases=()
+if [ $# -gt 0 ]; then
+  for name in "$@"; do cases+=("$CASES_DIR/$name.md"); done
+else
+  for f in "$CASES_DIR"/*.md; do cases+=("$f"); done
+fi
+
+results="[]"
+pass_count=0
+fail_count=0
+
+for case_file in "${cases[@]}"; do
+  name=$(basename "$case_file" .md)
+  [ -f "$case_file" ] || { echo "no such case: $name" >&2; exit 1; }
+
+  work=$(mktemp -d "${TMPDIR:-/tmp}/eval-$name.XXXXXX")
+  tree="$work/repo"
+
+  echo "▸ $name"
+  git worktree add --quiet --detach "$tree" HEAD || { echo "  worktree failed"; continue; }
+  # Reuse the installed dependencies instead of a 60s pnpm install per case.
+  ln -s "$ROOT/node_modules" "$tree/node_modules"
+
+  prompt=$(section Prompt "$case_file")
+  setup=$(section Setup "$case_file")
+  asserts=$(section Assertions "$case_file")
+
+  if [ -n "$setup" ]; then
+    ( cd "$tree" && bash -e -c "$setup" ) >"$work/setup.log" 2>&1 || {
+      echo "  ✗ setup failed — see $work/setup.log"
+      fail_count=$((fail_count + 1))
+      git worktree remove --force "$tree" 2>/dev/null
+      continue
+    }
+  fi
+
+  agent_json=$(
+    cd "$tree" && claude -p "$prompt" \
+      --output-format json \
+      --permission-mode "$PERMISSION_MODE" 2>"$work/agent.err"
+  )
+
+  cost=$(jq -r '.total_cost_usd // 0' <<<"$agent_json" 2>/dev/null || echo 0)
+  turns=$(jq -r '.num_turns // 0' <<<"$agent_json" 2>/dev/null || echo 0)
+  duration=$(jq -r '.duration_ms // 0' <<<"$agent_json" 2>/dev/null || echo 0)
+
+  # Assertions run one per line, with -e so the first failure ends the case.
+  if ( cd "$tree" && bash -e -c "$asserts" ) >"$work/assert.log" 2>&1; then
+    status=pass
+    pass_count=$((pass_count + 1))
+    echo "  ✓ pass  \$$cost  ${turns} turns"
+    git worktree remove --force "$tree" 2>/dev/null
+    rm -rf "$work"
+    logs=""
+  else
+    status=fail
+    fail_count=$((fail_count + 1))
+    echo "  ✗ fail  \$$cost  ${turns} turns  — logs: $work"
+    # Keep the worktree so the failure can be inspected.
+    logs="$work"
+  fi
+
+  results=$(jq \
+    --arg name "$name" --arg status "$status" --arg logs "$logs" \
+    --argjson cost "${cost:-0}" --argjson turns "${turns:-0}" --argjson duration "${duration:-0}" \
+    '. + [{name: $name, status: $status, cost_usd: $cost, turns: $turns, duration_ms: $duration, logs: $logs}]' \
+    <<<"$results")
+done
+
+jq -n \
+  --arg label "$LABEL" --arg stamp "$STAMP" --arg mode "$PERMISSION_MODE" \
+  --arg commit "$(git rev-parse --short HEAD)" \
+  --argjson results "$results" \
+  '{label: $label, timestamp: $stamp, commit: $commit, permission_mode: $mode, results: $results}' \
+  >"$OUT"
+
+echo
+echo "$pass_count passed, $fail_count failed → $OUT"
+[ "$fail_count" -eq 0 ]
