@@ -30,12 +30,10 @@ yarn-error.log*
 .vscode/
 .eslintcache# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# Local tooling — the agent harness is versioned, personal overrides are not
+# Local tooling — the project harness is versioned; skills and agents stay personal
 .claude/*
 !.claude/settings.json
 !.claude/launch.json
-!.claude/agents/
-!.claude/skills/
 !.claude/hooks/
 !.claude/evals/
 .claude/evals/results/
