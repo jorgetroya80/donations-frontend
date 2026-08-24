@@ -151,6 +151,7 @@ Por eso cada fase se commiteó por separado.
 | Pruebas de humo en sesión nueva | hechas, las cuatro pasaron |
 | `EVAL_LABEL=baseline bash scripts/run-evals.sh` | hecho, 4/4 (ver abajo) |
 | Corrida de control sin harness | pendiente (es lo que falta para poder comparar) |
+| `skillOverrides` para colapsar skills del plugin | no funciona; config retirada (ver abajo) |
 | `/caveman-init --dry-run` | pendiente, sólo si se usan otros IDEs |
 
 ## Baseline de evals
@@ -183,6 +184,32 @@ Llegar a una medición fiable exigió tres arreglos, incluidos en esta rama:
 
 De paso quedó claro que un agente en `--permission-mode acceptEdits` sí ejecuta comandos de
 shell: así fue como se corrompió el `node_modules`.
+
+## `skillOverrides` no funciona (config retirada)
+
+`.claude/settings.json` llevaba tres entradas `skillOverrides` en `name-only` para colapsar
+la descripción de skills del plugin `agent-skills`. No hacían nada, y se han quitado.
+
+Se probaron seis combinaciones contra Claude Code 2.1.231, preguntando a una sesión
+headless si el skill seguía apareciendo en su listado:
+
+| Clave | Ámbito | Valor | Resultado |
+| --- | --- | --- | --- |
+| `agent-skills:<skill>` | settings de proyecto | `name-only` | sin efecto |
+| `<skill>` | settings de proyecto | `name-only` | sin efecto |
+| `agent-skills@addy-agent-skills:<skill>` | settings de proyecto | `name-only` | sin efecto |
+| `agent-skills:<skill>` | `--settings` | `off` | sin efecto |
+| `<skill>` | settings de usuario | `off` | sin efecto |
+| `agent-skills@addy-agent-skills:<skill>` | settings de usuario | `off` | sin efecto |
+
+Se usó `off` en la mitad de las pruebas porque es el efecto más visible: debería retirar el
+skill del listado por completo. La sonda es fiable — con un nombre de skill inventado
+responde correctamente que no está listado.
+
+El changelog de 2.1.129 dice «`skillOverrides` setting now works», y la versión instalada es
+posterior, así que no es cuestión de versión. Conclusión: el ajuste no se aplica a skills
+que vienen de un plugin. Si se quiere volver a intentar, el siguiente paso es reproducirlo
+con un skill local (no de plugin) para acotar si el fallo es específico de plugins.
 
 ## Deuda detectada, no tocada
 
