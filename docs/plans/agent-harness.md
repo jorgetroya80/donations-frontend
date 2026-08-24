@@ -4,7 +4,7 @@ Estado: **implementado** en `chore/agent-harness` (commits `1715bc0`, `16c754d`,
 
 ## Contexto
 
-El repositorio tenía piezas sueltas de configuración para Claude Code (`.claude/skills/`, `.claude/agents/`, `launch.json`, `.mcp.json` con chrome-devtools), pero le faltaban las tres capas que convierten eso en un *harness*: contexto de proyecto, verificación automática y medición.
+El repositorio tenía piezas sueltas de configuración para Claude Code (`.claude/skills/`, `.claude/agents/`, `launch.json`, `.mcp.json` con chrome-devtools), pero le faltaban las tres capas que convierten eso en un _harness_: contexto de proyecto, verificación automática y medición.
 
 Punto de partida:
 
@@ -20,13 +20,13 @@ Decisión central, tomada después de descubrir que `.claude/` estaba entero en 
 
 **El harness no son las skills.** Se versiona lo que es regla del proyecto y cualquiera que clone necesita; queda personal lo que es preferencia del desarrollador.
 
-| Versionado | Personal (ignorado) |
-| --- | --- |
+| Versionado                                          | Personal (ignorado)           |
+| --------------------------------------------------- | ----------------------------- |
 | `.claude/settings.json` (hooks, plugins, overrides) | `.claude/settings.local.json` |
-| `.claude/hooks/*.sh` | `.claude/skills/` |
-| `.claude/evals/cases/` | `.claude/agents/` |
-| `.claude/launch.json` | `.claude/evals/results/` |
-| `CLAUDE.md` | |
+| `.claude/hooks/*.sh`                                | `.claude/skills/`             |
+| `.claude/evals/cases/`                              | `.claude/agents/`             |
+| `.claude/launch.json`                               | `.claude/evals/results/`      |
+| `CLAUDE.md`                                         |                               |
 
 Las skills y subagentes locales no llevan conocimiento de este repo, así que versionarlos obligaría a todo el que clone a heredar un catálogo ajeno. Se desindexaron con `git rm --cached` (siguen en disco).
 
@@ -34,23 +34,23 @@ Si en el futuro se quieren sincronizar entre máquinas, la migración limpia es 
 
 ## Fase 0 — Higiene del catálogo de skills
 
-El plugin [`agent-skills`](https://github.com/addyosmani/agent-skills) ya estaba instalado y activo: 24 skills de proceso, 4 subagentes (`code-reviewer`, `security-auditor`, `test-engineer`, `web-performance-auditor`), 8 slash commands y un hook `SessionStart` que inyecta el meta-skill `using-agent-skills` en cada sesión (requiere `jq`). Se mantiene: cubre la capa de *proceso*.
+El plugin [`agent-skills`](https://github.com/addyosmani/agent-skills) ya estaba instalado y activo: 24 skills de proceso, 4 subagentes (`code-reviewer`, `security-auditor`, `test-engineer`, `web-performance-auditor`), 8 slash commands y un hook `SessionStart` que inyecta el meta-skill `using-agent-skills` en cada sesión (requiere `jq`). Se mantiene: cubre la capa de _proceso_.
 
 Regla de corte aplicada — **el plugin gana en proceso genérico, lo local gana en conocimiento del stack**. Borradas por duplicar al plugin:
 
-| Borrada | La cubre |
-| --- | --- |
-| `tdd` | `agent-skills:test-driven-development` |
-| `prd-to-plan`, `to-issues`, `write-a-prd` | `agent-skills:spec-driven-development`, `planning-and-task-breakdown` |
-| `react-best-practices` (240 KB, 5× el resto junto) | `agent-skills:performance-optimization`, `frontend-ui-engineering` |
+| Borrada                                            | La cubre                                                              |
+| -------------------------------------------------- | --------------------------------------------------------------------- |
+| `tdd`                                              | `agent-skills:test-driven-development`                                |
+| `prd-to-plan`, `to-issues`, `write-a-prd`          | `agent-skills:spec-driven-development`, `planning-and-task-breakdown` |
+| `react-best-practices` (240 KB, 5× el resto junto) | `agent-skills:performance-optimization`, `frontend-ui-engineering`    |
 
 Conservadas: `react-patterns`, `react-ui-patterns`, `tailwind-patterns`, `make-interfaces-feel-better` (saben de React 19 + Compiler + Tailwind v4 + base-ui), `docker-expert`, `grill-me`.
 
 Con el borrado desaparece la cadena local PRD → plan → issues. Los ~24 `docs/PRD-*.md` existentes quedan como historial; los nuevos salen del flujo del plugin.
 
-En `settings.json`, `skillOverrides: "name-only"` para lo que no aplica a un SPA frontend: `observability-and-instrumentation`, `deprecation-and-migration`, `api-and-interface-design`.
+En `settings.json` se intentó `skillOverrides: "name-only"` para lo que no aplica a un SPA frontend: `observability-and-instrumentation`, `deprecation-and-migration`, `api-and-interface-design`.
 
-> Sin verificar: las claves se escribieron prefijadas (`agent-skills:observability-and-instrumentation`), mientras que el precedente local usa el nombre pelado (`docker-expert`). Si el prefijo no es el formato correcto, esos tres overrides se ignoran en silencio.
+> Retirado: el ajuste no alcanza a los skills que vienen de un plugin, con ninguna forma de clave. Detalle y pruebas más abajo.
 
 ## Fase 0b — Caveman en el harness
 
@@ -76,11 +76,11 @@ Límite: caveman comprime conversación y mensajes de commit. PRs, issues, docs 
 
 `.claude/settings.json` versionado + tres scripts en `.claude/hooks/`. Son la diferencia entre "el agente debería verificar" y "el agente no puede no verificar".
 
-| Hook | Script | Qué hace |
-| --- | --- | --- |
-| `PostToolUse` (`Edit\|Write`) | `format-file.sh` | `biome check --write` sobre el archivo tocado, si es `src/**/*.{ts,tsx}`. Milisegundos. Cierra además el hueco de que lint-staged usa `biome lint`, sin organizar imports. Siempre sale 0 |
-| `Stop` | `verify.sh` | Si hay cambios en `src/`: `pnpm run typecheck` + `vitest related` sobre lo cambiado. Al fallar imprime en stderr y **sale con código 2**, devolviendo el error al agente en vez de terminar el turno |
-| `UserPromptSubmit` | `context.sh` | Inyecta rama + `git status --short`. Evita el "commitea en main", que hoy sólo bloquea `pre-push` |
+| Hook                          | Script           | Qué hace                                                                                                                                                                                             |
+| ----------------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PostToolUse` (`Edit\|Write`) | `format-file.sh` | `biome check --write` sobre el archivo tocado, si es `src/**/*.{ts,tsx}`. Milisegundos. Cierra además el hueco de que lint-staged usa `biome lint`, sin organizar imports. Siempre sale 0            |
+| `Stop`                        | `verify.sh`      | Si hay cambios en `src/`: `pnpm run typecheck` + `vitest related` sobre lo cambiado. Al fallar imprime en stderr y **sale con código 2**, devolviendo el error al agente en vez de terminar el turno |
+| `UserPromptSubmit`            | `context.sh`     | Inyecta rama + `git status --short`. Evita el "commitea en main", que hoy sólo bloquea `pre-push`                                                                                                    |
 
 Detalles de implementación que costaron:
 
@@ -97,12 +97,12 @@ Permisos: por defecto `--permission-mode acceptEdits`, que deja editar pero no e
 
 Cuatro casos en `.claude/evals/cases/`:
 
-| Caso | Qué mide |
-| --- | --- |
-| `donor-phone-field` | i18n en `es.json` y Zod schema, en vez de un literal español en el JSX |
-| `query-hook-conventions` | Cliente generado con `client` + `throwOnError` + `signal`, no `fetch` crudo |
-| `fix-seeded-bug` | Arregla el bug sembrado en `permissions.ts` sin vaciar el test que lo detecta |
-| `new-list-page` | Reutiliza `use-sort`, `use-page-param`, `SortableTh`, helpers de error |
+| Caso                     | Qué mide                                                                      |
+| ------------------------ | ----------------------------------------------------------------------------- |
+| `donor-phone-field`      | i18n en `es.json` y Zod schema, en vez de un literal español en el JSX        |
+| `query-hook-conventions` | Cliente generado con `client` + `throwOnError` + `signal`, no `fetch` crudo   |
+| `fix-seeded-bug`         | Arregla el bug sembrado en `permissions.ts` sin vaciar el test que lo detecta |
+| `new-list-page`          | Reutiliza `use-sort`, `use-page-param`, `SortableTh`, helpers de error        |
 
 > El caso original "haz ordenable la tabla de gastos" resultó vacuo: **todas** las páginas de lista ya reutilizan `use-sort` y los helpers de error. Por eso el cuarto caso pide una página nueva — es la única forma de medir reutilización en un repo ya maduro.
 
@@ -120,11 +120,11 @@ El harness no se despliega: son archivos que el agente lee al arrancar. Tres cos
 
 ### Pruebas de humo (requieren sesión nueva)
 
-| Prueba | Acción | Esperado |
-| --- | --- | --- |
-| Formato | pedir una edición con formato sucio a propósito | el archivo queda formateado sin pedirlo |
-| Tipos | romper un tipo a propósito | al cerrar turno el agente recibe el error de `tsc` y lo corrige |
-| Delegación | "¿dónde se define `useDonors`?" | va a `cavecrew-investigator`, vuelve `file:line` |
+| Prueba     | Acción                                          | Esperado                                                        |
+| ---------- | ----------------------------------------------- | --------------------------------------------------------------- |
+| Formato    | pedir una edición con formato sucio a propósito | el archivo queda formateado sin pedirlo                         |
+| Tipos      | romper un tipo a propósito                      | al cerrar turno el agente recibe el error de `tsc` y lo corrige |
+| Delegación | "¿dónde se define `useDonors`?"                 | va a `cavecrew-investigator`, vuelve `file:line`                |
 
 Si las tres pasan, el harness está en marcha. Los evals sirven para lo siguiente: decidir si además **mejora** algo.
 
@@ -140,31 +140,31 @@ Por eso cada fase se commiteó por separado.
 
 ## Estado
 
-| Paso | Estado |
-| --- | --- |
-| Higiene del catálogo de skills | hecho |
-| Reparto versionado / personal | hecho |
-| `CLAUDE.md` reescrito y comprimido | hecho |
-| Hooks `PostToolUse`, `Stop`, `UserPromptSubmit` | hechos, probados aislados con stdin sintético |
-| `verify.sh` devuelve error real al agente | verificado (tipo roto → `exit=2` con salida de `tsc`) |
-| Plumbing de evals (worktree + setup + asserts) | verificado sin agente |
-| Pruebas de humo en sesión nueva | hechas, las cuatro pasaron |
-| `EVAL_LABEL=baseline bash scripts/run-evals.sh` | hecho, 4/4 (ver abajo) |
-| Corrida de control sin harness | pendiente (es lo que falta para poder comparar) |
-| `skillOverrides` para colapsar skills del plugin | no funciona; config retirada (ver abajo) |
-| `/caveman-init --dry-run` | pendiente, sólo si se usan otros IDEs |
+| Paso                                             | Estado                                                |
+| ------------------------------------------------ | ----------------------------------------------------- |
+| Higiene del catálogo de skills                   | hecho                                                 |
+| Reparto versionado / personal                    | hecho                                                 |
+| `CLAUDE.md` reescrito y comprimido               | hecho                                                 |
+| Hooks `PostToolUse`, `Stop`, `UserPromptSubmit`  | hechos, probados aislados con stdin sintético         |
+| `verify.sh` devuelve error real al agente        | verificado (tipo roto → `exit=2` con salida de `tsc`) |
+| Plumbing de evals (worktree + setup + asserts)   | verificado sin agente                                 |
+| Pruebas de humo en sesión nueva                  | hechas, las cuatro pasaron                            |
+| `EVAL_LABEL=baseline bash scripts/run-evals.sh`  | hecho, 4/4 (ver abajo)                                |
+| Corrida de control sin harness                   | pendiente (es lo que falta para poder comparar)       |
+| `skillOverrides` para colapsar skills del plugin | no funciona; config retirada (ver abajo)              |
+| `/caveman-init --dry-run`                        | pendiente, sólo si se usan otros IDEs                 |
 
 ## Baseline de evals
 
 Los cuatro casos pasan. La corrida completa cuesta unos 2,50 USD y unos 10 minutos, que es
 el precio recurrente de cada cambio a `CLAUDE.md` o a los hooks.
 
-| Caso | Coste | Turnos |
-| --- | --- | --- |
-| `fix-seeded-bug` | 0,30 USD | 6 |
-| `query-hook-conventions` | 0,52 USD | 12 |
-| `new-list-page` | 0,75 USD | 18 |
-| `donor-phone-field` | 0,90 USD | 30 |
+| Caso                     | Coste    | Turnos |
+| ------------------------ | -------- | ------ |
+| `fix-seeded-bug`         | 0,30 USD | 6      |
+| `query-hook-conventions` | 0,52 USD | 12     |
+| `new-list-page`          | 0,75 USD | 18     |
+| `donor-phone-field`      | 0,90 USD | 30     |
 
 **El número aún no significa nada por sí solo.** Falta la corrida de control, sin hooks y
 sin `CLAUDE.md`: 4/4 con el harness puesto sólo se puede leer comparado contra 4/4 sin él.
@@ -185,7 +185,7 @@ Llegar a una medición fiable exigió tres arreglos, incluidos en esta rama:
 De paso quedó claro que un agente en `--permission-mode acceptEdits` sí ejecuta comandos de
 shell: así fue como se corrompió el `node_modules`.
 
-## `skillOverrides` no funciona (config retirada)
+## `skillOverrides` sólo aplica a skills que no vienen de plugin (config retirada)
 
 `.claude/settings.json` llevaba tres entradas `skillOverrides` en `name-only` para colapsar
 la descripción de skills del plugin `agent-skills`. No hacían nada, y se han quitado.
@@ -193,23 +193,40 @@ la descripción de skills del plugin `agent-skills`. No hacían nada, y se han q
 Se probaron seis combinaciones contra Claude Code 2.1.231, preguntando a una sesión
 headless si el skill seguía apareciendo en su listado:
 
-| Clave | Ámbito | Valor | Resultado |
-| --- | --- | --- | --- |
-| `agent-skills:<skill>` | settings de proyecto | `name-only` | sin efecto |
-| `<skill>` | settings de proyecto | `name-only` | sin efecto |
+| Clave                                    | Ámbito               | Valor       | Resultado  |
+| ---------------------------------------- | -------------------- | ----------- | ---------- |
+| `agent-skills:<skill>`                   | settings de proyecto | `name-only` | sin efecto |
+| `<skill>`                                | settings de proyecto | `name-only` | sin efecto |
 | `agent-skills@addy-agent-skills:<skill>` | settings de proyecto | `name-only` | sin efecto |
-| `agent-skills:<skill>` | `--settings` | `off` | sin efecto |
-| `<skill>` | settings de usuario | `off` | sin efecto |
-| `agent-skills@addy-agent-skills:<skill>` | settings de usuario | `off` | sin efecto |
+| `agent-skills:<skill>`                   | `--settings`         | `off`       | sin efecto |
+| `<skill>`                                | settings de usuario  | `off`       | sin efecto |
+| `agent-skills@addy-agent-skills:<skill>` | settings de usuario  | `off`       | sin efecto |
 
 Se usó `off` en la mitad de las pruebas porque es el efecto más visible: debería retirar el
 skill del listado por completo. La sonda es fiable — con un nombre de skill inventado
 responde correctamente que no está listado.
 
 El changelog de 2.1.129 dice «`skillOverrides` setting now works», y la versión instalada es
-posterior, así que no es cuestión de versión. Conclusión: el ajuste no se aplica a skills
-que vienen de un plugin. Si se quiere volver a intentar, el siguiente paso es reproducirlo
-con un skill local (no de plugin) para acotar si el fallo es específico de plugins.
+posterior, así que no es cuestión de versión.
+
+El control pendiente ya está hecho: con un skill que no viene de plugin el ajuste sí surte
+efecto, y con el nombre a secas. Invocando el skill directamente (sonda más fiable que
+preguntar por el listado, porque el CLI responde con un mensaje literal):
+
+| Clave                                                     | Origen del skill             | Valor | Resultado                                                         |
+| --------------------------------------------------------- | ---------------------------- | ----- | ----------------------------------------------------------------- |
+| `docker-expert`                                           | personal (`.claude/skills/`) | `off` | bloqueado: «Skill "docker-expert" is disabled via skillOverrides» |
+| `security-review`                                         | bundled del CLI              | `off` | bloqueado, mismo mensaje                                          |
+| `api-and-interface-design`                                | plugin `agent-skills`        | `off` | el skill carga igual                                              |
+| `agent-skills:api-and-interface-design`                   | plugin `agent-skills`        | `off` | el skill carga igual                                              |
+| `addy-agent-skills:api-and-interface-design`              | plugin `agent-skills`        | `off` | el skill carga igual                                              |
+| `agent-skills@addy-agent-skills:api-and-interface-design` | plugin `agent-skills`        | `off` | el skill carga igual                                              |
+| `caveman:caveman-help`                                    | plugin `caveman`             | `off` | el skill carga igual                                              |
+
+Conclusión: la clave correcta es el nombre a secas, sin prefijo de plugin, pero los skills
+que vienen de un plugin no se pueden colapsar ni desactivar por esta vía en 2.1.231 —
+ninguna forma de clave los alcanza. Para recortar el listado de un plugin, la única palanca
+es desactivar el plugin entero.
 
 ## Deuda detectada, no tocada
 
