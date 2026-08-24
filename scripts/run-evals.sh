@@ -85,6 +85,17 @@ for case_file in "${cases[@]}"; do
       --permission-mode "$PERMISSION_MODE" 2>"$work/agent.err"
   )
 
+  # A session that returns nothing (or an is_error result) never produced output to judge.
+  # Report that as "error" so a dead session is not filed as a failed case.
+  if [ -z "$agent_json" ] || [ "$(jq -r '.is_error // false' <<<"$agent_json" 2>/dev/null)" = "true" ]; then
+    echo "  ! error  agent session produced no result — logs: $work"
+    fail_count=$((fail_count + 1))
+    results=$(jq --arg name "$name" --arg logs "$work" \
+      '. + [{name: $name, status: "error", cost_usd: 0, turns: 0, duration_ms: 0, logs: $logs}]' \
+      <<<"$results")
+    continue
+  fi
+
   cost=$(jq -r '.total_cost_usd // 0' <<<"$agent_json" 2>/dev/null || echo 0)
   turns=$(jq -r '.num_turns // 0' <<<"$agent_json" 2>/dev/null || echo 0)
   duration=$(jq -r '.duration_ms // 0' <<<"$agent_json" 2>/dev/null || echo 0)
