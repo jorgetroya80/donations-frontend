@@ -87,6 +87,36 @@ Detalles de implementación que costaron:
 - Anti-bucle en `Stop`: se usa el flag `stop_hook_active` del payload, no un fichero centinela.
 - macOS trae bash 3.2: **no hay `mapfile`**. La lista de archivos cambiados va como string separado por saltos de línea.
 
+### Fase 2b — Presupuesto de contexto para corridas autónomas
+
+Una corrida larga sin humano delante tiene un modo de fallo propio: la ventana se llena, la
+sesión se compacta y el trabajo a medias se pierde o queda irreconocible. Dos hooks más:
+
+| Hook           | Script              | Qué hace                                                                                                                        |
+| -------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `PostToolUse`  | `context-budget.sh` | Lee el uso de tokens del transcript. Bajo 80% calla; 80-89% avisa; al 90% sale con **código 2** y ordena parar, commitear y entregar un traspaso |
+| `PreCompact`   | `checkpoint.sh`     | Si la compactación llega igual, commitea el árbol entero antes de que ocurra. Red de seguridad, no historia                     |
+
+Cómo se calcula el uso: la suma de `input_tokens` + ambas cachés + `output_tokens` del
+último mensaje de asistente del transcript, contra `CONTEXT_WINDOW` (200 000 por defecto).
+Ajustables `CONTEXT_WARN_PCT` y `CONTEXT_STOP_PCT`. Sólo se leen las últimas 400 líneas del
+transcript: en sesiones largas el fichero pasa de los cientos de MB.
+
+El corte al 90% dispara **una vez por sesión** (centinela en `.git/`). Sin eso, cada llamada
+a herramienta posterior volvería a bloquear el turno y el agente no podría ni commitear.
+
+`checkpoint.sh` no commitea en `main` — ahí prefiere perder el diff antes que ensuciar la
+rama — ni cuando el árbol está limpio. El mensaje es genérico a propósito
+(`chore(agent): checkpoint before context compaction`): se reescribe después con `rebase`.
+
+Probados con stdin sintético: silencio al 52%, aviso al 89%, bloqueo con instrucciones al
+102%, silencio en la segunda llamada de la misma sesión; y el checkpoint commiteando en rama,
+saltándose el árbol limpio y negándose en `main`.
+
+Queda por comprobar en vivo: si la auto-compactación del CLI se adelanta al corte del 90%.
+Si pasa, la corrida autónoma va con `--autocompact` en un valor de tokens por debajo del
+umbral, o desactivada.
+
 ## Fase 3 — Capa de medición (evals)
 
 Sin esto, las fases anteriores son opinión. Runner mínimo, no framework.

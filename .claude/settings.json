@@ -10,6 +10,25 @@
             "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/format-file.sh\""
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/context-budget.sh\""
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/checkpoint.sh\"",
+            "timeout": 60
+          }
+        ]
       }
     ],
     "Stop": [
