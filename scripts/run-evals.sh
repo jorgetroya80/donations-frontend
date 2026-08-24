@@ -13,6 +13,10 @@
 # shell commands, so a case can expect the agent to run the suite itself. Override with
 # EVAL_PERMISSION_MODE=bypassPermissions to drop every permission check for the run —
 # only worth it inside the disposable worktree.
+#
+# EVAL_NO_HARNESS=1 deletes CLAUDE.md and .claude/settings.json inside the worktree before
+# the agent starts, so the case runs with no project context and no hooks. That is the
+# control arm: same cases, same model, harness off, to compare against a labelled run.
 set -uo pipefail
 
 ROOT=$(git rev-parse --show-toplevel)
@@ -22,6 +26,7 @@ CASES_DIR=.claude/evals/cases
 RESULTS_DIR=.claude/evals/results
 LABEL=${EVAL_LABEL:-run}
 PERMISSION_MODE=${EVAL_PERMISSION_MODE:-acceptEdits}
+NO_HARNESS=${EVAL_NO_HARNESS:-0}
 STAMP=$(date +%Y%m%d-%H%M%S)
 OUT="$RESULTS_DIR/$LABEL-$STAMP.json"
 
@@ -65,6 +70,12 @@ for case_file in "${cases[@]}"; do
   # into a temp dir that is about to be deleted. On APFS, -c clones (~8s, no real bytes).
   cp -Rc "$ROOT/node_modules" "$tree/node_modules" 2>/dev/null ||
     cp -R "$ROOT/node_modules" "$tree/node_modules"
+
+  # Control arm: strip the project context and the hooks from the worktree. Personal
+  # skills and agents are gitignored, so they are absent from the worktree already.
+  if [ "$NO_HARNESS" = "1" ]; then
+    rm -f "$tree/CLAUDE.md" "$tree/.claude/settings.json"
+  fi
 
   prompt=$(section Prompt "$case_file")
   setup=$(section Setup "$case_file")
@@ -126,8 +137,9 @@ done
 jq -n \
   --arg label "$LABEL" --arg stamp "$STAMP" --arg mode "$PERMISSION_MODE" \
   --arg commit "$(git rev-parse --short HEAD)" \
+  --arg no_harness "$NO_HARNESS" \
   --argjson results "$results" \
-  '{label: $label, timestamp: $stamp, commit: $commit, permission_mode: $mode, results: $results}' \
+  '{label: $label, timestamp: $stamp, commit: $commit, permission_mode: $mode, no_harness: ($no_harness == "1"), results: $results}' \
   >"$OUT"
 
 echo

@@ -59,9 +59,9 @@ El plugin `caveman` (7 skills, 3 subagentes `cavecrew-*`, 5 slash commands) es u
 - **Delegación** — documentada en `CLAUDE.md`: `cavecrew-investigator` para localizar código (sustituye a `Explore`), `cavecrew-reviewer` para diffs pequeños, `code-reviewer` del plugin para revisión profunda pre-merge. Su salida comprimida ocupa mucho menos contexto en el hilo principal.
 - **Commits** — `/caveman-commit` es la forma estándar de escribir mensajes en este repo. Emite Conventional Commits, así que el job `validate-title` de `ci.yml` y release-please siguen funcionando sin tocar nada. Riesgo a vigilar: un sujeto demasiado comprimido degrada el `CHANGELOG.md`, que sí leen humanos — el sujeto debe leerse solo, sin el diff delante.
 - **Compresión de `CLAUDE.md`** — hecha. El backup **no** queda en el repo: `caveman-compress` lo escribe en `~/.local/share/caveman-compress/backups/donations-frontend/CLAUDE.original.md`, a propósito, para que ningún auto-loader lo reingiera.
-- **`/caveman-init`** — escribe la regla de activación para otros agentes IDE (Cursor, Windsurf, Cline, `AGENTS.md`). Sólo tiene sentido si se usan esos IDEs; correr con `--dry-run` primero. No ejecutado.
+- **`/caveman-init`** — escribe la regla de activación para otros agentes IDE (Cursor, Windsurf, Cline, `AGENTS.md`). Descartado: en este proyecto no se usan esos IDEs.
 
-Límite: caveman comprime conversación y mensajes de commit. PRs, issues, docs y código siguen en prosa normal.
+Límite, decidido explícitamente: caveman se usa en la conversación y en los mensajes de commit. La documentación (planes, PRDs, PRs, issues), el código y los comentarios se escriben en prosa normal — los lee un humano, y el ahorro de tokens no compensa.
 
 ## Fase 1 — Capa de contexto
 
@@ -150,9 +150,9 @@ Por eso cada fase se commiteó por separado.
 | Plumbing de evals (worktree + setup + asserts)   | verificado sin agente                                 |
 | Pruebas de humo en sesión nueva                  | hechas, las cuatro pasaron                            |
 | `EVAL_LABEL=baseline bash scripts/run-evals.sh`  | hecho, 4/4 (ver abajo)                                |
-| Corrida de control sin harness                   | pendiente (es lo que falta para poder comparar)       |
+| Corrida de control sin harness                   | hecha, 4/4 igual que con harness (ver abajo)          |
 | `skillOverrides` para colapsar skills del plugin | no funciona; config retirada (ver abajo)              |
-| `/caveman-init --dry-run`                        | pendiente, sólo si se usan otros IDEs                 |
+| `/caveman-init --dry-run`                        | descartado, no se usan otros IDEs                     |
 
 ## Baseline de evals
 
@@ -166,8 +166,40 @@ el precio recurrente de cada cambio a `CLAUDE.md` o a los hooks.
 | `new-list-page`          | 0,75 USD | 18     |
 | `donor-phone-field`      | 0,90 USD | 30     |
 
-**El número aún no significa nada por sí solo.** Falta la corrida de control, sin hooks y
-sin `CLAUDE.md`: 4/4 con el harness puesto sólo se puede leer comparado contra 4/4 sin él.
+## Corrida de control: el harness no cambia el resultado
+
+`EVAL_NO_HARNESS=1` borra `CLAUDE.md` y `.claude/settings.json` dentro del worktree antes de
+arrancar el agente, así que el caso corre sin contexto de proyecto y sin hooks. Las skills y
+subagentes personales están en `.gitignore`, de modo que tampoco llegan al worktree.
+
+```bash
+EVAL_LABEL=control EVAL_NO_HARNESS=1 bash scripts/run-evals.sh
+```
+
+Corrida del 2026-08-24 sobre `383c486`:
+
+| Caso                     | Con harness    | Sin harness    |
+| ------------------------ | -------------- | -------------- |
+| `fix-seeded-bug`         | pasa, 0,30 USD | pasa, 0,31 USD |
+| `query-hook-conventions` | pasa, 0,52 USD | pasa, 0,58 USD |
+| `new-list-page`          | pasa, 0,75 USD | pasa, 0,53 USD |
+| `donor-phone-field`      | pasa, 0,90 USD | pasa, 0,96 USD |
+| **Total**                | 4/4, 2,47 USD  | 4/4, 2,38 USD  |
+
+**El harness no mejora ninguno de los cuatro casos.** El coste queda dentro del ruido, y sin
+`CLAUDE.md` la corrida salió incluso algo más barata. Las aserciones sí comprueban
+convenciones reales (`use-sort`, `sortable-th`, `throwOnError`, `signal`, i18n sin literales
+en JSX), así que la lectura no es que midan de menos: es que el agente deduce esas
+convenciones leyendo el código vecino, que ya las cumple. En un repo con precedentes
+consistentes, escribir esas mismas reglas en `CLAUDE.md` es redundante.
+
+Lo que esto **no** dice: nada sobre los hooks. `format-file.sh` y `verify.sh` corrigen y
+bloquean cosas que las aserciones no miran (formato, tipos rotos a mitad de tarea), y su
+efecto no aparece en un pass/fail final que el agente ya alcanzaba por su cuenta.
+
+Para que la suite discrimine haría falta un caso sin precedente vecino que copiar — una
+convención que sólo esté escrita en `CLAUDE.md` — o medir estado intermedio en vez del
+resultado final.
 
 Llegar a una medición fiable exigió tres arreglos, incluidos en esta rama:
 
