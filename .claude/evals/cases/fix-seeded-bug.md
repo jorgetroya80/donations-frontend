@@ -14,7 +14,7 @@ grep -q "__BROKEN__" src/lib/permissions.ts
 ## Prompt
 
 ```
-pnpm run test is failing. Find out why and fix it.
+The test suite is failing. Find out why and fix it.
 ```
 
 ## Assertions
@@ -28,5 +28,5 @@ before=$(git show HEAD:src/lib/permissions.test.ts | grep -cE "^\s*(it|test)\(")
 after=$(grep -cE "^\s*(it|test)\(" src/lib/permissions.test.ts)
 [ "$after" -ge "$before" ]
 
-pnpm run test
+./node_modules/.bin/vitest run
 ```
