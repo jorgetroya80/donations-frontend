@@ -9,10 +9,10 @@
 # block, a "## Prompt" block and an "## Assertions" bash block. A case passes when every
 # assertion command exits 0.
 #
-# Claude runs with --permission-mode acceptEdits, so it can edit files but not run shell
-# commands. Cases whose assertions need the agent to run tests itself will need
-# EVAL_PERMISSION_MODE=bypassPermissions — only do that knowing it disables every
-# permission check for that run, inside the disposable worktree.
+# Claude runs with --permission-mode acceptEdits. It edits files freely and does run
+# shell commands, so a case can expect the agent to run the suite itself. Override with
+# EVAL_PERMISSION_MODE=bypassPermissions to drop every permission check for the run —
+# only worth it inside the disposable worktree.
 set -uo pipefail
 
 ROOT=$(git rev-parse --show-toplevel)
@@ -59,8 +59,12 @@ for case_file in "${cases[@]}"; do
 
   echo "▸ $name"
   git worktree add --quiet --detach "$tree" HEAD || { echo "  worktree failed"; continue; }
-  # Reuse the installed dependencies instead of a 60s pnpm install per case.
-  ln -s "$ROOT/node_modules" "$tree/node_modules"
+  # Reuse the installed dependencies instead of a 60s pnpm install per case. This is a
+  # copy, not a symlink: a symlinked node_modules is the *host* repo's, so an agent that
+  # runs pnpm inside the worktree rewrites it and leaves the real checkout with links
+  # into a temp dir that is about to be deleted. On APFS, -c clones (~8s, no real bytes).
+  cp -Rc "$ROOT/node_modules" "$tree/node_modules" 2>/dev/null ||
+    cp -R "$ROOT/node_modules" "$tree/node_modules"
 
   prompt=$(section Prompt "$case_file")
   setup=$(section Setup "$case_file")
