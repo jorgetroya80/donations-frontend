@@ -148,9 +148,41 @@ Por eso cada fase se commiteó por separado.
 | Hooks `PostToolUse`, `Stop`, `UserPromptSubmit` | hechos, probados aislados con stdin sintético |
 | `verify.sh` devuelve error real al agente | verificado (tipo roto → `exit=2` con salida de `tsc`) |
 | Plumbing de evals (worktree + setup + asserts) | verificado sin agente |
-| Pruebas de humo en sesión nueva | pendiente |
-| `EVAL_LABEL=baseline bash scripts/run-evals.sh` | pendiente (cuesta dinero) |
+| Pruebas de humo en sesión nueva | hechas, las cuatro pasaron |
+| `EVAL_LABEL=baseline bash scripts/run-evals.sh` | hecho, 4/4 (ver abajo) |
+| Corrida de control sin harness | pendiente (es lo que falta para poder comparar) |
 | `/caveman-init --dry-run` | pendiente, sólo si se usan otros IDEs |
+
+## Baseline de evals
+
+Los cuatro casos pasan. La corrida completa cuesta unos 2,50 USD y unos 10 minutos, que es
+el precio recurrente de cada cambio a `CLAUDE.md` o a los hooks.
+
+| Caso | Coste | Turnos |
+| --- | --- | --- |
+| `fix-seeded-bug` | 0,30 USD | 6 |
+| `query-hook-conventions` | 0,52 USD | 12 |
+| `new-list-page` | 0,75 USD | 18 |
+| `donor-phone-field` | 0,90 USD | 30 |
+
+**El número aún no significa nada por sí solo.** Falta la corrida de control, sin hooks y
+sin `CLAUDE.md`: 4/4 con el harness puesto sólo se puede leer comparado contra 4/4 sin él.
+
+Llegar a una medición fiable exigió tres arreglos, incluidos en esta rama:
+
+- Los hooks llamaban a `pnpm exec`, que aborta dentro de los worktrees de eval, así que
+  `verify.sh` le devolvía al agente un error de pnpm en vez de la salida real de `tsc`.
+  Ahora llaman a `./node_modules/.bin/*` directamente; no volver a "ordenarlo" a `pnpm`.
+- Los worktrees enlazaban por symlink el `node_modules` del repo anfitrión. Un agente que
+  ejecutara pnpm dentro de un worktree lo reescribía y dejaba la copia de trabajo real
+  apuntando a un almacén temporal que la propia corrida borraba después. Cada caso recibe
+  ahora su propio clon APFS.
+- Tres de los cuatro casos no medían nada: dos pedían categorías de gasto, que son un enum
+  de Zod local sin endpoint, y el tercero afirmaba un campo que el formulario de donante ya
+  tenía. Cada caso borra ahora en su `## Setup` aquello que pide.
+
+De paso quedó claro que un agente en `--permission-mode acceptEdits` sí ejecuta comandos de
+shell: así fue como se corrompió el `node_modules`.
 
 ## Deuda detectada, no tocada
 
