@@ -41,7 +41,10 @@
     "manageUsers": "Administrar usuarios",
     "financialOverview": "Resumen financiero",
     "currentPeriod": "Actual",
-    "previousPeriod": "Anterior"
+    "previousPeriod": "Anterior",
+    "newCategory": "nuevo",
+    "periodTotal": "total {{amount}}",
+    "rankingCaption": "{{title}}, importe y variación frente al periodo anterior"
   },
   "donations": {
     "title": "Donaciones",
