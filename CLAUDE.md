@@ -1,92 +1,46 @@
 # CLAUDE.md
 
-Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
-
-**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
-
-## 1. Think Before Coding
-
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
-
-Before implementing:
-
-- State your assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them - don't pick silently.
-- If a simpler approach exists, say so. Push back when warranted.
-- If something is unclear, stop. Name what's confusing. Ask.
-
-## 2. Simplicity First
-
-**Minimum code that solves the problem. Nothing speculative.**
-
-- No features beyond what was asked.
-- No abstractions for single-use code.
-- No "flexibility" or "configurability" that wasn't requested.
-- No error handling for impossible scenarios.
-- If you write 200 lines and it could be 50, rewrite it.
-
-Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
-
-## 3. Surgical Changes
-
-**Touch only what you must. Clean up only your own mess.**
-
-When editing existing code:
-
-- Don't "improve" adjacent code, comments, or formatting.
-- Don't refactor things that aren't broken.
-- Match existing style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it - don't delete it.
-
-When your changes create orphans:
-
-- Remove imports/variables/functions that YOUR changes made unused.
-- Don't remove pre-existing dead code unless asked.
-
-The test: Every changed line should trace directly to the user's request.
-
-## 4. Goal-Driven Execution
-
-**Define success criteria. Loop until verified.**
-
-Transform tasks into verifiable goals:
-
-- "Add validation" → "Write tests for invalid inputs, then make them pass"
-- "Fix the bug" → "Write a test that reproduces it, then make it pass"
-- "Refactor X" → "Ensure tests pass before and after"
-
-For multi-step tasks, state a brief plan:
-
-```
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
-```
-
-Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
-
----
-
-**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
-
----
+React 19 + TypeScript + Vite 8 SPA. Manage church donations, expenses, reports.
+Full structure: `docs/ARCHITECTURE.md`. Coding discipline: skill `karpathy-guidelines`.
 
 ## Commands
 
-- `pnpm run build` — Build application
-- `pnpm run dev` / `pnpm start` — Start dev server (port 3000)
-- `pnpm run check` — Biome lint + format with auto-fix (`src/**/*.{ts,tsx}`)
-- `pnpm run lint` — Biome lint with auto-fix (`src/**/*.{ts,tsx}`)
-- `pnpm run preview` — Preview production build
-- `pnpm run test` — Run unit tests,
-- `pnpm run test:watch` — Run unit tests in watch mode,
-- `pnpm run test:coveragee` — Run test coveragee,
+- `pnpm run dev` / `pnpm start` — dev server (port 3000)
+- `pnpm run build` — build
+- `pnpm run preview` — preview production build (port 4173)
+- `pnpm run typecheck` — `tsc --build --force`
+- `pnpm run check` — Biome lint + format + import organizing, auto-fix (`src/`)
+- `pnpm run test` — unit tests · `test:watch` · `test:coverage`
 
-## Architecture
+## Conventions
 
-React 19 + TypeScript + Vite 8 SPA for a donations frontend.
+**Feature slices.** One folder per domain in `src/features/<domain>/`:
+`<domain>s-page.tsx`, `<domain>-form.tsx`, `<domain>-schema.ts` (Zod), `use-<domain>s.ts`
+(React Query), `index.ts` barrel. Tests colocated as `*.test.tsx` next to file.
+File names kebab-case, always.
 
-- **React Compiler** enabled via `babel-plugin-react-compiler` (no manual memoization needed)
-- **Tailwind CSS v4** via `@tailwindcss/vite` plugin
-- **Linting**: Biome (format + lint + import organizing)
-- **lint-staged**: Biome runs on staged files for formatting (all files) and linting (ts/tsx)
+**Server data.** Only via `@jorgetroya80/donations-api-client`, pass `client` from
+`src/lib/api.ts` with `throwOnError: true` and `signal`. Never call `fetch`/`ky` from
+feature. Reference pattern: `src/features/donors/use-donors.ts`.
+
+**API errors.** Reuse `src/lib/parse-api-field-errors.ts` (field errors to form) and
+`src/lib/get-problem-message.ts` (ProblemDetail to message). No new parsing.
+
+**i18n.** Every user-visible string live in `src/locales/es.json`. No literals in JSX.
+
+**UI.** Plain HTML + Tailwind v4. No new wrappers around `@base-ui/react`; when
+use base-ui, pass `render` prop (`asChild` ignored). Reuse `src/components/`
+(`empty-state`, `skeleton`, `page-header`, `sortable-th`) and `src/lib/use-sort.ts`,
+`use-page-param.ts`, `use-debounced-value.ts`, `formatters.ts`, `permissions.ts`.
+
+**React Compiler** enabled — no manual `useMemo` / `useCallback`.
+
+**Tests.** Use `src/test/test-utils.tsx` to render, `src/test/msw-handlers.ts` for API
+mocks. Never assert against real network.
+
+## Workflow
+
+- Never commit to `main` (`pre-push` blocks it). Branch, then PR.
+- Commit messages via `/caveman-commit` — Conventional Commits, imperative, subject ≤50
+  chars. Subject must read on own as `CHANGELOG.md` line. No AI attribution.
+- Deep pre-merge review: `code-reviewer`.

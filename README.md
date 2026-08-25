@@ -102,6 +102,23 @@ docker run --name donations-frontend --rm -p 8080:80 --add-host=api:host-gateway
 
 `--add-host=api:host-gateway` maps the `api` hostname inside the container to your host machine, so nginx can proxy `/api/` to the running API.
 
+## Working with AI Agents
+
+The repo ships an agent harness under `.claude/`: project conventions in `CLAUDE.md`, and
+hooks that format every edited file and run typecheck plus the related tests before a turn
+can end (`.claude/hooks/`).
+
+Requirements on your machine:
+
+- `jq` on `PATH` (`brew install jq`) — the hooks read their event payload with it.
+- The skill plugins the harness assumes. From an interactive `claude` terminal:
+  `/plugin marketplace add addyosmani/agent-skills`. Plugin activation lives in
+  `.claude/settings.json`; personal overrides go in `.claude/settings.local.json`, which is
+  not versioned.
+
+Hooks are read when a session starts, so open a new session after changing them.
+`bash scripts/run-evals.sh` runs the harness eval cases in throwaway git worktrees.
+
 ## Architecture
 
 ```
