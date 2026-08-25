@@ -43,5 +43,4 @@ mocks. Never assert against real network.
 - Never commit to `main` (`pre-push` blocks it). Branch, then PR.
 - Commit messages via `/caveman-commit` — Conventional Commits, imperative, subject ≤50
   chars. Subject must read on own as `CHANGELOG.md` line. No AI attribution.
-- Locating code (`where is X`, `what calls Y`): delegate to `cavecrew-investigator`.
-  Review small diff: `cavecrew-reviewer`. Deep pre-merge review: `code-reviewer`.
+- Deep pre-merge review: `code-reviewer`.
