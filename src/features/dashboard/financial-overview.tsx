@@ -5,11 +5,10 @@ import { DateRangePicker } from '@/components/date-range-picker'
 import { EmptyState } from '@/components/empty-state'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import type { ChartConfig } from '@/components/ui/chart'
 import { useDonationReport, useExpenseReport } from '@/features/reports'
-import { currentMonthRange, formatDate } from '@/lib/formatters'
+import { currentMonthRange, formatCurrency, formatDate } from '@/lib/formatters'
 import { getProblemMessage } from '@/lib/get-problem-message'
-import { ComparisonBarChart } from './comparison-bar-chart.lazy'
+import { CategoryRanking, type RankingItem } from './category-ranking'
 import { previousRange } from './financial-overview.utils'
 import { StatCard } from './stat-card'
 import { useBalance } from './use-dashboard-data'
@@ -19,16 +18,11 @@ const donationTypes = ['TITHE', 'OFFERING', 'SPECIAL_OFFERING', 'OTHER']
 export function FinancialOverview() {
   const { t } = useTranslation()
 
-  const donationChartConfig: ChartConfig = Object.fromEntries(
-    donationTypes.map((type, i) => [
-      type,
-      { label: t(`donations.types.${type}`), color: `var(--chart-${i + 1})` },
-    ])
+  const donationTypeLabels: Record<string, string> = Object.fromEntries(
+    donationTypes.map((type) => [type, t(`donations.types.${type}`)])
   )
-  const comparisonConfig: ChartConfig = {
-    current: { label: t('dashboard.currentPeriod'), color: 'var(--chart-1)' },
-    previous: { label: t('dashboard.previousPeriod'), color: 'var(--chart-3)' },
-  }
+  const donationsTitle = t('dashboard.donationsByType')
+  const expensesTitle = t('dashboard.expensesByCategory')
   const [range, setRange] = useState(currentMonthRange)
 
   const dateParams = {
@@ -48,37 +42,40 @@ export function FinancialOverview() {
     balance.isLoading || donations.isLoading || expenses.isLoading
   const error = balance.error || donations.error || expenses.error
 
-  const makeDonationItem = (type: string | null | undefined) => ({
-    type: donationChartConfig[type ?? '']?.label ?? type ?? '',
-    current:
-      donations.data?.totalsByType?.find((d) => d.type === type)?.total ?? 0,
-    previous:
-      prevDonations.data?.totalsByType?.find((d) => d.type === type)?.total ??
-      0,
-  })
-
+  // A category can appear in either period only: unioning both keeps a
+  // category that dropped to zero visible, as the -100% it is.
   const allDonationTypes = Array.from(
     new Set([
       ...(donations.data?.totalsByType?.map((d) => d.type) ?? []),
       ...(prevDonations.data?.totalsByType?.map((d) => d.type) ?? []),
     ])
   )
-  const titheData = allDonationTypes
-    .filter((t) => t === 'TITHE')
-    .map(makeDonationItem)
-  const otherDonationsData = allDonationTypes
-    .filter((t) => t !== 'TITHE')
-    .map(makeDonationItem)
+  const donationRows: RankingItem[] = allDonationTypes.map((type) => ({
+    key: type ?? '',
+    label: donationTypeLabels[type ?? ''] ?? type ?? '',
+    current:
+      donations.data?.totalsByType?.find((d) => d.type === type)?.total ?? 0,
+    previous:
+      prevDonations.data?.totalsByType?.find((d) => d.type === type)?.total ??
+      0,
+  }))
 
-  const expenseChartData =
-    expenses.data?.totalsByCategory?.map((cur) => ({
-      category: cur.category ? t(`expenses.categories.${cur.category}`) : '',
-      current: cur.total ?? 0,
-      previous:
-        prevExpenses.data?.totalsByCategory?.find(
-          (e) => e.category === cur.category
-        )?.total ?? 0,
-    })) ?? []
+  const allExpenseCategories = Array.from(
+    new Set([
+      ...(expenses.data?.totalsByCategory?.map((e) => e.category) ?? []),
+      ...(prevExpenses.data?.totalsByCategory?.map((e) => e.category) ?? []),
+    ])
+  )
+  const expenseRows: RankingItem[] = allExpenseCategories.map((category) => ({
+    key: category ?? '',
+    label: category ? t(`expenses.categories.${category}`) : '',
+    current:
+      expenses.data?.totalsByCategory?.find((e) => e.category === category)
+        ?.total ?? 0,
+    previous:
+      prevExpenses.data?.totalsByCategory?.find((e) => e.category === category)
+        ?.total ?? 0,
+  }))
 
   return (
     <div className="space-y-4">
@@ -128,32 +125,19 @@ export function FinancialOverview() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
-          <CardHeader>
-            <CardTitle>{t('dashboard.donationsByType')}</CardTitle>
+          <CardHeader className="flex flex-row items-baseline justify-between gap-3">
+            <CardTitle>{donationsTitle}</CardTitle>
+            {donations.data?.grandTotal != null && (
+              <span className="text-muted-foreground text-sm whitespace-nowrap">
+                {t('dashboard.periodTotal', {
+                  amount: formatCurrency(donations.data.grandTotal),
+                })}
+              </span>
+            )}
           </CardHeader>
-          <CardContent className="min-h-75">
-            {titheData.length > 0 || otherDonationsData.length > 0 ? (
-              <div className="space-y-4">
-                {titheData.length > 0 && (
-                  <ComparisonBarChart
-                    data={titheData}
-                    config={comparisonConfig}
-                    categoryKey="type"
-                    categoryWidth={120}
-                    className="max-h-20"
-                  />
-                )}
-                {otherDonationsData.length > 0 && (
-                  <ComparisonBarChart
-                    data={otherDonationsData}
-                    config={comparisonConfig}
-                    categoryKey="type"
-                    categoryWidth={120}
-                    showLegend
-                    className="max-h-45"
-                  />
-                )}
-              </div>
+          <CardContent>
+            {donationRows.length > 0 ? (
+              <CategoryRanking items={donationRows} title={donationsTitle} />
             ) : (
               <EmptyState
                 icon={<BarChart3 size={40} />}
@@ -164,18 +148,22 @@ export function FinancialOverview() {
         </Card>
 
         <Card>
-          <CardHeader>
-            <CardTitle>{t('dashboard.expensesByCategory')}</CardTitle>
+          <CardHeader className="flex flex-row items-baseline justify-between gap-3">
+            <CardTitle>{expensesTitle}</CardTitle>
+            {expenses.data?.grandTotal != null && (
+              <span className="text-muted-foreground text-sm whitespace-nowrap">
+                {t('dashboard.periodTotal', {
+                  amount: formatCurrency(expenses.data.grandTotal),
+                })}
+              </span>
+            )}
           </CardHeader>
-          <CardContent className="min-h-75">
-            {expenseChartData.length > 0 ? (
-              <ComparisonBarChart
-                data={expenseChartData}
-                config={comparisonConfig}
-                categoryKey="category"
-                categoryWidth={100}
-                showLegend
-                className="max-h-75"
+          <CardContent>
+            {expenseRows.length > 0 ? (
+              <CategoryRanking
+                items={expenseRows}
+                title={expensesTitle}
+                inverted
               />
             ) : (
               <EmptyState
