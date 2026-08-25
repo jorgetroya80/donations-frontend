@@ -150,13 +150,14 @@ El harness no se despliega: son archivos que el agente lee al arrancar. Tres cos
 
 ### Pruebas de humo (requieren sesión nueva)
 
-| Prueba     | Acción                                          | Esperado                                                        |
-| ---------- | ----------------------------------------------- | --------------------------------------------------------------- |
-| Formato    | pedir una edición con formato sucio a propósito | el archivo queda formateado sin pedirlo                         |
-| Tipos      | romper un tipo a propósito                      | al cerrar turno el agente recibe el error de `tsc` y lo corrige |
-| Delegación | "¿dónde se define `useDonors`?"                 | va a `cavecrew-investigator`, vuelve `file:line`                |
+| Prueba  | Acción                                          | Esperado                                                        |
+| ------- | ----------------------------------------------- | --------------------------------------------------------------- |
+| Formato | pedir una edición con formato sucio a propósito | el archivo queda formateado sin pedirlo                         |
+| Tipos   | romper un tipo a propósito                      | al cerrar turno el agente recibe el error de `tsc` y lo corrige |
 
-Si las tres pasan, el harness está en marcha. Los evals sirven para lo siguiente: decidir si además **mejora** algo.
+Había una tercera, de delegación en `cavecrew-investigator`; se cae con la regla que la motivaba.
+
+Si las dos pasan, el harness está en marcha. Los evals sirven para lo siguiente: decidir si además **mejora** algo.
 
 ### Salida de emergencia
 
