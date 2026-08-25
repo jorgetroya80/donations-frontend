@@ -47,17 +47,6 @@ describe('FinancialOverview', () => {
     })
   })
 
-  it('reserves a stable height on both ranking cards', () => {
-    const { container } = renderWithProviders(<FinancialOverview />)
-
-    // The empty state is shorter than a rendered ranking, so without a floor
-    // the cards grow when a range with data is picked.
-    const contents = container.querySelectorAll(
-      '[data-slot="card-content"].min-h-75'
-    )
-    expect(contents).toHaveLength(2)
-  })
-
   it('renders card titles', () => {
     renderWithProviders(<FinancialOverview />)
 

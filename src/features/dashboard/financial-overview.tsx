@@ -135,7 +135,7 @@ export function FinancialOverview() {
               </span>
             )}
           </CardHeader>
-          <CardContent className="min-h-75">
+          <CardContent>
             {donationRows.length > 0 ? (
               <CategoryRanking items={donationRows} title={donationsTitle} />
             ) : (
@@ -158,7 +158,7 @@ export function FinancialOverview() {
               </span>
             )}
           </CardHeader>
-          <CardContent className="min-h-75">
+          <CardContent>
             {expenseRows.length > 0 ? (
               <CategoryRanking
                 items={expenseRows}
