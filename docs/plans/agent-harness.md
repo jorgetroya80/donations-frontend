@@ -61,7 +61,11 @@ El plugin `caveman` se usa aquí para dos cosas, y sólo para esas dos:
 
 Todo lo demás va en prosa normal: documentación, PRDs, PRs, issues, código y comentarios los lee una persona, y el ahorro de tokens no compensa. `CLAUDE.md` es la excepción, comprimido con `caveman-compress` porque lo carga el agente en cada turno; el backup queda fuera del repo, en `~/.local/share/caveman-compress/backups/donations-frontend/CLAUDE.original.md`, para que ningún auto-loader lo reingiera.
 
-Descartados: la delegación en los subagentes `cavecrew-*` (corren en Haiku, y la regla no se cumplía) y `/caveman-init` (no se usan otros IDEs).
+Descartado el resto del plugin:
+
+- **Delegación en los subagentes `cavecrew-*`** — corren en **Haiku**. El ahorro que prometen es de contexto en el hilo principal, pero lo pagan bajando el modelo que hace el trabajo: localizar código y revisar diffs pasa a un motor más débil que el que lleva la tarea. En un repo de este tamaño el contexto no es el cuello de botella —la corrida autónoma de una feature entera tocó techo en el 39 % de la ventana—, así que se cambia calidad por un recurso que sobra. Aparte, la regla no se cumplía: el agente buscaba a mano igual.
+- **`/caveman-init`** — escribe la regla de activación para Cursor, Windsurf, Cline y `AGENTS.md`. Aquí no se usa ninguno de esos IDEs, así que no hay nada que inicializar.
+- **`/caveman-review`** — devuelve la revisión en una línea por hallazgo. Las revisiones las lee una persona y acaban en comentarios de PR, que van en prosa; para eso ya está `code-reviewer`.
 
 ## Fase 1 — Capa de contexto
 
