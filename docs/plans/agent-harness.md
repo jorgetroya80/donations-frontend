@@ -54,6 +54,16 @@ En `settings.json` se intentó `skillOverrides: "name-only"` para lo que no apli
 
 ## Fase 0b — Caveman en el harness
 
+El plugin se activa desde el repo, no desde la configuración personal: `.claude/settings.json`
+lo enciende (`caveman@caveman`) y `.caveman.json` en la raíz fija el nivel en `full`. El propio
+plugin trae un hook `SessionStart` que aplica el modo al abrir sesión, así que no hay nada que
+añadir a `hooks/`. El fichero de repo tiene prioridad sobre la config de usuario y sólo afecta a
+este proyecto: comprobado poniéndolo en `lite` — aquí resolvía `lite`, fuera seguía en `full`.
+
+Aviso para quien clone: activar un plugin desde el settings del proyecto sólo surte efecto si
+esa persona tiene instalado el marketplace `caveman`. Si no lo tiene, la entrada no hace nada y
+no avisa; la sesión arranca en prosa normal.
+
 El plugin `caveman` se usa aquí para dos cosas, y sólo para esas dos:
 
 - **La conversación con el agente.** Respuestas comprimidas; el código, los comandos y los mensajes de error salen exactos.
