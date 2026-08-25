@@ -54,14 +54,14 @@ En `settings.json` se intentó `skillOverrides: "name-only"` para lo que no apli
 
 ## Fase 0b — Caveman en el harness
 
-El plugin `caveman` (7 skills, 3 subagentes `cavecrew-*`, 5 slash commands) es una capa de compresión de tokens, ortogonal al resto.
+El plugin `caveman` se usa aquí para dos cosas, y sólo para esas dos:
 
-- **Delegación** — retirada de `CLAUDE.md`. La regla mandaba localizar código con `cavecrew-investigator` y revisar diffs pequeños con `cavecrew-reviewer`. Dos motivos para quitarla: los `cavecrew-*` corren en **Haiku**, y en la corrida autónoma del 2026-08-25 la regla no disparó ni una vez — el agente hizo 13 `Read` y 12 `grep`/`ls` a mano, que es justo el trabajo que mandaba delegar. Una regla que ocupa contexto en cada turno y no se cumple sale mejor fuera. Se conserva `code-reviewer` (del plugin `agent-skills`, no de caveman) para revisión profunda pre-merge. El patrón que sí valdría, si algún día hace falta, es invocar varios investigadores en paralelo con ángulos distintos; eso se pide a mano.
-- **Commits** — `/caveman-commit` es la forma estándar de escribir mensajes en este repo. Emite Conventional Commits, así que el job `validate-title` de `ci.yml` y release-please siguen funcionando sin tocar nada. Riesgo a vigilar: un sujeto demasiado comprimido degrada el `CHANGELOG.md`, que sí leen humanos — el sujeto debe leerse solo, sin el diff delante.
-- **Compresión de `CLAUDE.md`** — hecha. El backup **no** queda en el repo: `caveman-compress` lo escribe en `~/.local/share/caveman-compress/backups/donations-frontend/CLAUDE.original.md`, a propósito, para que ningún auto-loader lo reingiera.
-- **`/caveman-init`** — escribe la regla de activación para otros agentes IDE (Cursor, Windsurf, Cline, `AGENTS.md`). Descartado: en este proyecto no se usan esos IDEs.
+- **La conversación con el agente.** Respuestas comprimidas; el código, los comandos y los mensajes de error salen exactos.
+- **Los mensajes de commit**, vía `/caveman-commit`. Emite Conventional Commits, así que el job `validate-title` de `ci.yml` y release-please siguen funcionando sin tocar nada. Riesgo a vigilar: un sujeto demasiado comprimido degrada el `CHANGELOG.md`, que sí leen humanos — el sujeto debe leerse solo, sin el diff delante.
 
-Límite, decidido explícitamente: caveman se usa en la conversación y en los mensajes de commit. La documentación (planes, PRDs, PRs, issues), el código y los comentarios se escriben en prosa normal — los lee un humano, y el ahorro de tokens no compensa.
+Todo lo demás va en prosa normal: documentación, PRDs, PRs, issues, código y comentarios los lee una persona, y el ahorro de tokens no compensa. `CLAUDE.md` es la excepción, comprimido con `caveman-compress` porque lo carga el agente en cada turno; el backup queda fuera del repo, en `~/.local/share/caveman-compress/backups/donations-frontend/CLAUDE.original.md`, para que ningún auto-loader lo reingiera.
+
+Descartados: la delegación en los subagentes `cavecrew-*` (corren en Haiku, y la regla no se cumplía) y `/caveman-init` (no se usan otros IDEs).
 
 ## Fase 1 — Capa de contexto
 
