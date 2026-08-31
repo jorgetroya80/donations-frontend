@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.11](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.10...donations-frontend-v0.3.11) (2026-08-25)
+
+
+### Features
+
+* **dashboard:** rank categories instead of charts ([#185](https://github.com/jorgetroya80/donations-frontend/issues/185)) ([adaeba8](https://github.com/jorgetroya80/donations-frontend/commit/adaeba807fe5cdc28998cfc634108f4f3b16b478))
+
 ## [0.3.10](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.9...donations-frontend-v0.3.10) (2026-08-21)
 
 
