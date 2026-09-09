@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.12](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.11...donations-frontend-v0.3.12) (2026-09-09)
+
+
+### Bug Fixes
+
+* **deps:** bump browserslist to 4.28.7 ([#187](https://github.com/jorgetroya80/donations-frontend/issues/187)) ([20fa162](https://github.com/jorgetroya80/donations-frontend/commit/20fa1620e948c1b006f9585d45e8f3f3d0482586))
+
 ## [0.3.11](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.10...donations-frontend-v0.3.11) (2026-08-25)
 
 
