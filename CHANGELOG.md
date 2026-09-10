@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.13](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.12...donations-frontend-v0.3.13) (2026-09-09)
+
+
+### Bug Fixes
+
+* **deps:** bump vitest and coverage-v8 to 4.1.11 ([#189](https://github.com/jorgetroya80/donations-frontend/issues/189)) ([88bc94c](https://github.com/jorgetroya80/donations-frontend/commit/88bc94c53aeaec1af55fc747c8adf5e93066dac1))
+
 ## [0.3.12](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.11...donations-frontend-v0.3.12) (2026-09-09)
 
 
