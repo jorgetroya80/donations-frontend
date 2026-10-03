@@ -5,6 +5,7 @@ import { Skeleton } from '@/components/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useToast } from '@/components/ui/toast'
 import { getProblemMessage } from '@/lib/get-problem-message'
+import { hasApiFieldErrors } from '@/lib/parse-api-field-errors'
 import { ExpenseForm } from './expense-form'
 import type { CreateExpenseFormData } from './expense-schema'
 import { useExpense, useUpdateExpense } from './use-expenses'
@@ -60,7 +61,7 @@ export function ExpenseEditPage() {
     <div className="mx-auto max-w-2xl space-y-4">
       <PageHeader title={t('expenses.edit')} />
 
-      {updateMutation.error && (
+      {updateMutation.error && !hasApiFieldErrors(updateMutation.error) && (
         <Alert variant="destructive">
           <AlertDescription>
             {getProblemMessage(updateMutation.error, t('expenses.errorSaving'))}

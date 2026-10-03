@@ -5,6 +5,7 @@ import { Skeleton } from '@/components/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useToast } from '@/components/ui/toast'
 import { getProblemMessage } from '@/lib/get-problem-message'
+import { hasApiFieldErrors } from '@/lib/parse-api-field-errors'
 import { DonorForm } from './donor-form'
 import type { CreateDonorFormData } from './donor-schema'
 import { useDonor, useUpdateDonor } from './use-donors'
@@ -59,7 +60,7 @@ export function DonorEditPage() {
     <div className="mx-auto max-w-2xl space-y-4">
       <PageHeader title={t('donors.edit')} />
 
-      {updateMutation.error && (
+      {updateMutation.error && !hasApiFieldErrors(updateMutation.error) && (
         <Alert variant="destructive">
           <AlertDescription>
             {getProblemMessage(updateMutation.error, t('donors.errorSaving'))}

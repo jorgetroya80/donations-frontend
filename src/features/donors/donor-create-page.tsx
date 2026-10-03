@@ -4,6 +4,7 @@ import { PageHeader } from '@/components/page-header'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useToast } from '@/components/ui/toast'
 import { getProblemMessage } from '@/lib/get-problem-message'
+import { hasApiFieldErrors } from '@/lib/parse-api-field-errors'
 import { DonorForm } from './donor-form'
 import type { CreateDonorFormData } from './donor-schema'
 import { useCreateDonor } from './use-donors'
@@ -31,7 +32,7 @@ export function DonorCreatePage() {
     <div className="mx-auto max-w-2xl space-y-4">
       <PageHeader title={t('donors.new')} />
 
-      {createMutation.error && (
+      {createMutation.error && !hasApiFieldErrors(createMutation.error) && (
         <Alert variant="destructive">
           <AlertDescription>
             {getProblemMessage(createMutation.error, t('donors.errorSaving'))}

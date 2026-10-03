@@ -9,3 +9,11 @@ export function parseApiFieldErrors(err: unknown): Record<string, string> {
   if (parsed.success && parsed.data.fields) return parsed.data.fields
   return {}
 }
+
+/**
+ * True when the error carries field errors. The form shows those under each
+ * input, so the page needs no extra alert.
+ */
+export function hasApiFieldErrors(err: unknown): boolean {
+  return Object.keys(parseApiFieldErrors(err)).length > 0
+}

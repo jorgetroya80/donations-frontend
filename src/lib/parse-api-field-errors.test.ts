@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { parseApiFieldErrors } from './parse-api-field-errors'
+import {
+  hasApiFieldErrors,
+  parseApiFieldErrors,
+} from './parse-api-field-errors'
 
 describe('parseApiFieldErrors', () => {
   it('returns fields from a validation problem detail', () => {
@@ -66,5 +69,32 @@ describe('parseApiFieldErrors', () => {
         fields: { fullName: 'Required', nationalId: 'Invalid format' },
       })
     ).toEqual({ fullName: 'Required', nationalId: 'Invalid format' })
+  })
+})
+
+describe('hasApiFieldErrors', () => {
+  it('is true for a validation problem detail with fields', () => {
+    expect(
+      hasApiFieldErrors({
+        status: 400,
+        detail: 'Validation failed',
+        fields: { nationalId: 'Invalid format' },
+      })
+    ).toBe(true)
+  })
+
+  it('is false for a problem detail without fields', () => {
+    expect(
+      hasApiFieldErrors({ status: 400, detail: 'Malformed request body' })
+    ).toBe(false)
+  })
+
+  it('is false for an empty fields object', () => {
+    expect(hasApiFieldErrors({ status: 400, fields: {} })).toBe(false)
+  })
+
+  it('is false for unknown errors', () => {
+    expect(hasApiFieldErrors(new Error('oops'))).toBe(false)
+    expect(hasApiFieldErrors(null)).toBe(false)
   })
 })
