@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { HttpResponse, http } from 'msw'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { server } from '@/test/msw-server'
+import { problemDetailResponse } from '@/test/problem-detail'
 import { renderWithProviders } from '@/test/test-utils'
 import { DonationCreatePage } from './donation-create-page'
 
@@ -98,5 +99,29 @@ describe('DonationCreatePage', () => {
     await waitFor(() => {
       expect(screen.queryByText(/posible duplicado/i)).not.toBeInTheDocument()
     })
+  })
+
+  it('shows the request id when saving fails with a server error', async () => {
+    const requestId = '3f2b6c1e-8a4d-4f7e-9c0b-5d1a2e3f4a5b'
+    server.use(
+      http.post('*/api/v1/donations', () =>
+        problemDetailResponse({
+          status: 500,
+          title: 'Internal Server Error',
+          detail: 'Internal server error',
+          instance: '/api/v1/donations',
+          requestId,
+        })
+      )
+    )
+
+    const user = userEvent.setup()
+    renderWithProviders(<DonationCreatePage />)
+
+    await fillAndSubmitForm(user)
+
+    expect(
+      await screen.findByText(`Internal server error (Ref.: ${requestId})`)
+    ).toBeInTheDocument()
   })
 })

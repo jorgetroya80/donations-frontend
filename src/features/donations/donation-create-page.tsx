@@ -6,6 +6,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/toast'
 import { getProblemMessage } from '@/lib/get-problem-message'
+import { hasApiFieldErrors } from '@/lib/parse-api-field-errors'
 import { DonationForm } from './donation-form'
 import type { CreateDonationFormData } from './donation-schema'
 import { useCreateDonation } from './use-donations'
@@ -65,16 +66,18 @@ export function DonationCreatePage() {
     <div className="mx-auto max-w-2xl space-y-4">
       <PageHeader title={t('donations.new')} />
 
-      {createMutation.error && !duplicateWarning && (
-        <Alert variant="destructive">
-          <AlertDescription>
-            {getProblemMessage(
-              createMutation.error,
-              t('donations.errorSaving')
-            )}
-          </AlertDescription>
-        </Alert>
-      )}
+      {createMutation.error &&
+        !duplicateWarning &&
+        !hasApiFieldErrors(createMutation.error) && (
+          <Alert variant="destructive">
+            <AlertDescription>
+              {getProblemMessage(
+                createMutation.error,
+                t('donations.errorSaving')
+              )}
+            </AlertDescription>
+          </Alert>
+        )}
 
       {duplicateWarning && (
         <Alert variant="destructive">

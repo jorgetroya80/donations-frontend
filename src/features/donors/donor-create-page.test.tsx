@@ -50,5 +50,7 @@ describe('DonorCreatePage', () => {
         screen.getByText('Formato de DNI/NIE inválido')
       ).toBeInTheDocument()
     })
+    // Field errors are shown under their inputs, so no page-level alert.
+    expect(screen.queryByText('Validation failed')).not.toBeInTheDocument()
   })
 })

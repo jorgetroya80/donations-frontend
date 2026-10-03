@@ -4,6 +4,7 @@ import { PageHeader } from '@/components/page-header'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useToast } from '@/components/ui/toast'
 import { getProblemMessage } from '@/lib/get-problem-message'
+import { hasApiFieldErrors } from '@/lib/parse-api-field-errors'
 import { useCreateUser } from './use-users'
 import { UserForm } from './user-form'
 import type { CreateUserFormData } from './user-schema'
@@ -30,7 +31,7 @@ export function UserCreatePage() {
     <div className="mx-auto max-w-2xl space-y-4">
       <PageHeader title={t('users.new')} />
 
-      {createMutation.error && (
+      {createMutation.error && !hasApiFieldErrors(createMutation.error) && (
         <Alert variant="destructive">
           <AlertDescription>
             {getProblemMessage(createMutation.error, t('users.errorSaving'))}

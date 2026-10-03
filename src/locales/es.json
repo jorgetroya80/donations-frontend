@@ -222,7 +222,8 @@
   "errors": {
     "unexpectedTitle": "Algo salió mal",
     "unexpectedMessage": "Ocurrió un error inesperado. Intenta recargar la página.",
-    "reload": "Recargar página"
+    "reload": "Recargar página",
+    "withReference": "{{message}} (Ref.: {{requestId}})"
   },
   "common": {
     "loading": "Cargando...",
