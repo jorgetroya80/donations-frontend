@@ -50,6 +50,22 @@ describe('getProblemMessage', () => {
       ).toBe('Account temporarily locked')
     })
 
+    // Field errors are shown under each input, so the user can fix them
+    // without support.
+    it('omits the request id on a 400 with field errors', () => {
+      expect(
+        getProblemMessage(
+          {
+            status: 400,
+            detail: 'Validation failed',
+            fields: { donationDate: 'Donation date cannot be in the future' },
+            requestId,
+          },
+          'Error genérico'
+        )
+      ).toBe('Validation failed')
+    })
+
     it('appends the request id to the fallback when detail and title are missing', () => {
       expect(
         getProblemMessage({ status: 500, requestId }, 'Error genérico')
