@@ -112,7 +112,7 @@ cp .env.example .env
 docker compose up --build
 ```
 
-The app runs at http://localhost:8080, with the API and Postgres in containers.
+The app runs at `http://localhost:8080`, with the API and Postgres in containers.
 
 | Command                     | Effect                         |
 | --------------------------- | ------------------------------ |
@@ -145,7 +145,7 @@ curl -fsSL https://raw.githubusercontent.com/jorgetroya80/donations-frontend/mai
 
 The script downloads the app, creates a settings file and pulls the Docker images into
 `~/donations/`. Start the app with `cd ~/donations && ./scripts/start.sh`, then open
-http://localhost:8080.
+`http://localhost:8080`.
 
 | Script                | What it does                  |
 | --------------------- | ----------------------------- |
