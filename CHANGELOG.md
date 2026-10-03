@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.14](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.13...donations-frontend-v0.3.14) (2026-10-03)
+
+
+### Features
+
+* **errors:** show request id on 5xx errors ([#194](https://github.com/jorgetroya80/donations-frontend/issues/194)) ([a6f7213](https://github.com/jorgetroya80/donations-frontend/commit/a6f7213c6fa27514c587d7a50464265a3f0fef35))
+
+
+### Bug Fixes
+
+* **deps:** bump donations-api-client to 2.2.0 ([#192](https://github.com/jorgetroya80/donations-frontend/issues/192)) ([4bb9ee7](https://github.com/jorgetroya80/donations-frontend/commit/4bb9ee7593a41ad7ff3d90ee3e58aada72a7e32a))
+
 ## [0.3.13](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.12...donations-frontend-v0.3.13) (2026-09-09)
 
 
