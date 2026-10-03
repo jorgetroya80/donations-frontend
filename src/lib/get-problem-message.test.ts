@@ -31,36 +31,21 @@ describe('getProblemMessage', () => {
     const requestId = '3f2b6c1e-8a4d-4f7e-9c0b-5d1a2e3f4a5b'
     const withRef = (message: string) => `${message} (Ref.: ${requestId})`
 
-    it.each([400, 500, 503])('appends the request id on %i', (status) => {
+    it.each([500, 503])('appends the request id on %i', (status) => {
+      expect(
+        getProblemMessage(
+          { status, detail: 'Internal server error', requestId },
+          'Error genérico'
+        )
+      ).toBe(withRef('Internal server error'))
+    })
+
+    // A 400 is fixable by the user and needs no support. 401 covers the
+    // login lockout, which the API reports as a 401.
+    it.each([400, 401, 404, 409])('omits the request id on %i', (status) => {
       expect(
         getProblemMessage(
           { status, detail: 'Validation failed', requestId },
-          'Error genérico'
-        )
-      ).toBe(withRef('Validation failed'))
-    })
-
-    // 401 covers the login lockout, which the API reports as a 401.
-    it.each([401, 404, 409])('omits the request id on %i', (status) => {
-      expect(
-        getProblemMessage(
-          { status, detail: 'Account temporarily locked', requestId },
-          'Error genérico'
-        )
-      ).toBe('Account temporarily locked')
-    })
-
-    // Field errors are shown under each input, so the user can fix them
-    // without support.
-    it('omits the request id on a 400 with field errors', () => {
-      expect(
-        getProblemMessage(
-          {
-            status: 400,
-            detail: 'Validation failed',
-            fields: { donationDate: 'Donation date cannot be in the future' },
-            requestId,
-          },
           'Error genérico'
         )
       ).toBe('Validation failed')
