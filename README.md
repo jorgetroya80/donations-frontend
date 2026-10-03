@@ -91,7 +91,7 @@ pnpm install
 pnpm run dev
 ```
 
-The app runs at http://localhost:3000.
+The app runs at `http://localhost:3000`.
 
 | Command                  | Description                       |
 | ------------------------ | --------------------------------- |
