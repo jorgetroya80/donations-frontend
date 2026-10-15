@@ -1,5 +1,6 @@
 import { render, waitFor } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+
 import { Calendar, prefetchCalendar } from './calendar.lazy'
 
 const JANUARY_2026 = new Date(2026, 0, 1)

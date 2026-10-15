@@ -1,6 +1,7 @@
 import { act, renderHook } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { beforeEach, describe, expect, it } from 'vitest'
+
 import { AuthProvider, useAuth } from './auth-context'
 
 const AUTH_KEY = 'auth_user'

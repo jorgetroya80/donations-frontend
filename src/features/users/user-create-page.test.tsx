@@ -1,6 +1,8 @@
 import { screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it } from 'vitest'
+
 import { renderWithProviders } from '@/test/test-utils'
+
 import { UserCreatePage } from './user-create-page'
 
 beforeEach(() => {

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Bar, BarChart, XAxis, YAxis } from 'recharts'
+
 import {
   type ChartConfig,
   ChartContainer,

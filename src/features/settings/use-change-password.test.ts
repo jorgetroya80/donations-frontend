@@ -1,6 +1,8 @@
 import { renderHook, waitFor } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+
 import { createWrapper } from '@/test/test-utils'
+
 import { useChangePassword } from './use-change-password'
 
 describe('useChangePassword', () => {

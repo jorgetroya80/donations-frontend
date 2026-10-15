@@ -2,7 +2,9 @@ import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useLocation, useNavigate } from 'react-router'
 import { describe, expect, it } from 'vitest'
+
 import { renderWithProviders } from '@/test/test-utils'
+
 import { ReportsPage } from './reports-page'
 
 function LocationProbe() {

@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+
 import { PageHeader } from '@/components/page-header'
 import { useAuth } from '@/features/auth/auth-context'
 import {
@@ -6,6 +7,7 @@ import {
   canRecordData,
   canViewReports,
 } from '@/lib/permissions'
+
 import { FinancialOverview } from './financial-overview'
 import { QuickActions } from './quick-actions'
 import { UserStats } from './user-stats'

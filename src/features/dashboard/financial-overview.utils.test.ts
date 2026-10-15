@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import { calcPctChange, previousRange } from './financial-overview.utils'
 
 describe('previousRange', () => {

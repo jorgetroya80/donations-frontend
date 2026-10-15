@@ -1,7 +1,9 @@
 import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { renderWithProviders } from '@/test/test-utils'
+
 import { Sidebar } from './sidebar'
 
 function setUser(username: string, roles: string[]) {

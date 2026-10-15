@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next'
+
 import { formatCurrency } from '@/lib/formatters'
+
 import { calcPctChange } from './financial-overview.utils'
 import { PctChange } from './pct-change'
 

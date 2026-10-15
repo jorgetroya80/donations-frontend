@@ -1,7 +1,9 @@
 import { screen } from '@testing-library/react'
 import { Route, Routes } from 'react-router'
 import { describe, expect, it } from 'vitest'
+
 import { renderWithProviders } from '@/test/test-utils'
+
 import { ProtectedRoute } from './protected-route'
 
 function TestApp() {

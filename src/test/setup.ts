@@ -1,7 +1,9 @@
 import '@testing-library/jest-dom/vitest'
 import { cleanup } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, vi } from 'vitest'
+
 import '@/lib/i18n'
+
 import { server } from './msw-server'
 
 Object.defineProperty(window, 'matchMedia', {

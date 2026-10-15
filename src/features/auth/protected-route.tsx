@@ -1,4 +1,5 @@
 import { Navigate, Outlet, useLocation } from 'react-router'
+
 import { useAuth } from './auth-context'
 
 const CHANGE_PASSWORD_PATH = '/settings/password'

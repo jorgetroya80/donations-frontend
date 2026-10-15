@@ -1,5 +1,6 @@
 import { screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { ErrorBoundary } from '@/components/error-boundary'
 import { renderWithProviders } from '@/test/test-utils'
 

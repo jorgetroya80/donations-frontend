@@ -3,10 +3,12 @@ import userEvent from '@testing-library/user-event'
 import { http } from 'msw'
 import { Route, Routes } from 'react-router'
 import { beforeEach, describe, expect, it } from 'vitest'
+
 import { kyInstance } from '@/lib/api'
 import { server } from '@/test/msw-server'
 import { problemDetailResponse } from '@/test/problem-detail'
 import { renderWithProviders } from '@/test/test-utils'
+
 import { ChangePasswordPage } from './change-password-page'
 
 function renderPage() {

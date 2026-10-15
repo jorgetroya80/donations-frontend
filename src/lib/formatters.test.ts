@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import { describe, expect, it } from 'vitest'
+
 import { currentMonthRange, formatCurrency, formatDate } from './formatters'
 
 const fmt = (s: string) => s.replace(/\s/g, ' ')

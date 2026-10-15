@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { type RenderOptions, render } from '@testing-library/react'
 import type { ReactElement, ReactNode } from 'react'
 import { MemoryRouter } from 'react-router'
+
 import { Toaster, ToastProvider } from '@/components/ui/toast'
 import { AuthProvider } from '@/features/auth/auth-context'
 import { ThemeProvider } from '@/features/theme/theme-context'

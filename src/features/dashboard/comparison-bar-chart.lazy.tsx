@@ -1,5 +1,7 @@
 import { lazy, Suspense } from 'react'
+
 import { cn } from '@/lib/utils'
+
 import type { ComparisonBarChartProps } from './comparison-bar-chart'
 
 // recharts is ~100 KB gzip and the dashboard is the landing route, so the

@@ -1,6 +1,8 @@
 import { screen, waitFor } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+
 import { renderWithProviders } from '@/test/test-utils'
+
 import { UserStats } from './user-stats'
 
 describe('UserStats', () => {

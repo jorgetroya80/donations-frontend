@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import { canManageUsers, canRecordData, canViewReports } from './permissions'
 
 const admin = { username: 'admin', roles: ['ADMIN'] }

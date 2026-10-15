@@ -2,6 +2,7 @@ import { act, renderHook } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { MemoryRouter, useSearchParams } from 'react-router'
 import { describe, expect, it } from 'vitest'
+
 import { useSort } from '@/lib/use-sort'
 
 function createWrapper(initialEntry = '/') {

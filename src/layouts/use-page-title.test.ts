@@ -1,6 +1,8 @@
 import { renderHook } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+
 import { createWrapper } from '@/test/test-utils'
+
 import { usePageTitle } from './use-page-title'
 
 describe('usePageTitle', () => {

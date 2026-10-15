@@ -1,6 +1,7 @@
 import { HandCoins, Receipt, Users } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
+
 import { Button } from '@/components/ui/button'
 
 export function QuickActions() {

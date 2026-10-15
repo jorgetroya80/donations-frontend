@@ -1,12 +1,14 @@
 import { screen } from '@testing-library/react'
 import { Route, Routes } from 'react-router'
 import { describe, expect, it } from 'vitest'
+
 import {
   canManageUsers,
   canRecordData,
   canViewReports,
 } from '@/lib/permissions'
 import { renderWithProviders } from '@/test/test-utils'
+
 import { RoleRoute } from './role-route'
 
 function setUser(username: string, roles: string[]) {
