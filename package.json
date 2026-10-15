@@ -6,9 +6,11 @@
   "scripts": {
     "analyze": "ANALYZE=1 vite build",
     "build": "vite build",
-    "check": "biome check --write src/",
-    "check:ci": "biome check src/",
+    "check": "biome lint --write src/ && oxfmt src/",
+    "check:ci": "biome lint src/ && oxfmt --check src/",
     "dev": "vite",
+    "format": "oxfmt src/",
+    "format:check": "oxfmt --check src/",
     "lint": "biome lint --write src/",
     "lighthouse": "mkdir -p .lighthouse && npx -y lighthouse@13 http://localhost:4173 --preset=desktop --output=json --output=html --output-path=./.lighthouse/report --chrome-flags=--headless",
     "preview": "vite preview",
@@ -19,8 +21,13 @@
     "typecheck": "tsc --build --force"
   },
   "lint-staged": {
-    "**/*.{cjs,css,js,json,mjs}": ["biome format --write --staged"],
-    "src/**/*.{ts,tsx}": ["biome lint --write --staged"]
+    "**/*.{cjs,css,js,json,mjs}": [
+      "oxfmt --no-error-on-unmatched-pattern"
+    ],
+    "src/**/*.{ts,tsx}": [
+      "biome lint --write --staged",
+      "oxfmt --no-error-on-unmatched-pattern"
+    ]
   },
   "dependencies": {
     "@base-ui/react": "1.4.1",

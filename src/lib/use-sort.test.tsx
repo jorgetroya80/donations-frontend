@@ -38,14 +38,13 @@ describe('useSort', () => {
     expect(result.current.sort.sort).toBe('amount,asc')
   })
 
-  it.each([
-    'garbage',
-    'unknown,asc',
-    'amount,sideways',
-  ])('falls back to the default sort for invalid param %s', (value) => {
-    const { result } = renderUseSort(`/?sort=${value}`)
-    expect(result.current.sort.sort).toBe('date,desc')
-  })
+  it.each(['garbage', 'unknown,asc', 'amount,sideways'])(
+    'falls back to the default sort for invalid param %s',
+    (value) => {
+      const { result } = renderUseSort(`/?sort=${value}`)
+      expect(result.current.sort.sort).toBe('date,desc')
+    }
+  )
 
   it('sorts a new field ascending', () => {
     const { result } = renderUseSort()
