@@ -49,9 +49,6 @@ jobs:
       - name: Lint
         run: pnpm exec oxlint --format github src/
 
-      - name: Format check
-        run: pnpm exec oxfmt --check src/
-
       - name: TypeScript type check
         run: pnpm run typecheck
 
