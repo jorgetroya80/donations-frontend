@@ -6,12 +6,12 @@
   "scripts": {
     "analyze": "ANALYZE=1 vite build",
     "build": "vite build",
-    "check": "biome lint --write src/ && oxfmt src/",
-    "check:ci": "biome lint src/ && oxfmt --check src/",
+    "check": "oxlint --fix src/ && oxfmt src/",
+    "check:ci": "oxlint src/ && oxfmt --check src/",
     "dev": "vite",
     "format": "oxfmt src/",
     "format:check": "oxfmt --check src/",
-    "lint": "biome lint --write src/",
+    "lint": "oxlint --fix src/",
     "lighthouse": "mkdir -p .lighthouse && npx -y lighthouse@13 http://localhost:4173 --preset=desktop --output=json --output=html --output-path=./.lighthouse/report --chrome-flags=--headless",
     "preview": "vite preview",
     "start": "vite",
@@ -25,7 +25,7 @@
       "oxfmt --no-error-on-unmatched-pattern"
     ],
     "src/**/*.{ts,tsx}": [
-      "biome lint --write --staged",
+      "oxlint --fix",
       "oxfmt --no-error-on-unmatched-pattern"
     ]
   },

@@ -19,6 +19,6 @@ esac
 
 [ -f "$file" ] || exit 0
 
-./node_modules/.bin/biome lint --write "$file" >/dev/null 2>&1
+./node_modules/.bin/oxlint --fix "$file" >/dev/null 2>&1
 ./node_modules/.bin/oxfmt "$file" >/dev/null 2>&1
 exit 0
