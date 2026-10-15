@@ -37,7 +37,7 @@ typed client generated from the API's OpenAPI spec.
 | Forms        | React Hook Form + Zod                     |
 | Charts       | Recharts                                  |
 | i18n         | i18next                                   |
-| Quality      | Biome, Vitest, React Testing Library, MSW |
+| Quality      | oxlint, oxfmt, Vitest, React Testing Library, MSW |
 | Delivery     | Docker, nginx, GitHub Actions, Render     |
 
 ## Engineering highlights
@@ -58,7 +58,7 @@ typed client generated from the API's OpenAPI spec.
 - **Testing.** Vitest + React Testing Library, with MSW mocking the API. Tests never touch the
   real network.
 - **Automated delivery.** GitHub Actions validates PR titles (Conventional Commits) and runs
-  Biome, typecheck, tests with coverage, and the build. release-please generates the changelog
+  oxlint, oxfmt, typecheck, tests with coverage, and the build. release-please generates the changelog
   and versions, Docker images are published to Docker Hub, and Dependabot keeps dependencies
   current.
 - **Spanish UI.** Every user-visible string goes through i18next. JSX contains no hard-coded
@@ -100,7 +100,7 @@ The app runs at `http://localhost:3000`.
 | `pnpm run preview`       | Preview production build (:4173)  |
 | `pnpm run test`          | Run tests                         |
 | `pnpm run test:coverage` | Run tests with coverage           |
-| `pnpm run check`         | Biome lint + format + import sort |
+| `pnpm run check`         | oxlint + oxfmt (format + import sort) |
 | `pnpm run typecheck`     | TypeScript type check             |
 
 ## Running the full stack locally

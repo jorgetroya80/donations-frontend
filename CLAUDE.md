@@ -9,7 +9,7 @@ Full structure: `docs/ARCHITECTURE.md`. Coding discipline: skill `karpathy-guide
 - `pnpm run build` — build
 - `pnpm run preview` — preview production build (port 4173)
 - `pnpm run typecheck` — `tsc --build --force`
-- `pnpm run check` — Biome lint + format + import organizing, auto-fix (`src/`)
+- `pnpm run check` — oxlint + oxfmt (format + import sort), auto-fix (`src/`)
 - `pnpm run test` — unit tests · `test:watch` · `test:coverage`
 
 ## Conventions
