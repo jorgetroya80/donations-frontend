@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.15](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.14...donations-frontend-v0.3.15) (2026-10-15)
+
+
+### Bug Fixes
+
+* **deps:** bump undici to 7.29.1 ([#195](https://github.com/jorgetroya80/donations-frontend/issues/195)) ([9edb6ba](https://github.com/jorgetroya80/donations-frontend/commit/9edb6ba1c08fb96e995ee2e45fc8463f3d9869ab))
+
 ## [0.3.14](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.13...donations-frontend-v0.3.14) (2026-10-03)
 
 
