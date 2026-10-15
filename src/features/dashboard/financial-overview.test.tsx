@@ -1,9 +1,11 @@
 import { screen, waitFor, within } from '@testing-library/react'
 import { HttpResponse, http } from 'msw'
 import { describe, expect, it } from 'vitest'
+
 import { currentMonthRange } from '@/lib/formatters'
 import { server } from '@/test/msw-server'
 import { renderWithProviders } from '@/test/test-utils'
+
 import { FinancialOverview } from './financial-overview'
 import { previousRange } from './financial-overview.utils'
 

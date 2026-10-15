@@ -1,7 +1,9 @@
 import { HttpResponse, http } from 'msw'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { server } from '@/test/msw-server'
 import { problemDetailResponse } from '@/test/problem-detail'
+
 import { kyInstance } from './api'
 
 const AUTH_KEY = 'auth_user'

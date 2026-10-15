@@ -3,9 +3,11 @@ import userEvent from '@testing-library/user-event'
 import { HttpResponse, http } from 'msw'
 import { useLocation, useNavigate } from 'react-router'
 import { beforeEach, describe, expect, it } from 'vitest'
+
 import { server } from '@/test/msw-server'
 import { problemDetailResponse } from '@/test/problem-detail'
 import { renderWithProviders } from '@/test/test-utils'
+
 import { DonationsPage } from './donations-page'
 
 function LocationProbe() {

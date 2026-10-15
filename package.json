@@ -6,10 +6,12 @@
   "scripts": {
     "analyze": "ANALYZE=1 vite build",
     "build": "vite build",
-    "check": "biome check --write src/",
-    "check:ci": "biome check src/",
+    "check": "oxlint --fix src/ && oxfmt src/",
+    "check:ci": "oxlint src/ && oxfmt --check src/",
     "dev": "vite",
-    "lint": "biome lint --write src/",
+    "format": "oxfmt src/",
+    "format:check": "oxfmt --check src/",
+    "lint": "oxlint --fix src/",
     "lighthouse": "mkdir -p .lighthouse && npx -y lighthouse@13 http://localhost:4173 --preset=desktop --output=json --output=html --output-path=./.lighthouse/report --chrome-flags=--headless",
     "preview": "vite preview",
     "start": "vite",
@@ -20,10 +22,11 @@
   },
   "lint-staged": {
     "**/*.{cjs,css,js,json,mjs}": [
-      "biome format --write --staged"
+      "oxfmt --no-error-on-unmatched-pattern"
     ],
     "src/**/*.{ts,tsx}": [
-      "biome lint --write --staged"
+      "oxlint --fix",
+      "oxfmt --no-error-on-unmatched-pattern"
     ]
   },
   "dependencies": {
@@ -52,7 +55,6 @@
   },
   "devDependencies": {
     "@babel/core": "7.29.6",
-    "@biomejs/biome": "2.4.12",
     "@rolldown/plugin-babel": "0.2.3",
     "@tailwindcss/vite": "4.2.2",
     "@testing-library/jest-dom": "6.9.1",
@@ -68,6 +70,8 @@
     "jsdom": "29.0.2",
     "lint-staged": "16.4.0",
     "msw": "2.13.4",
+    "oxfmt": "0.71.0",
+    "oxlint": "1.87.0",
     "prettier": "3.8.3",
     "prettier-plugin-packagejson": "3.0.2",
     "prettier-plugin-tailwindcss": "0.7.2",

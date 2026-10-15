@@ -1,6 +1,8 @@
 import { waitFor } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+
 import { renderWithProviders } from '@/test/test-utils'
+
 import { ComparisonBarChart } from './comparison-bar-chart.lazy'
 
 const config = {

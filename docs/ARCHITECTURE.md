@@ -67,7 +67,7 @@ erDiagram
 | Icons         | Lucide React                                              |
 | i18n          | react-i18next                                             |
 | Dates         | Day.js                                                    |
-| Linting       | Biome                                                     |
+| Linting       | oxlint, oxfmt                                             |
 | Testing       | Vitest                                                    |
 |               | React Testing Library                                     |
 | API Mocking   | MSW                                                       |

@@ -2,6 +2,7 @@ import '@/lib/i18n'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Suspense } from 'react'
 import { BrowserRouter } from 'react-router'
+
 import { AppRoutes } from '@/app-routes'
 import { ErrorBoundary } from '@/components/error-boundary'
 import { Skeleton } from '@/components/skeleton'

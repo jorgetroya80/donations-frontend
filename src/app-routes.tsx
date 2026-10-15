@@ -1,5 +1,6 @@
 import { lazy } from 'react'
 import { Navigate, Route, Routes } from 'react-router'
+
 import { ProtectedRoute } from '@/features/auth/protected-route'
 import { RoleRoute } from '@/features/auth/role-route'
 import { AppLayout } from '@/layouts/app-layout'

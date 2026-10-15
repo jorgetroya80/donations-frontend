@@ -1,6 +1,7 @@
 import { act, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
+
 import { Calendar } from './calendar'
 
 // January 2026 is fixed so the grid is deterministic:

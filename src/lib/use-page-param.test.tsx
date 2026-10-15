@@ -2,6 +2,7 @@ import { act, renderHook } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { MemoryRouter, useSearchParams } from 'react-router'
 import { describe, expect, it } from 'vitest'
+
 import { usePageParam } from '@/lib/use-page-param'
 
 function createWrapper(initialEntry = '/') {
@@ -33,17 +34,13 @@ describe('usePageParam', () => {
     expect(result.current.page.page).toBe(2)
   })
 
-  it.each([
-    '1',
-    '0',
-    '-2',
-    '1.5',
-    '2abc',
-    'garbage',
-  ])('falls back to page 0 for param %s', (value) => {
-    const { result } = renderUsePageParam(`/?page=${value}`)
-    expect(result.current.page.page).toBe(0)
-  })
+  it.each(['1', '0', '-2', '1.5', '2abc', 'garbage'])(
+    'falls back to page 0 for param %s',
+    (value) => {
+      const { result } = renderUsePageParam(`/?page=${value}`)
+      expect(result.current.page.page).toBe(0)
+    }
+  )
 
   it('writes the page as a 1-based param', () => {
     const { result } = renderUsePageParam()

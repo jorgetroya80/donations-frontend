@@ -11,7 +11,7 @@ cd "${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel)}" || exit 0
 file=$(jq -r '.tool_input.file_path // empty')
 [ -n "$file" ] || exit 0
 
-# Only source files Biome is configured for.
+# Only source files the linter and formatter are configured for.
 case "$file" in
   "$PWD"/src/*.ts | "$PWD"/src/*.tsx | src/*.ts | src/*.tsx) ;;
   *) exit 0 ;;
@@ -19,5 +19,6 @@ esac
 
 [ -f "$file" ] || exit 0
 
-./node_modules/.bin/biome check --write "$file" >/dev/null 2>&1
+./node_modules/.bin/oxlint --fix "$file" >/dev/null 2>&1
+./node_modules/.bin/oxfmt "$file" >/dev/null 2>&1
 exit 0

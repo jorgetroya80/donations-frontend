@@ -1,6 +1,7 @@
 import { KeyRound, LogOut, Menu, Moon, Sun, User } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
+
 import { buttonVariants } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -11,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useAuth } from '@/features/auth/auth-context'
 import { useTheme } from '@/features/theme/theme-context'
+
 import { usePageTitle } from './use-page-title'
 
 interface HeaderProps {

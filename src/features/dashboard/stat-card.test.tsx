@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+
 import { StatCard } from './stat-card'
 
 function renderCard(props: Partial<Parameters<typeof StatCard>[0]> = {}) {

@@ -1,6 +1,8 @@
 import { screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { renderWithProviders } from '@/test/test-utils'
+
 import { DashboardPage } from './dashboard-page'
 
 vi.mock('./financial-overview', () => ({

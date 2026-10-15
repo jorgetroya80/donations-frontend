@@ -1,5 +1,6 @@
 import { createClient } from '@jorgetroya80/donations-api-client'
 import ky from 'ky'
+
 import { FORCE_ROTATION_EVENT } from './auth-events'
 
 const AUTH_STORAGE_KEY = 'auth_user'

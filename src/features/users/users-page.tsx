@@ -1,6 +1,7 @@
 import { Pencil, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
+
 import { EmptyState } from '@/components/empty-state'
 import { PageHeader } from '@/components/page-header'
 import { TableSkeleton } from '@/components/skeleton'
@@ -19,6 +20,7 @@ import {
 import { getProblemMessage } from '@/lib/get-problem-message'
 import { usePageParam } from '@/lib/use-page-param'
 import { useSort } from '@/lib/use-sort'
+
 import { useUsers } from './use-users'
 
 export function UsersPage() {

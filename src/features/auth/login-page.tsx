@@ -3,12 +3,14 @@ import { CircleAlert } from 'lucide-react'
 import { type SyntheticEvent, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
+
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { client } from '@/lib/api'
+
 import { useAuth } from './auth-context'
 
 const LOCKOUT_THRESHOLD = 5

@@ -35,13 +35,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: biomejs/setup-biome@v2
-        with:
-          version: 2.4.12
-
-      - name: Biome CI
-        run: biome ci src/
-
       - uses: pnpm/action-setup@v6.0.8
         with:
           version: 11.1.1
@@ -52,6 +45,9 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm exec oxlint --format github src/
 
       - name: TypeScript type check
         run: pnpm run typecheck
