@@ -72,7 +72,9 @@ class of bug `tsc` cannot catch. Choose B if `void navigate(...)` reads as noise
 
 **Decision:** Option A (Jorge, 2026-10-16), then changed to **Option C** after review the same
 day: Jorge does not want `void` at call sites, so `typescript/no-floating-promises` is turned
-off and the 27 `void` / `act` edits were reverted. Only the 3 `chart.tsx` fixes remain.
+off and the 27 `void` / `act` edits were reverted. Jorge also rejected the `String(...)` fixes,
+so `typescript/restrict-template-expressions` is off too and `chart.tsx` is unchanged. Net: 13
+type-aware rules on, 0 findings, no source changes.
 
 ## Decisions (if A)
 
@@ -108,7 +110,8 @@ Each task is one commit (Task 3 may have none if nothing needs changing).
 - ~~`void` the 14 `navigate(...)` calls, the 8 `invalidateQueries(...)` calls and `i18n.init`.~~
 - ~~`use-debounced-value.test.ts`: `act(() => { vi.advanceTimersByTime(n) })`.~~
 - Superseded by Option C: `"typescript/no-floating-promises": "off"` in `.oxlintrc.json`.
-- `chart.tsx`: replace the 3 template literals with `String(...)`.
+- ~~`chart.tsx`: replace the 3 template literals with `String(...)`.~~ Superseded:
+  `"typescript/restrict-template-expressions": "off"`.
 
 Acceptance:
 
