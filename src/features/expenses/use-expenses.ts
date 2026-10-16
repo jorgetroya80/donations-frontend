@@ -59,7 +59,7 @@ export function useCreateExpense() {
         ({ data }) => data
       ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['expenses'] })
+      void queryClient.invalidateQueries({ queryKey: ['expenses'] })
     },
   })
 }
@@ -72,7 +72,7 @@ export function useUpdateExpense(id: number) {
         ({ data }) => data
       ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['expenses'] })
+      void queryClient.invalidateQueries({ queryKey: ['expenses'] })
     },
   })
 }

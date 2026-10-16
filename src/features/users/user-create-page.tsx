@@ -26,7 +26,7 @@ export function UserCreatePage() {
     })
 
     toast.add({ title: t('users.successCreated') })
-    navigate('/users')
+    void navigate('/users')
   }
 
   return (

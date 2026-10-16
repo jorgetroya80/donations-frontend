@@ -60,7 +60,7 @@ export function useCreateDonation() {
         ({ data }) => data
       ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['donations'] })
+      void queryClient.invalidateQueries({ queryKey: ['donations'] })
     },
   })
 }
@@ -73,7 +73,7 @@ export function useUpdateDonation(id: number) {
         ({ data }) => data
       ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['donations'] })
+      void queryClient.invalidateQueries({ queryKey: ['donations'] })
     },
   })
 }

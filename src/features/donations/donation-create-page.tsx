@@ -43,7 +43,7 @@ export function DonationCreatePage() {
     }
 
     toast.add({ title: t('donations.successCreated') })
-    navigate('/donations')
+    void navigate('/donations')
   }
 
   async function handleConfirmDuplicate() {
@@ -61,7 +61,7 @@ export function DonationCreatePage() {
     })
 
     toast.add({ title: t('donations.successCreated') })
-    navigate('/donations')
+    void navigate('/donations')
   }
 
   return (

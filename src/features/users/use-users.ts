@@ -53,7 +53,7 @@ export function useCreateUser() {
     mutationFn: (body: CreateUserRequest) =>
       createUser({ body, client, throwOnError: true }).then(({ data }) => data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] })
+      void queryClient.invalidateQueries({ queryKey: ['users'] })
     },
   })
 }
@@ -66,7 +66,7 @@ export function useUpdateUser(id: number) {
         ({ data }) => data
       ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] })
+      void queryClient.invalidateQueries({ queryKey: ['users'] })
     },
   })
 }

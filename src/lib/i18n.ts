@@ -3,7 +3,7 @@ import { initReactI18next } from 'react-i18next'
 
 import es from '@/locales/es.json'
 
-i18n.use(initReactI18next).init({
+void i18n.use(initReactI18next).init({
   resources: {
     es: { translation: es },
   },

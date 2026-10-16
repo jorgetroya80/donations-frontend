@@ -67,7 +67,7 @@ export function LoginPage() {
         roles: data.roles,
         mustChangePassword,
       })
-      navigate(mustChangePassword ? '/settings/password' : '/', {
+      void navigate(mustChangePassword ? '/settings/password' : '/', {
         replace: true,
       })
     } catch {
