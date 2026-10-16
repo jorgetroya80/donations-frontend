@@ -50,7 +50,7 @@ export function ChangePasswordPage() {
       })
       clearMustChangePassword()
       if (forced) {
-        void navigate('/', { replace: true })
+        navigate('/', { replace: true })
         return
       }
       setSuccess(true)

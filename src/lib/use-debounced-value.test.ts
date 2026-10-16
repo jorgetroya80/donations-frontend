@@ -21,14 +21,10 @@ describe('useDebouncedValue', () => {
     rerender({ value: 'b' })
     expect(result.current).toBe('a')
 
-    act(() => {
-      vi.advanceTimersByTime(249)
-    })
+    act(() => vi.advanceTimersByTime(249))
     expect(result.current).toBe('a')
 
-    act(() => {
-      vi.advanceTimersByTime(1)
-    })
+    act(() => vi.advanceTimersByTime(1))
     expect(result.current).toBe('b')
   })
 
@@ -39,18 +35,12 @@ describe('useDebouncedValue', () => {
     )
 
     rerender({ value: 'b' })
-    act(() => {
-      vi.advanceTimersByTime(200)
-    })
+    act(() => vi.advanceTimersByTime(200))
     rerender({ value: 'c' })
-    act(() => {
-      vi.advanceTimersByTime(200)
-    })
+    act(() => vi.advanceTimersByTime(200))
     expect(result.current).toBe('a')
 
-    act(() => {
-      vi.advanceTimersByTime(50)
-    })
+    act(() => vi.advanceTimersByTime(50))
     expect(result.current).toBe('c')
   })
 })

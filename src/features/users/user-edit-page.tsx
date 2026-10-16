@@ -35,7 +35,7 @@ export function UserEditPage() {
     })
 
     toast.add({ title: t('users.successUpdated') })
-    void navigate('/users')
+    navigate('/users')
   }
 
   if (isLoading) {

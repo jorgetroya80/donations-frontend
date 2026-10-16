@@ -27,7 +27,7 @@ export function DonorCreatePage() {
     })
 
     toast.add({ title: t('donors.successCreated') })
-    void navigate('/donors')
+    navigate('/donors')
   }
 
   return (

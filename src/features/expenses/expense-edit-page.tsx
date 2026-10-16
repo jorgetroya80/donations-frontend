@@ -33,7 +33,7 @@ export function ExpenseEditPage() {
     })
 
     toast.add({ title: t('expenses.successUpdated') })
-    void navigate('/expenses')
+    navigate('/expenses')
   }
 
   if (isLoading) {

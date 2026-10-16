@@ -33,7 +33,7 @@ export function DonationEditPage() {
     })
 
     toast.add({ title: t('donations.successUpdated') })
-    void navigate('/donations')
+    navigate('/donations')
   }
 
   if (isLoading) {

@@ -28,7 +28,7 @@ export function ExpenseCreatePage() {
     })
 
     toast.add({ title: t('expenses.successCreated') })
-    void navigate('/expenses')
+    navigate('/expenses')
   }
 
   return (

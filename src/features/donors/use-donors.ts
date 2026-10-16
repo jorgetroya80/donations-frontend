@@ -61,7 +61,7 @@ export function useCreateDonor() {
         ({ data }) => data
       ),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['donors'] })
+      queryClient.invalidateQueries({ queryKey: ['donors'] })
     },
   })
 }
@@ -74,7 +74,7 @@ export function useUpdateDonor(id: number) {
         ({ data }) => data
       ),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['donors'] })
+      queryClient.invalidateQueries({ queryKey: ['donors'] })
     },
   })
 }

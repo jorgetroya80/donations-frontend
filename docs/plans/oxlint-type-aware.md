@@ -70,7 +70,9 @@ worth one native dependency and ~30 `void`s.
 **Recommendation: A**, because no new abstraction is needed and floating promises are the
 class of bug `tsc` cannot catch. Choose B if `void navigate(...)` reads as noise.
 
-**Decision:** Option A (Jorge, 2026-10-16).
+**Decision:** Option A (Jorge, 2026-10-16), then changed to **Option C** after review the same
+day: Jorge does not want `void` at call sites, so `typescript/no-floating-promises` is turned
+off and the 27 `void` / `act` edits were reverted. Only the 3 `chart.tsx` fixes remain.
 
 ## Decisions (if A)
 
@@ -103,8 +105,9 @@ Each task is one commit (Task 3 may have none if nothing needs changing).
 `minimumReleaseAge` capped `oxlint-tsgolint` at `7.0.2003` (7.0.2004 too new).
 
 - Add `oxlint-tsgolint` as an exact-pinned devDependency.
-- `void` the 14 `navigate(...)` calls, the 8 `invalidateQueries(...)` calls and `i18n.init`.
-- `use-debounced-value.test.ts`: `act(() => { vi.advanceTimersByTime(n) })`.
+- ~~`void` the 14 `navigate(...)` calls, the 8 `invalidateQueries(...)` calls and `i18n.init`.~~
+- ~~`use-debounced-value.test.ts`: `act(() => { vi.advanceTimersByTime(n) })`.~~
+- Superseded by Option C: `"typescript/no-floating-promises": "off"` in `.oxlintrc.json`.
 - `chart.tsx`: replace the 3 template literals with `String(...)`.
 
 Acceptance:

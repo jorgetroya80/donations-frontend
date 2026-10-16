@@ -29,11 +29,11 @@ export function Header({ onMenuClick, menuButtonRef }: HeaderProps) {
 
   function handleLogout() {
     logout()
-    void navigate('/login', { replace: true })
+    navigate('/login', { replace: true })
   }
 
   function handleChangePassword() {
-    void navigate('/settings/password')
+    navigate('/settings/password')
   }
 
   return (

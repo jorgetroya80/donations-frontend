@@ -32,7 +32,7 @@ export function DonorEditPage() {
     })
 
     toast.add({ title: t('donors.successUpdated') })
-    void navigate('/donors')
+    navigate('/donors')
   }
 
   if (isLoading) {
