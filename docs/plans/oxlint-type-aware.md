@@ -118,9 +118,9 @@ Add `"options": { "typeAware": true }`.
 
 Acceptance:
 
-- [ ] `pnpm exec oxlint src/` (no flag) reports type-aware rules: a scratch bare
+- [x] `pnpm exec oxlint src/` (no flag) reports type-aware rules: a scratch bare
       `navigate('/x')` in an `onClick` is flagged
-- [ ] `pnpm run check` and `pnpm run check:ci` exit 0
+- [x] `pnpm run check` and `pnpm run check:ci` exit 0
 
 ### Task 3: Verify every entry point, then CI
 
@@ -128,17 +128,17 @@ No command edits expected; the config covers them.
 
 Acceptance:
 
-- [ ] `lint-staged` blocks a staged file with a bare `navigate('/x')`
-- [ ] `.claude/hooks/format-file.sh` still runs in under ~2 s on one `src/*.tsx` file
-- [ ] CI `Lint` step (`oxlint --format github src/`) emits `::error file=…` for the scratch
+- [x] `lint-staged` blocks a staged file with a bare `navigate('/x')`
+- [x] `.claude/hooks/format-file.sh` still runs in under ~2 s (0.47 s) on one `src/*.tsx` file
+- [x] CI `Lint` step (`oxlint --format github src/`) emits `::error file=…` for the scratch
       violation locally
 - [ ] `Lint & Type Check` job passes on the PR
 
 ### Checkpoint: Complete
 
-- [ ] `pnpm install --frozen-lockfile`, `check:ci`, `typecheck`, `test`, `build` pass
+- [x] `pnpm install --frozen-lockfile`, `check:ci`, `typecheck`, `test`, `build` pass
 - [ ] CI green
-- [ ] Update `docs/ARCHITECTURE.md` / `CLAUDE.md` only if they describe the lint command
+- [x] Update `docs/ARCHITECTURE.md` / `CLAUDE.md` only if they describe the lint command (not needed: commands unchanged)
 
 ## Risks
 
