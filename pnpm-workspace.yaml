@@ -4,4 +4,5 @@ minimumReleaseAgeExclude:
   - '@jorgetroya80/donations-api-client'
 overrides:
   browserslist: 4.28.7
+  source-map-js: 1.2.2
   undici: 7.29.1
