@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.16](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.15...donations-frontend-v0.3.16) (2026-10-19)
+
+
+### Bug Fixes
+
+* **deps:** bump source-map-js to 1.2.2 ([#201](https://github.com/jorgetroya80/donations-frontend/issues/201)) ([fc22146](https://github.com/jorgetroya80/donations-frontend/commit/fc221463950e9b3309cdb83ca761b0b8dcc30a48))
+
 ## [0.3.15](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.14...donations-frontend-v0.3.15) (2026-10-15)
 
 
