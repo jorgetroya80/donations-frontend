@@ -37,23 +37,21 @@ describe('Calendar (lazy)', () => {
     expect(container.querySelectorAll('.animate-pulse')).toHaveLength(1)
   })
 
+  // The first import transforms react-day-picker, which takes about a second
+  // alone and over 5s under a loaded full run. Await it outside waitFor, under
+  // its own test timeout, so the polling only covers the fallback swap.
   it('renders the calendar once the chunk resolves', async () => {
+    await prefetchCalendar()
+
     const { container } = render(
       <Calendar mode="range" defaultMonth={JANUARY_2026} numberOfMonths={2} />
     )
 
-    // Generous timeout: the first transform of react-day-picker in this
-    // environment takes about a second, well past waitFor's 1s default.
-    await waitFor(
-      () => {
-        expect(container.querySelectorAll('[data-day]').length).toBeGreaterThan(
-          0
-        )
-      },
-      { timeout: 5000 }
-    )
+    await waitFor(() => {
+      expect(container.querySelectorAll('[data-day]').length).toBeGreaterThan(0)
+    })
     expect(container.querySelector('.animate-pulse')).not.toBeInTheDocument()
-  })
+  }, 30_000)
 
   it('prefetches the chunk without rendering anything', async () => {
     await expect(prefetchCalendar()).resolves.toHaveProperty('Calendar')
