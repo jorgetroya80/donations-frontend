@@ -24,7 +24,7 @@ services:
       retries: 3
 
   api:
-    image: jorgetroya/donations-api:${DONATIONS_API_VERSION:-1.7.1}
+    image: jorgetroya/donations-api:${DONATIONS_API_VERSION:-2.3.0}
     pull_policy: always
     ports:
       - '8081:8081'
