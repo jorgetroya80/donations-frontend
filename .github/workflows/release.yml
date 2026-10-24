@@ -3,6 +3,8 @@ name: Release
 on:
   push:
     branches: [main]
+  pull_request: # TEMP: validation run, revert before merge
+    branches: [main]
 
 concurrency:
   group: release
@@ -14,6 +16,7 @@ jobs:
   release-please:
     name: release-please
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' # TEMP
     timeout-minutes: 10
     permissions:
       contents: write
@@ -33,7 +36,7 @@ jobs:
   docker-publish:
     name: docker-publish
     needs: release-please
-    if: needs.release-please.outputs.release_created == 'true'
+    if: "!cancelled() && (needs.release-please.outputs.release_created == 'true' || github.event_name == 'pull_request')" # TEMP
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -44,7 +47,7 @@ jobs:
       # Build from the release tag, not github.sha: they differ if the tag is created by a later push
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ needs.release-please.outputs.tag_name }}
+          ref: ${{ needs.release-please.outputs.tag_name || 'v0.3.18' }} # TEMP
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
       - uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
@@ -58,14 +61,14 @@ jobs:
           # The workflow runs on push to main, not on a tag event, so the version comes from
           # release-please and "latest" must be explicit
           tags: |
-            type=semver,pattern={{version}},value=${{ needs.release-please.outputs.tag_name }}
-            type=semver,pattern={{major}}.{{minor}},value=${{ needs.release-please.outputs.tag_name }}
+            type=semver,pattern={{version}},value=${{ needs.release-please.outputs.tag_name || 'v0.3.18' }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ needs.release-please.outputs.tag_name || 'v0.3.18' }}
             type=raw,value=latest
       - uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          push: true
+          push: ${{ github.event_name == 'push' }} # TEMP
           cache-from: type=gha
           cache-to: type=gha,mode=max
           secrets: |
