@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.17](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.16...donations-frontend-v0.3.17) (2026-10-24)
+
+
+### Bug Fixes
+
+* **deps:** bump donations-api-client to 2.3.0 ([#203](https://github.com/jorgetroya80/donations-frontend/issues/203)) ([ea96fa3](https://github.com/jorgetroya80/donations-frontend/commit/ea96fa3617d026e6a9358784abb2f3214c7f2140))
+
 ## [0.3.16](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.15...donations-frontend-v0.3.16) (2026-10-19)
 
 
