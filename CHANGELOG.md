@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.18](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.17...donations-frontend-v0.3.18) (2026-10-24)
+
+
+### Bug Fixes
+
+* **deps:** bump vite to 8.1.6 ([#206](https://github.com/jorgetroya80/donations-frontend/issues/206)) ([892ab67](https://github.com/jorgetroya80/donations-frontend/commit/892ab67afd668ee6d14cc032a9ca8ef29035f208))
+
 ## [0.3.17](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.16...donations-frontend-v0.3.17) (2026-10-24)
 
 
