@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.19](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.18...donations-frontend-v0.3.19) (2026-10-26)
+
+
+### Bug Fixes
+
+* **deps:** bump undici to 7.30.1 ([#209](https://github.com/jorgetroya80/donations-frontend/issues/209)) ([2b89f1d](https://github.com/jorgetroya80/donations-frontend/commit/2b89f1d834870c28dbf1a15124e38ce1f643715a))
+* **deps:** bump vitest to 4.1.12 ([#211](https://github.com/jorgetroya80/donations-frontend/issues/211)) ([0f59292](https://github.com/jorgetroya80/donations-frontend/commit/0f59292baec60b2d71100007018bd03fab1b115c))
+* **deps:** bump zod to 4.6.6 ([#210](https://github.com/jorgetroya80/donations-frontend/issues/210)) ([de08002](https://github.com/jorgetroya80/donations-frontend/commit/de08002c7d145aee84b41a5d07486e45ccfc5893))
+
 ## [0.3.18](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.17...donations-frontend-v0.3.18) (2026-10-24)
 
 
