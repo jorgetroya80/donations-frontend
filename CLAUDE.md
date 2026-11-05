@@ -2,6 +2,7 @@
 
 React 19 + TypeScript + Vite 8 SPA. Manage church donations, expenses, reports.
 Full structure: `docs/ARCHITECTURE.md`. Coding discipline: skill `karpathy-guidelines`.
+Quality bar: read `CONSTRAINTS.md` before writing code. Never weaken it to make a change pass.
 
 ## Commands
 
