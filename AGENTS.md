@@ -13,8 +13,17 @@ Quality bar: read `CONSTRAINTS.md` before writing code. Never weaken it to make 
 - `pnpm check`: oxlint + oxfmt, auto-fix (`src/`)
 - `pnpm check:ci`: same checks, no writes (use before pushing)
 - `pnpm test`: unit tests. `pnpm test:watch`, `pnpm test:coverage` for variants
+- `pnpm check:fast`: typecheck, oxlint, gitleaks. Seconds. Run after edits.
+- `pnpm check:task`: `check:fast` + coverage + changed-line coverage + floor guard. Under 90 s.
+- `pnpm check:full`: `check:task` + Semgrep + osv-scanner. Needs network.
 
-Run `pnpm typecheck`, `pnpm check:ci` and `pnpm test` before reporting a change as done.
+Tools for `check:fast` and `check:full`: `brew install gitleaks osv-scanner semgrep`.
+
+`pnpm install` needs `NODE_AUTH_TOKEN` with `read:packages` to pull `@jorgetroya80/donations-api-client` from GitHub Packages.
+
+Run `pnpm run check:task` before reporting a change as done, and report its real result. Quality bar: `CONSTRAINTS.md`.
+
+Dependency CVE: pin the fixed version under `overrides` in `pnpm-workspace.yaml`. Do not fork or vendor the dependency.
 
 ## Conventions
 
