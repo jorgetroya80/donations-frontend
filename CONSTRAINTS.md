@@ -27,6 +27,21 @@ Last reviewed: 2026-11-06 by @jorgetroya80
 
 Every row names the command that produces the verdict.
 
+## Tools
+
+Install the binaries once. Checked versions are the ones the rules were measured with.
+
+| Tool | Version | Install | Needed by | Notes |
+| --- | --- | --- | --- | --- |
+| gitleaks | 8.30.1 | `brew install gitleaks` | `check:fast` | Always run with `--redact`. Never print a matched secret. |
+| semgrep | 1.183.0 | `brew install semgrep` | `check:full` | Pulls rules from the registry, so needs network. Use `--metrics=off`. |
+| osv-scanner | 2.7.0 | `brew install osv-scanner` | `check:full` | Reads the advisory database online. |
+| Node, pnpm | per `.nvmrc`, `packageManager` | per README | all | `pnpm install` needs `NODE_AUTH_TOKEN` (GitHub Packages). See AGENTS.md. |
+
+Missing binary: `check:fast` fails with `command not found`. Install it, then rerun. Do not skip the check.
+
+CI (`.github/workflows/ci.yml`) does not run these scripts yet. It runs oxlint, typecheck, tests, coverage and build. The floor guard, changed-line coverage, bundle budget, gitleaks, Semgrep and osv-scanner run only locally until CI wires them in.
+
 ## Measured (gated above, values kept as record)
 
 | Metric                            | Today    | Direction     | Measured by                                                 |
