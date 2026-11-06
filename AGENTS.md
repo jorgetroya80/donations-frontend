@@ -81,3 +81,4 @@ A rule can be broken in one path only with an approved exception. Rules and proc
 - The trailer is the approval record. `check:task` rejects a new row with no matching trailer in the branch's commits.
 - Do not write the trailer for an exception you did not get approved. The reviewer must not be the author.
 - `check:task` also fails when a row's Expires date has passed. Fix the code, or renew with a new row, ID and trailer.
+- Rewording or removing a floor bullet in `CONSTRAINTS.md` needs `Floor: <old bullet text>` on a commit. Same approval rule: the reviewer is not the author.

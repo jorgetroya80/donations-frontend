@@ -10,6 +10,8 @@ Last reviewed: 2026-11-06 by @jorgetroya80
 - No secrets in source
 - This file does not get weakened to make a change pass
 
+To reword or remove a floor bullet, commit with a trailer `Floor: <old bullet text, without the leading "- ">`. The floor guard accepts the change only with that trailer. A reviewer other than the author approves it.
+
 ## Enforced with numbers
 
 | Dimension        | Rule                                                                                       | Why                                                                 | Checked by                                                                           | Runs at    |
