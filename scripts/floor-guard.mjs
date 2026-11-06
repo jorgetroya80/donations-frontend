@@ -116,7 +116,8 @@ for (const { file, text } of removed) {
   if (
     isTest(file) &&
     !deleted.includes(file) &&
-    /\b(expect|assert|should)\b/.test(text)
+    // An assertion is a call: `expect(`, `assert.x` or `.should`. A bare `expect` in an import is not one.
+    /\bexpect\(|\bassert[.(]|\.should\b/.test(text)
   ) {
     flag('assertion-removed', file, text)
   }
