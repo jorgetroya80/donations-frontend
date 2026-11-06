@@ -40,7 +40,15 @@ Install the binaries once. Checked versions are the ones the rules were measured
 
 Missing binary: `check:fast` fails with `command not found`. Install it, then rerun. Do not skip the check.
 
-CI (`.github/workflows/ci.yml`) does not run these scripts yet. It runs oxlint, typecheck, tests, coverage and build. The floor guard, changed-line coverage, bundle budget, gitleaks, Semgrep and osv-scanner run only locally until CI wires them in.
+### What to run, and when
+
+Run these on your machine. CI does not run the constraint scripts; it only runs its own jobs (`ci.yml`). The checks here are your gate.
+
+1. After each edit: `pnpm run check:fast`. Seconds.
+2. Before you report a task done, and before you open a PR: `pnpm run check:task`. Under 90 s. It needs `origin/main` fetched, because the guard and changed-line coverage diff against it: `git fetch origin main`.
+3. Before a PR that touches dependencies, security code, or input handling: `pnpm run check:full`. Needs network for Semgrep and osv-scanner.
+
+If a check fails, fix the code, or name the failing check in the PR. Do not weaken the check to pass it.
 
 ## Measured (gated above, values kept as record)
 
