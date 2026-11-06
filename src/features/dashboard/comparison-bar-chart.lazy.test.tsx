@@ -1,9 +1,15 @@
 import { waitFor } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { beforeAll, describe, expect, it } from 'vitest'
 
 import { renderWithProviders } from '@/test/test-utils'
 
 import { ComparisonBarChart } from './comparison-bar-chart.lazy'
+
+// The first import pulls in recharts. Under a loaded suite that cold transform can
+// outlast waitFor's 1s default, so warm the module before the tests run.
+beforeAll(async () => {
+  await import('./comparison-bar-chart')
+})
 
 const config = {
   current: { label: 'Actual', color: 'var(--chart-1)' },
