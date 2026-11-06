@@ -40,5 +40,16 @@ Promote a row to "enforced" once a command gates it.
 
 ## Exceptions
 
+An exception lets one rule break in one path, for a stated time. Use it only when the fix is real but not yet possible.
+
+To add a row:
+
+1. Pick the next ID: `W<n>` for a warning, `E<n>` for an error-level rule.
+2. Owner: a GitHub login who will fix it. Expiry: 90 days from today by default, `YYYY-MM-DD`.
+3. Add the row, then commit with the trailer `Exception: <ID>`. The floor guard rejects any row without a matching trailer.
+4. Review: the PR reviewer is not the author. The reviewer confirms the reason and the expiry.
+
+The guard (`check:task`) fails when a row's Expires date has passed. Fix the code, or renew with a new row, new ID, and new trailer.
+
 | ID  | Rule | Path | Reason | Owner | Expires |
 | --- | ---- | ---- | ------ | ----- | ------- |

@@ -3,6 +3,7 @@
 // Usage: node scripts/floor-guard.mjs [--base <ref>]   (default base: origin/main)
 // Exit: 0 clean, 1 floor violation, 2 guard could not run.
 import { execFileSync } from 'node:child_process'
+import { readFileSync } from 'node:fs'
 
 const base = (() => {
   const i = process.argv.indexOf('--base')
@@ -82,6 +83,16 @@ const isConstraints = (f) => /CONSTRAINTS\.md$/.test(f)
 // The rule text and this guard quote the patterns they police; scanning them would flag themselves.
 const isSelf = (f) => isConstraints(f) || /floor-guard\.mjs$/.test(f)
 
+// Exceptions: a row in CONSTRAINTS.md is an approved exception only when a commit in this branch
+// carries `Exception: <ID>`. The trailer is the approval record; review checks its author is not the
+// PR author. Rows past their Expires date fail the guard until removed or renewed with a new row.
+const EXCEPTION_ROW = /^\| *([WE]\d+) *\|/
+const messages = git(['log', '--format=%B', `${mergeBase}..HEAD`])
+if (messages === null) bail('could not read commits since ' + mergeBase)
+const approved = new Set(
+  [...messages.matchAll(/^Exception: ([WE]\d+)$/gm)].map((m) => m[1])
+)
+
 const SUPPRESSIONS =
   /@ts-ignore|@ts-nocheck|eslint-disable|oxlint-disable|biome-ignore|# *noqa|# *type: *ignore|istanbul ignore|nosemgrep|gitleaks:allow|Stryker disable/
 const STUBS =
@@ -91,8 +102,8 @@ const SKIPS =
 
 for (const { file, text } of added) {
   if (isSelf(file)) {
-    if (isConstraints(file) && /^\| *(W|E)\d+ *\|/.test(text))
-      flag('new-exception', file, text)
+    const row = isConstraints(file) && text.match(EXCEPTION_ROW)
+    if (row && !approved.has(row[1])) flag('unapproved-exception', file, text)
     continue
   }
   if (SUPPRESSIONS.test(text)) flag('silenced-checker', file, text)
@@ -179,6 +190,24 @@ for (const r of removedRules) {
     })
   }
   if (verdict) flag(verdict, r.file, r.text + '  ->  ' + a.text)
+}
+
+// Expired exceptions: any row whose Expires cell (last column) is before today.
+let constraints
+try {
+  constraints = readFileSync('CONSTRAINTS.md', 'utf8')
+} catch {
+  bail('could not read CONSTRAINTS.md')
+}
+const today = new Date().toISOString().slice(0, 10)
+for (const line of constraints.split('\n')) {
+  if (!EXCEPTION_ROW.test(line)) continue
+  const expires = line
+    .split('|')
+    .map((c) => c.trim())
+    .filter(Boolean)
+    .at(-1)
+  if (expires < today) flag('exception-expired', 'CONSTRAINTS.md', line)
 }
 
 if (findings.length === 0) {
