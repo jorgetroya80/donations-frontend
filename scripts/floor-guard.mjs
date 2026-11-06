@@ -125,6 +125,8 @@ for (const { file, text } of removed) {
 // A rule in CONSTRAINTS.md weakened or removed. Numbers carry a direction from the words around them.
 const ruleKey = (t) => {
   const s = t.trim()
+  // A table separator (`| --- | --- |`) is layout, not a rule. The formatter realigns it.
+  if (/^\|[\s:|-]+\|$/.test(s)) return null
   if (s.startsWith('|'))
     return (
       s
