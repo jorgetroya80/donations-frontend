@@ -92,6 +92,11 @@ if (messages === null) bail('could not read commits since ' + mergeBase)
 const approved = new Set(
   [...messages.matchAll(/^Exception: ([WE]\d+)$/gm)].map((m) => m[1])
 )
+// Floor: a floor bullet reworded or removed is approved only by `Floor: <old rule key>` in a commit.
+// The key is the bullet text before its first colon, or the whole bullet when there is no colon.
+const approvedFloor = new Set(
+  [...messages.matchAll(/^Floor: (.+)$/gm)].map((m) => m[1].trim())
+)
 
 const SUPPRESSIONS =
   /@ts-ignore|@ts-nocheck|eslint-disable|oxlint-disable|biome-ignore|# *noqa|# *type: *ignore|istanbul ignore|nosemgrep|gitleaks:allow|Stryker disable/
@@ -173,7 +178,9 @@ const addedRules = added.filter(
 for (const r of removedRules) {
   const a = addedRules.find((x) => ruleKey(x.text) === ruleKey(r.text))
   if (!a) {
-    if (!isException(r.text)) flag('rule-removed', r.file, r.text)
+    if (isException(r.text)) continue
+    if (!approvedFloor.has(ruleKey(r.text)))
+      flag('rule-removed', r.file, r.text)
     continue
   }
   const before = thresholds(r.text),

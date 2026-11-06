@@ -6,7 +6,7 @@ Last reviewed: 2026-11-06 by @jorgetroya80
 
 - No new suppression comments: `@ts-ignore`, `eslint-disable`, `// oxlint-disable`
 - No unimplemented stubs: `throw new Error("Not implemented")`, empty `catch {}`, `TODO`
-- No skipped or deleted tests without a reason in the commit message
+- No skipped or deleted tests: no new `.skip`, `.todo` or `xit`, no deleted test files, no removed assertions. The floor guard blocks each one. There is no exception route for a single test.
 - No secrets in source
 - This file does not get weakened to make a change pass
 
