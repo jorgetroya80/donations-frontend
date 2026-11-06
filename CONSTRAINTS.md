@@ -1,6 +1,6 @@
 # Constraints
 
-Last reviewed: 2026-11-05 by @jorgetroya80
+Last reviewed: 2026-11-06 by @jorgetroya80
 
 ## Floor (always enforced)
 
@@ -20,19 +20,23 @@ Last reviewed: 2026-11-05 by @jorgetroya80
 | Accessibility  | Zero critical or serious axe violations on form pages (contrast excluded, needs a browser) | Missing labels and broken ARIA hit keyboard and screen-reader users | `pnpm run test`, `src/test/a11y.test.tsx` | check:task |
 | Coverage       | Changed lines ≥ 80% covered                          | Forces a test for new code, leaves room for config lines | `node scripts/changed-line-coverage.mjs --min 80`                                    | check:task |
 | Floor          | No move that lowers the bar                          | Cheapest road to green                                   | `node scripts/floor-guard.mjs`                                                       | check:task |
+| Project coverage | Project line coverage ≥ 84.2% | Ratchet: 84.77% measured, 0.5% tolerance | `pnpm run test:coverage` (`coverage.thresholds` in `vitest.config.ts`) | check:task |
+| Entry bundle   | Gzip of `index-*.js` ≤ 46,816 B                      | Ratchet: 46,583 B measured, +0.5% tolerance              | `node scripts/bundle-budget.mjs` (after `pnpm run build`)                            | check:task |
 | Security: code | No Semgrep findings (`p/default`, `p/owasp-top-ten`) | Input handling and XSS paths                             | `semgrep scan --config p/default --config p/owasp-top-ten --error --metrics=off src` | check:full |
 | Security: deps | Nothing at high or above                             | Below high is mostly noise                               | `osv-scanner scan source -r .`                                                       | check:full |
 
 Every row names the command that produces the verdict.
 
-## Measured, not yet enforced
+## Measured (gated above, values kept as record)
 
 | Metric                            | Today    | Direction     | Measured by                                                 |
 | --------------------------------- | -------- | ------------- | ----------------------------------------------------------- |
 | Project line coverage             | 84.77%   | must not fall | `pnpm run test:coverage`                                    |
 | Entry bundle, gzip (`index-*.js`) | 46,519 B | must not grow | `pnpm run build && gzip -c dist/assets/index-*.js \| wc -c` |
 
-Promote a row to "enforced" once a command gates it.
+Owner for every enforced row: @jorgetroya80. Review by 2027-02-03.
+
+Ratchets: the gate allows a 0.5% drop from the measured value, then fails. Raise the number when the measured value rises. Do not lower it to pass a change.
 
 ## Deferred
 
