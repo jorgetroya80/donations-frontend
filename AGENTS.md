@@ -60,6 +60,10 @@ literals in JSX.
 - Never commit to `main`. The `pre-push` hook blocks it. Branch, then open a PR.
 - Commit messages: Conventional Commits, imperative mood, subject 50 characters
   or fewer. The subject must read correctly as a `CHANGELOG.md` line.
+- Types: `feat`, `fix`, `chore`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `revert`. CI rejects a PR title outside this list. `feat`, `fix` and `perf` reach `CHANGELOG.md` through release-please.
+- Scope is optional: `type(scope): subject`. Use a lowercase kebab-case area, such as the feature folder (`donors`, `reports`), a cross-cutting area (`a11y`, `deps`, `ui`, `docker`) or the tool (`lint`, `pre-commit`). Do not use file names.
+- `chore(main):` is reserved for release-please. Do not write it.
+- Breaking change: `!` after the type or scope, and a `BREAKING CHANGE:` footer in the body.
 - PR body: What / Why / Test plan.
 - Deep pre-merge review: use the `code-reviewer` agent.
 
