@@ -9,7 +9,7 @@
     "check": "oxlint --fix src/ && oxfmt src/",
     "check:ci": "oxlint src/ && oxfmt --check src/",
     "check:fast": "pnpm run typecheck && oxlint src/ && gitleaks detect --redact --no-banner --source .",
-    "check:task": "pnpm run check:fast && pnpm run test:coverage && node scripts/changed-line-coverage.mjs && node scripts/floor-guard.mjs",
+    "check:task": "pnpm run check:fast && pnpm run test:coverage && node scripts/changed-line-coverage.mjs && node scripts/floor-guard.mjs && pnpm run build && node scripts/bundle-budget.mjs",
     "check:full": "pnpm run check:task && semgrep scan --config p/default --config p/owasp-top-ten --error --metrics=off src && osv-scanner scan source -r .",
     "dev": "vite",
     "format": "oxfmt src/",

@@ -20,6 +20,8 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/**/*.{ts,tsx}'],
+      // Ratchet: 84.77% measured, 0.5% tolerance. Raise it when coverage rises. See CONSTRAINTS.md.
+      thresholds: { lines: 84.2 },
       exclude: [
         'src/test/**',
         'src/components/ui/**',

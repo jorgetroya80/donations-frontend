@@ -60,5 +60,25 @@ literals in JSX.
 - Never commit to `main`. The `pre-push` hook blocks it. Branch, then open a PR.
 - Commit messages: Conventional Commits, imperative mood, subject 50 characters
   or fewer. The subject must read correctly as a `CHANGELOG.md` line.
+- Types: `feat`, `fix`, `chore`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `revert`. CI rejects a PR title outside this list. `feat`, `fix` and `perf` reach `CHANGELOG.md` through release-please.
+- Scope is optional: `type(scope): subject`. Use a lowercase kebab-case area, such as the feature folder (`donors`, `reports`), a cross-cutting area (`a11y`, `deps`, `ui`, `docker`) or the tool (`lint`, `pre-commit`). Do not use file names.
+- `chore(main):` is reserved for release-please. Do not write it.
+- Breaking change: `!` after the type or scope, and a `BREAKING CHANGE:` footer in the body.
 - PR body: What / Why / Test plan.
 - Deep pre-merge review: use the `code-reviewer` agent.
+
+## Exceptions
+
+A rule can be broken in one path only with an approved exception. Rules and process: `CONSTRAINTS.md`, section Exceptions.
+
+- Add a row to the Exceptions table in `CONSTRAINTS.md`. Use the next ID: `W<n>` or `E<n>`.
+- Commit the row with a trailer on its own line, after a blank line:
+
+  ```
+  Exception: W1
+  ```
+
+- The trailer is the approval record. `check:task` rejects a new row with no matching trailer in the branch's commits.
+- Do not write the trailer for an exception you did not get approved. The reviewer must not be the author.
+- `check:task` also fails when a row's Expires date has passed. Fix the code, or renew with a new row, ID and trailer.
+- Rewording or removing a floor bullet in `CONSTRAINTS.md` needs `Floor: <old bullet text>` on a commit. Same approval rule: the reviewer is not the author.
