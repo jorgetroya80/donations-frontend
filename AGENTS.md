@@ -62,3 +62,18 @@ literals in JSX.
   or fewer. The subject must read correctly as a `CHANGELOG.md` line.
 - PR body: What / Why / Test plan.
 - Deep pre-merge review: use the `code-reviewer` agent.
+
+## Exceptions
+
+A rule can be broken in one path only with an approved exception. Rules and process: `CONSTRAINTS.md`, section Exceptions.
+
+- Add a row to the Exceptions table in `CONSTRAINTS.md`. Use the next ID: `W<n>` or `E<n>`.
+- Commit the row with a trailer on its own line, after a blank line:
+
+  ```
+  Exception: W1
+  ```
+
+- The trailer is the approval record. `check:task` rejects a new row with no matching trailer in the branch's commits.
+- Do not write the trailer for an exception you did not get approved. The reviewer must not be the author.
+- `check:task` also fails when a row's Expires date has passed. Fix the code, or renew with a new row, ID and trailer.
