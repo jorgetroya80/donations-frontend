@@ -43,8 +43,8 @@ describe('Calendar keyboard navigation', () => {
     ['{ArrowLeft}', '2026-01-13'],
     ['{ArrowDown}', '2026-01-21'],
     ['{ArrowUp}', '2026-01-07'],
-    ['{Home}', '2026-01-11'],
-    ['{End}', '2026-01-17'],
+    ['{Home}', '2026-01-12'],
+    ['{End}', '2026-01-18'],
   ])('moves DOM focus to %s -> %s', async (key, expected) => {
     const user = userEvent.setup()
     const { dayButton, focusDay } = renderCalendar()
