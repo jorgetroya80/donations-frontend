@@ -82,3 +82,4 @@ The guard (`check:task`) fails when a row's Expires date has passed. Fix the cod
 
 | ID  | Rule | Path | Reason | Owner | Expires |
 | --- | ---- | ---- | ------ | ----- | ------- |
+| E1  | Entry bundle ≤ 46,816 B | `src/features/theme/` | Blocked-storage fallback for the theme provider needs 4 B over the budget. `check:task` passes `--max 46830` to `bundle-budget.mjs` until this expires; remove the flag then. | @jorgetroya80 | 2027-02-15 |
