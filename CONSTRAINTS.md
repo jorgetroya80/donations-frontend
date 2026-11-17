@@ -6,7 +6,7 @@ Last reviewed: 2026-11-06 by @jorgetroya80
 
 - No new suppression comments: `@ts-ignore`, `eslint-disable`, `// oxlint-disable`
 - No unimplemented stubs: `throw new Error("Not implemented")`, empty `catch {}`, `TODO`
-- No skipped or deleted tests: no new `.skip`, `.todo` or `xit`, no deleted test files, no removed assertions. The floor guard blocks each one. There is no exception route for a single test.
+- No skipped or deleted tests: no new `.skip`, `.todo` or `xit`, no deleted test files, no removed assertions. The floor guard blocks each one. One route exists, for an assertion whose expected value must change: replace it in the same commit with one that checks at least as much, and add the trailer `Assertion: <test file path>`. The floor guard then accepts removed assertions in that file only when the branch adds at least as many. A reviewer other than the author approves it.
 - No secrets in source
 - This file does not get weakened to make a change pass
 
