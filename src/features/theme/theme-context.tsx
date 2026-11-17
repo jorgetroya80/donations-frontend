@@ -40,10 +40,14 @@ function migrateLegacyTheme() {
   if (saved === getSystemTheme()) localStorage.removeItem(STORAGE_KEY)
 }
 
-export function getInitialTheme(): Theme {
-  migrateLegacyTheme()
+function readTheme(): Theme {
   const saved = localStorage.getItem(STORAGE_KEY)
   return isTheme(saved) ? saved : getSystemTheme()
+}
+
+export function getInitialTheme(): Theme {
+  migrateLegacyTheme()
+  return readTheme()
 }
 
 // Native UI (scrollbars, form controls) follows color-scheme, colors follow
@@ -79,6 +83,25 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     applyScheme(theme)
   }, [theme])
+
+  // Re-resolve when the OS scheme changes or another tab writes storage. Any
+  // key triggers it, which is harmless: an unrelated write re-applies the same
+  // theme. applyScheme runs here too: a removed override can leave the theme
+  // unchanged while the meta still has to go back to 'light dark'.
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-color-scheme: dark)')
+    function sync() {
+      const next = readTheme()
+      setTheme(next)
+      applyScheme(next)
+    }
+    media.addEventListener('change', sync)
+    window.addEventListener('storage', sync)
+    return () => {
+      media.removeEventListener('change', sync)
+      window.removeEventListener('storage', sync)
+    }
+  }, [])
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>

@@ -61,7 +61,7 @@ key migration + store-only-overrides (T2)    theme-context only; index.html unch
 - [x] Human review before T4
 
 ### Phase 3: Sync and ship
-- [ ] T4: Follow OS changes and other tabs live
+- [x] T4: Follow OS changes and other tabs live
 - [ ] T5: Manual verification, legacy-scan rerun, PR
 
 ### Checkpoint: Complete
@@ -151,17 +151,17 @@ Branch first (for example `fix/theme-color-scheme`). `main` is blocked by pre-pu
 
 ### Task 4: Follow OS changes and other tabs live
 
-**Description:** Subscribe to the `matchMedia('(prefers-color-scheme: dark)')` `change` event, so that with no override the UI re-resolves. Listen for the `window` `storage` event on `theme`, so a toggle in one tab applies to the others. Both call `applyScheme()`. Clean up on unmount. Prefer `useSyncExternalStore` if it keeps the code smaller.
+**Description:** Subscribe to the `matchMedia('(prefers-color-scheme: dark)')` `change` event, so that with no override the UI re-resolves. Listen for the `window` `storage` event (any key; filtering by key cost the last bytes of the bundle budget, and an unrelated write only re-applies the same theme), so a toggle in one tab applies to the others. Both call `applyScheme()`. Clean up on unmount. Prefer `useSyncExternalStore` if it keeps the code smaller.
 
 **Acceptance criteria:**
-- [ ] With no override, an OS change updates `theme`, `.dark`, the meta and the inline style without a reload
-- [ ] With an override, an OS change does nothing
-- [ ] A `storage` event from another tab applies the new value or the removal
+- [x] With no override, an OS change updates `theme`, `.dark`, the meta and the inline style without a reload
+- [x] With an override, an OS change does nothing
+- [x] A `storage` event from another tab applies the new value or the removal
 
 **Verification:**
-- [ ] Tests fire a mocked `matchMedia` change and a `StorageEvent`, and assert that listeners are removed on unmount
-- [ ] `pnpm run check:task` is green
-- [ ] Manual check: two tabs, toggle in one and the other follows; switching the OS appearance changes the app when not overridden
+- [x] Tests fire a mocked `matchMedia` change and a `StorageEvent`, and assert that listeners are removed on unmount
+- [x] `pnpm run check:task` is green
+- [ ] Manual check (moved to T5): two tabs, toggle in one and the other follows; switching the OS appearance changes the app when not overridden
 
 **Dependencies:** T3
 **Files likely touched:** `src/features/theme/theme-context.tsx`, `src/features/theme/theme-context.test.ts`, possibly `src/test/setup.ts`

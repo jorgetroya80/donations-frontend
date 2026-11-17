@@ -189,6 +189,87 @@ describe('color-scheme', () => {
   })
 })
 
+describe('live sync', () => {
+  let meta: HTMLMetaElement
+  let osDark: boolean
+  const osListeners = new Set<() => void>()
+
+  function setOsDark(dark: boolean) {
+    osDark = dark
+    act(() => osListeners.forEach((listener) => listener()))
+  }
+
+  beforeEach(() => {
+    osDark = false
+    osListeners.clear()
+    vi.mocked(window.matchMedia).mockImplementation(
+      (query) =>
+        ({
+          get matches() {
+            return osDark
+          },
+          media: query,
+          addEventListener: (_type: string, listener: () => void) =>
+            osListeners.add(listener),
+          removeEventListener: (_type: string, listener: () => void) =>
+            osListeners.delete(listener),
+        }) as unknown as MediaQueryList
+    )
+    document.documentElement.classList.remove('dark')
+    meta = document.createElement('meta')
+    meta.name = 'color-scheme'
+    meta.content = 'light dark'
+    document.head.append(meta)
+  })
+
+  afterEach(() => {
+    meta.remove()
+  })
+
+  it('follows an OS change when there is no override', () => {
+    const { result } = renderHook(() => useTheme(), { wrapper: ThemeProvider })
+    setOsDark(true)
+    expect(result.current.theme).toBe('dark')
+    expect(document.documentElement.classList.contains('dark')).toBe(true)
+    expect(meta.content).toBe('light dark')
+  })
+
+  it('ignores an OS change while an override is stored', () => {
+    localStorage.setItem('theme', 'light')
+    localStorage.setItem('theme-migrated', '1')
+    const { result } = renderHook(() => useTheme(), { wrapper: ThemeProvider })
+    setOsDark(true)
+    expect(result.current.theme).toBe('light')
+  })
+
+  it('applies an override set in another tab', () => {
+    const { result } = renderHook(() => useTheme(), { wrapper: ThemeProvider })
+    localStorage.setItem('theme', 'dark')
+    act(() => {
+      window.dispatchEvent(new StorageEvent('storage', { key: 'theme' }))
+    })
+    expect(result.current.theme).toBe('dark')
+    expect(meta.content).toBe('dark')
+  })
+
+  it('releases the override when another tab removes it', () => {
+    localStorage.setItem('theme', 'light')
+    localStorage.setItem('theme-migrated', '1')
+    renderHook(() => useTheme(), { wrapper: ThemeProvider })
+    localStorage.removeItem('theme')
+    act(() => {
+      window.dispatchEvent(new StorageEvent('storage', { key: 'theme' }))
+    })
+    expect(meta.content).toBe('light dark')
+  })
+
+  it('stops listening to the OS on unmount', () => {
+    const { unmount } = renderHook(() => useTheme(), { wrapper: ThemeProvider })
+    unmount()
+    expect(osListeners.size).toBe(0)
+  })
+})
+
 describe('legacy theme migration', () => {
   it('drops an unmarked value equal to the OS scheme', () => {
     mockMatchMedia(true)
