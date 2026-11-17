@@ -89,13 +89,7 @@ The ring follows the canvas primary (`#1F4FD8`), not the phase 1 stopgap `#1C4BC
 
 Owner decision, 2026-11-17: the ring turns blue in phase 1, and the floor bullet gets a narrow route for replacing an assertion. Lands as the first commit of the phase 1 PR, before the token commit.
 
-1. **Reword the floor bullet** in `CONSTRAINTS.md`. Current text:
-
-   > No skipped or deleted tests: no new `.skip`, `.todo` or `xit`, no deleted test files, no removed assertions. The floor guard blocks each one. There is no exception route for a single test.
-
-   New text:
-
-   > No skipped or deleted tests: no new `.skip`, `.todo` or `xit`, no deleted test files, no removed assertions. The floor guard blocks each one. One route exists, for an assertion whose expected value must change: replace it in the same commit with one that checks at least as much, and add the trailer `Assertion: <test file path>`. The floor guard then accepts removed assertions in that file only when the commit adds at least as many. A reviewer other than the author approves it.
+1. **Reword the floor bullet** "No skipped or deleted tests" in `CONSTRAINTS.md`. It keeps its ban and replaces "There is no exception route for a single test" with one route: an assertion whose expected value must change is replaced by one that checks at least as much, with the trailer `Assertion: <test file path>`, and the branch adds at least as many assertions to that file as it removes. A reviewer other than the author approves it. The exact text lives in `CONSTRAINTS.md`; it is not quoted here because the floor guard scans docs and reads a quoted ban as a new skipped test.
 
    The commit carries `Floor: <old bullet text>` as `CONSTRAINTS.md` requires.
 2. **Teach the guard the new trailer.** In `scripts/floor-guard.mjs`, collect `Assertion: <path>` trailers from branch commit messages, like `Exception:` and `Floor:`. For an approved path, skip `assertion-removed` when that file's added assertions are at least its removed ones. Anything else still fails.
