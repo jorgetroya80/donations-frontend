@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.20](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.19...donations-frontend-v0.3.20) (2026-11-17)
+
+
+### Bug Fixes
+
+* **theme:** follow OS scheme and set color-scheme ([#215](https://github.com/jorgetroya80/donations-frontend/issues/215)) ([f44781a](https://github.com/jorgetroya80/donations-frontend/commit/f44781a065cf7f90ab5e74fbf4a1485e8527c02e))
+
 ## [0.3.19](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.18...donations-frontend-v0.3.19) (2026-10-26)
 
 
