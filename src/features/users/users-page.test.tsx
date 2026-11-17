@@ -1,7 +1,9 @@
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { HttpResponse, http } from 'msw'
 import { beforeEach, describe, expect, it } from 'vitest'
 
+import { server } from '@/test/msw-server'
 import { renderWithProviders } from '@/test/test-utils'
 
 import { UsersPage } from './users-page'
@@ -44,6 +46,37 @@ describe('UsersPage', () => {
 
     const activeBadges = screen.getAllByText('Activo')
     expect(activeBadges.length).toBe(2)
+    for (const badge of activeBadges) {
+      expect(badge).toHaveClass('bg-success-soft')
+    }
+  })
+
+  it('shows inactive users with the secondary badge', async () => {
+    server.use(
+      http.get('*/api/v1/users', () =>
+        HttpResponse.json({
+          content: [
+            {
+              id: 3,
+              username: 'antiguo',
+              active: false,
+              roles: ['OPERATOR'],
+              mustChangePassword: false,
+              createdAt: '2026-03-01T10:00:00',
+              updatedAt: '2026-03-01T10:00:00',
+            },
+          ],
+          page: { size: 10, number: 0, totalElements: 1, totalPages: 1 },
+        })
+      )
+    )
+    renderWithProviders(<UsersPage />)
+
+    await waitFor(() => {
+      expect(screen.getByText('antiguo')).toBeInTheDocument()
+    })
+
+    expect(screen.getByText('Inactivo')).toHaveClass('bg-secondary')
   })
 
   it('renders pagination info', async () => {

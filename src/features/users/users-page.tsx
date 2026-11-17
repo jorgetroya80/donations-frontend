@@ -99,7 +99,7 @@ export function UsersPage() {
                   </TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-1">
-                      <Badge variant={u.active ? 'default' : 'destructive'}>
+                      <Badge variant={u.active ? 'success' : 'secondary'}>
                         {u.active ? t('users.active') : t('users.inactive')}
                       </Badge>
                       {u.mustChangePassword && (
