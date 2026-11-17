@@ -77,6 +77,7 @@ describe('ThemeProvider + useTheme', () => {
   })
 
   it('toggleTheme persists new theme to localStorage', () => {
+    mockMatchMedia(false)
     localStorage.setItem('theme', 'light')
     const { result } = renderHook(() => useTheme(), { wrapper: ThemeProvider })
     act(() => result.current.toggleTheme())
@@ -96,6 +97,63 @@ describe('ThemeProvider + useTheme', () => {
     const { result } = renderHook(() => useTheme(), { wrapper: ThemeProvider })
     act(() => result.current.toggleTheme())
     expect(document.documentElement.classList.contains('dark')).toBe(false)
+  })
+})
+
+describe('override storage', () => {
+  beforeEach(() => {
+    document.documentElement.classList.remove('dark')
+  })
+
+  it('stores nothing on first mount', () => {
+    mockMatchMedia(false)
+    renderHook(() => useTheme(), { wrapper: ThemeProvider })
+    expect(localStorage.length).toBe(0)
+  })
+
+  it('stores a toggle that differs from the OS scheme as an override', () => {
+    mockMatchMedia(false)
+    const { result } = renderHook(() => useTheme(), { wrapper: ThemeProvider })
+    act(() => result.current.toggleTheme())
+    expect(localStorage.getItem('theme')).toBe('dark')
+    expect(localStorage.getItem('theme-migrated')).toBe('1')
+  })
+
+  it('removes the override when toggling back to the OS scheme', () => {
+    mockMatchMedia(false)
+    localStorage.setItem('theme', 'dark')
+    localStorage.setItem('theme-migrated', '1')
+    const { result } = renderHook(() => useTheme(), { wrapper: ThemeProvider })
+    act(() => result.current.toggleTheme())
+    expect(result.current.theme).toBe('light')
+    expect(localStorage.getItem('theme')).toBeNull()
+  })
+
+  it('keeps an override that now matches the OS scheme', () => {
+    mockMatchMedia(true)
+    localStorage.setItem('theme', 'dark')
+    localStorage.setItem('theme-migrated', '1')
+    const { result } = renderHook(() => useTheme(), { wrapper: ThemeProvider })
+    expect(result.current.theme).toBe('dark')
+    expect(localStorage.getItem('theme')).toBe('dark')
+  })
+})
+
+describe('legacy theme migration', () => {
+  it('drops an unmarked value equal to the OS scheme', () => {
+    mockMatchMedia(true)
+    localStorage.setItem('theme', 'dark')
+    expect(getInitialTheme()).toBe('dark')
+    expect(localStorage.getItem('theme')).toBeNull()
+    expect(localStorage.getItem('theme-migrated')).toBe('1')
+  })
+
+  it('keeps an unmarked value that differs from the OS scheme', () => {
+    mockMatchMedia(false)
+    localStorage.setItem('theme', 'dark')
+    expect(getInitialTheme()).toBe('dark')
+    expect(localStorage.getItem('theme')).toBe('dark')
+    expect(localStorage.getItem('theme-migrated')).toBe('1')
   })
 })
 

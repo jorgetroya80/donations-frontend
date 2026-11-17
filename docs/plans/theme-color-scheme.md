@@ -18,26 +18,28 @@ Target behaviour, from the guide's two-state model:
 
 ## Decisions (agreed 2026-11-17)
 
-- **Bug-pinned users: option C, smart migration.** The stored key moves from `theme` to `color-scheme`. On load, an old `theme` value is handled once:
+- **Bug-pinned users: option C, smart migration.** The key stays `theme`. A marker key, `theme-migrated`, records that a stored value is a deliberate override. On load, a `theme` value without the marker is handled once:
   - It equals the current OS scheme: drop it. It is most likely the bug, and dropping it causes no visible change.
   - It differs from the current OS scheme: keep it as the override, since it is most likely a deliberate choice.
-  - Then delete `theme`.
+  - Then set the marker. The toggle also sets the marker whenever it stores an override.
 
-  The migration is about 5 lines in `theme-context.tsx` and is marked for removal once old values have aged out.
+  The migration is about 5 lines in `theme-context.tsx` and is marked for removal after 2027-05-17.
+
+  *Changed 2026-11-17 during T2:* the first version renamed the key to `color-scheme`. That changed an existing assertion on `theme`, which the floor guard counts as a removed assertion, with no exception route. Keeping the key avoids that, and also leaves `index.html` and the CSP hash untouched in T2.
 - **Browser support policy: Baseline Widely available.** Some users are on locked-down (managed) devices that may run browsers older than current. The policy goes in `AGENTS.md` (T1).
 - **`color-scheme` set inline on `<html>` by JS** (the "optional extra"). This works on any browser that supports `color-scheme`, with no reliance on `:has()`. Consequence: the guide's CSS rule `:root:has(meta[content=…])` would never apply when JS runs, and without JS the meta default `light dark` already covers it. **So there is no `:has()` mapping and no change to `src/index.css`.** Verified: no dependency (Tailwind preflight, tw-animate-css, base-ui) declares `color-scheme`.
 - **`<meta name="color-scheme">` is kept** and stays in sync with the inline style. It provides the no-JS default (`light dark`), follows the guide's model, and clears the scanner rule.
 - **Two-state toggle, kept in the header.** There is no settings page, and the guide accepts two states for a toggle in the page chrome.
 - **Keep the `.dark` class.** Tailwind `@custom-variant dark` and the `.dark` token block depend on it. One `applyScheme()` helper sets `.dark`, the meta content and `style.colorScheme` together.
 - **Keep the `getInitialTheme` export and its tests** (the floor guard forbids removed assertions). Add new tests rather than rewriting old ones.
-- **The inline `<script>` stays classic,** without `type=module` or `defer`, and as small as possible. Its `catch` must not be empty (floor guard). During the migration window it reads `color-scheme ?? theme`, so the first load after deploy does not flash.
+- **The inline `<script>` stays classic,** without `type=module` or `defer`, and as small as possible. Its `catch` must not be empty (floor guard). Editing it changes its hash, so update `script-src` in `security-headers.conf` (`tests/csp-inline-script.test.ts` catches drift).
 - **No new dependencies, and no `useMemo` or `useCallback`** (React Compiler).
 
 ## Dependency Graph
 
 ```
 AGENTS.md browser policy (T1)                independent, docs only
-key migration + store-only-overrides (T2)    touches index.html key read too, so FOUC stays correct
+key migration + store-only-overrides (T2)    theme-context only; index.html unchanged
     └── color-scheme meta + inline style (T3)      applyScheme() writes from the resolved scheme T2 produces
             └── live OS + cross-tab sync (T4)       sync calls applyScheme()
                     └── manual check, rescan, PR (T5)
@@ -47,7 +49,7 @@ key migration + store-only-overrides (T2)    touches index.html key read too, so
 
 ### Phase 1: Policy and core bug fix
 - [x] T1: Document browser support policy in `AGENTS.md`
-- [ ] T2: Store theme only as an override, migrate the old key
+- [x] T2: Store theme only as an override, migrate the old key
 
 ### Phase 2: Native UI
 - [ ] T3: Drive `color-scheme` from JS (meta and inline style)
@@ -108,20 +110,20 @@ Branch first (for example `fix/theme-color-scheme`). `main` is blocked by pre-pu
 
 ### Task 2: Store theme only as an override, migrate the old key
 
-**Description:** Switch the storage key from `theme` to `color-scheme`. No stored value means follow the system. Remove the unconditional write on mount. `toggleTheme` sets the target to the opposite of the resolved scheme: if the target equals the OS preference, remove the key; otherwise store it. Run a one-time migration on load: if the old `theme` value equals the OS scheme, drop it; if it differs and no `color-scheme` value exists, copy it over; then remove `theme`. Add a removal-date comment. In `index.html`, change the inline script to read `localStorage.getItem('color-scheme') ?? localStorage.getItem('theme')`, so the first load after deploy does not flash.
+**Description:** Keep the storage key `theme`, but treat it as an override only: no stored value means follow the system. Remove the unconditional write on mount. `toggleTheme` sets the target to the opposite of the resolved scheme: if the target equals the OS preference, remove the key; otherwise store it and set the marker `theme-migrated`. Run a one-time migration on load: a `theme` value without the marker that equals the OS scheme is dropped, one that differs is kept, and the marker is set. Add a removal-date comment.
 
 **Acceptance criteria:**
-- [ ] First mount with no stored value writes nothing
-- [ ] Toggling away from the OS scheme stores it; toggling back removes it; a stored value is kept after the OS changes to match it
-- [ ] Migration: old value equal to OS is dropped, old value different from OS becomes `color-scheme`, `theme` is gone afterwards
+- [x] First mount with no stored value writes nothing
+- [x] Toggling away from the OS scheme stores it; toggling back removes it; a stored value is kept after the OS changes to match it
+- [x] Migration: an unmarked value equal to the OS is dropped, one that differs is kept, and the marker is set afterwards
 
 **Verification:**
-- [ ] New tests in `src/features/theme/theme-context.test.ts` for each criterion; no existing assertion removed (update the key in existing tests where needed)
-- [ ] `pnpm run check:task` is green
-- [ ] Manual check: a fresh profile has no key after reload; a profile with `theme=dark` and OS dark has no key afterwards and still renders dark
+- [x] New tests in `src/features/theme/theme-context.test.ts` for each criterion; no existing assertion removed
+- [x] `pnpm run check:task` is green
+- [ ] Manual check: a fresh profile has no key after reload; a profile with `theme=dark` and OS dark has no `theme` key afterwards and still renders dark
 
 **Dependencies:** None
-**Files likely touched:** `src/features/theme/theme-context.tsx`, `src/features/theme/theme-context.test.ts`, `index.html`
+**Files likely touched:** `src/features/theme/theme-context.tsx`, `src/features/theme/theme-context.test.ts`
 **Estimated scope:** S
 
 ### Task 3: Drive `color-scheme` from JS (meta and inline style)
@@ -149,7 +151,7 @@ Branch first (for example `fix/theme-color-scheme`). `main` is blocked by pre-pu
 
 ### Task 4: Follow OS changes and other tabs live
 
-**Description:** Subscribe to the `matchMedia('(prefers-color-scheme: dark)')` `change` event, so that with no override the UI re-resolves. Listen for the `window` `storage` event on `color-scheme`, so a toggle in one tab applies to the others. Both call `applyScheme()`. Clean up on unmount. Prefer `useSyncExternalStore` if it keeps the code smaller.
+**Description:** Subscribe to the `matchMedia('(prefers-color-scheme: dark)')` `change` event, so that with no override the UI re-resolves. Listen for the `window` `storage` event on `theme`, so a toggle in one tab applies to the others. Both call `applyScheme()`. Clean up on unmount. Prefer `useSyncExternalStore` if it keeps the code smaller.
 
 **Acceptance criteria:**
 - [ ] With no override, an OS change updates `theme`, `.dark`, the meta and the inline style without a reload
