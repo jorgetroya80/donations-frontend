@@ -55,10 +55,10 @@ key migration + store-only-overrides (T2)    theme-context only; index.html unch
 - [x] T3: Drive `color-scheme` from JS (meta and inline style)
 
 ### Checkpoint A (after T1 to T3)
-- [ ] `pnpm run check:task` is green, entry bundle within budget
-- [ ] Fresh profile: nothing stored until the toggle is clicked
-- [ ] Dark mode: scrollbar, select, date picker and autofill render dark
-- [ ] Human review before T4
+- [x] `pnpm run check:task` is green, entry bundle within budget
+- [x] Fresh profile: nothing stored until the toggle is clicked
+- [ ] Dark mode: scrollbar, select, date picker and autofill render dark (visual check moved to T5; computed values verified)
+- [x] Human review before T4
 
 ### Phase 3: Sync and ship
 - [ ] T4: Follow OS changes and other tabs live
@@ -145,9 +145,9 @@ Branch first (for example `fix/theme-color-scheme`). `main` is blocked by pre-pu
 **Estimated scope:** S
 
 ### Checkpoint A: After T1 to T3
-- [ ] `pnpm run check:task` is green
-- [ ] Core flow works: system mode, override, back to system, migration
-- [ ] Human review before T4
+- [x] `pnpm run check:task` is green
+- [x] Core flow works: system mode, override, back to system, migration
+- [x] Human review before T4
 
 ### Task 4: Follow OS changes and other tabs live
 
