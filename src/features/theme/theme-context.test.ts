@@ -224,6 +224,7 @@ describe('live sync', () => {
 
   afterEach(() => {
     meta.remove()
+    mockMatchMedia(false)
   })
 
   it('follows an OS change when there is no override', () => {
@@ -267,6 +268,30 @@ describe('live sync', () => {
     const { unmount } = renderHook(() => useTheme(), { wrapper: ThemeProvider })
     unmount()
     expect(osListeners.size).toBe(0)
+  })
+})
+
+describe('blocked storage', () => {
+  it('follows the OS scheme and still toggles', async () => {
+    vi.resetModules()
+    const blocked = vi
+      .spyOn(window, 'localStorage', 'get')
+      .mockImplementation(() => {
+        throw new DOMException('blocked', 'SecurityError')
+      })
+    try {
+      const theme = await import('./theme-context')
+      mockMatchMedia(true)
+      const { result } = renderHook(() => theme.useTheme(), {
+        wrapper: theme.ThemeProvider,
+      })
+      expect(result.current.theme).toBe('dark')
+      act(() => result.current.toggleTheme())
+      expect(result.current.theme).toBe('light')
+    } finally {
+      blocked.mockRestore()
+      mockMatchMedia(false)
+    }
   })
 })
 

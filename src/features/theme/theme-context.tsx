@@ -21,7 +21,16 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null)
 
-function isTheme(value: string | null): value is Theme {
+// Reading localStorage throws when site data is blocked. Then the theme just
+// follows the OS and nothing is saved, like the inline script in index.html.
+let store: Storage | undefined
+try {
+  store = localStorage
+} catch {
+  store = undefined
+}
+
+function isTheme(value: string | null | undefined): value is Theme {
   return value === 'light' || value === 'dark'
 }
 
@@ -34,14 +43,14 @@ function getSystemTheme(): Theme {
 // The old code saved the OS scheme on the first visit, so an unmarked value
 // equal to the OS scheme is most likely that bug rather than a choice.
 function migrateLegacyTheme() {
-  const saved = localStorage.getItem(STORAGE_KEY)
-  if (saved === null || localStorage.getItem(MIGRATED_KEY) !== null) return
-  localStorage.setItem(MIGRATED_KEY, '1')
-  if (saved === getSystemTheme()) localStorage.removeItem(STORAGE_KEY)
+  const saved = store?.getItem(STORAGE_KEY)
+  if (saved == null || store?.getItem(MIGRATED_KEY) != null) return
+  store?.setItem(MIGRATED_KEY, '1')
+  if (saved === getSystemTheme()) store?.removeItem(STORAGE_KEY)
 }
 
 function readTheme(): Theme {
-  const saved = localStorage.getItem(STORAGE_KEY)
+  const saved = store?.getItem(STORAGE_KEY)
   return isTheme(saved) ? saved : getSystemTheme()
 }
 
@@ -54,7 +63,7 @@ export function getInitialTheme(): Theme {
 // .dark. 'light dark' lets the browser follow the OS; a single value pins it.
 // The inline script in index.html does the same before first paint.
 function applyScheme(theme: Theme) {
-  const saved = localStorage.getItem(STORAGE_KEY)
+  const saved = store?.getItem(STORAGE_KEY)
   const scheme = isTheme(saved) ? saved : 'light dark'
   const root = document.documentElement
   root.classList.toggle('dark', theme === 'dark')
@@ -72,10 +81,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   function toggleTheme() {
     const next = theme === 'light' ? 'dark' : 'light'
     if (next === getSystemTheme()) {
-      localStorage.removeItem(STORAGE_KEY)
+      store?.removeItem(STORAGE_KEY)
     } else {
-      localStorage.setItem(STORAGE_KEY, next)
-      localStorage.setItem(MIGRATED_KEY, '1')
+      store?.setItem(STORAGE_KEY, next)
+      store?.setItem(MIGRATED_KEY, '1')
     }
     setTheme(next)
   }
