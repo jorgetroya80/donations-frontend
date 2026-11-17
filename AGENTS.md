@@ -52,6 +52,10 @@ literals in JSX.
 
 **React Compiler** is enabled. Do not add manual `useMemo` or `useCallback`.
 
+**Browser support.** Target Baseline Widely available; some users run locked-down
+devices with older browsers. A newer feature needs feature detection, graceful
+degradation and a fallback of 20 lines or fewer, with no new dependency or polyfill.
+
 **Tests.** Render with `src/test/test-utils.tsx`. Mock API calls in
 `src/test/msw-handlers.ts`. Never hit the real network in tests.
 
