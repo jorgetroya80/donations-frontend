@@ -46,7 +46,7 @@ Task 1 quality bar (CONSTRAINTS.md + floor-guard.mjs)
 ### Phase 2: Components (PR 2, branch `style/sereno-controls`, after PR 1 merges)
 
 - [x] Task 3: Outlined fields and muted disabled background
-- [ ] Task 4: `--primary-hover` and final primary `#1F4FD8`
+- [x] Task 4: `--primary-hover` and final primary `#1F4FD8`
 - [ ] Task 5: Soft green status badge
 - [ ] Task 6: Right-align amount columns
 
