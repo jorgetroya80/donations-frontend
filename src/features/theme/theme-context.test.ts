@@ -296,17 +296,29 @@ describe('blocked storage', () => {
 })
 
 describe('legacy theme migration', () => {
-  it('drops an unmarked value equal to the OS scheme', () => {
+  // The migration runs at module load, so each test loads a fresh copy.
+  async function mountFresh() {
+    vi.resetModules()
+    const theme = await import('./theme-context')
+    return renderHook(() => theme.useTheme(), { wrapper: theme.ThemeProvider })
+  }
+
+  it('drops an unmarked value equal to the OS scheme', async () => {
     mockMatchMedia(true)
     localStorage.setItem('theme', 'dark')
+    const { result } = await mountFresh()
+    expect(result.current.theme).toBe('dark')
     expect(getInitialTheme()).toBe('dark')
     expect(localStorage.getItem('theme')).toBeNull()
     expect(localStorage.getItem('theme-migrated')).toBe('1')
+    expect(document.documentElement.style.colorScheme).toBe('light dark')
   })
 
-  it('keeps an unmarked value that differs from the OS scheme', () => {
+  it('keeps an unmarked value that differs from the OS scheme', async () => {
     mockMatchMedia(false)
     localStorage.setItem('theme', 'dark')
+    const { result } = await mountFresh()
+    expect(result.current.theme).toBe('dark')
     expect(getInitialTheme()).toBe('dark')
     expect(localStorage.getItem('theme')).toBe('dark')
     expect(localStorage.getItem('theme-migrated')).toBe('1')
