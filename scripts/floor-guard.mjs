@@ -97,6 +97,11 @@ const approved = new Set(
 const approvedFloor = new Set(
   [...messages.matchAll(/^Floor: (.+)$/gm)].map((m) => m[1].trim())
 )
+// Assertion: a changed expected value is approved by `Assertion: <test file path>` in a commit.
+// Removed assertions in that file pass only when the branch adds at least as many as it removes.
+const approvedAssertion = new Set(
+  [...messages.matchAll(/^Assertion: (.+)$/gm)].map((m) => m[1].trim())
+)
 
 const SUPPRESSIONS =
   /@ts-ignore|@ts-nocheck|eslint-disable|oxlint-disable|biome-ignore|# *noqa|# *type: *ignore|istanbul ignore|nosemgrep|gitleaks:allow|Stryker disable/
@@ -117,14 +122,16 @@ for (const { file, text } of added) {
 }
 
 for (const f of deleted) if (isTest(f)) flag('test-deleted', f, 'file deleted')
+// An assertion is a call: `expect(`, `assert.x` or `.should`. A bare `expect` in an import is not one.
+const ASSERTION = /\bexpect\(|\bassert[.(]|\.should\b/
+const assertionCount = (lines, f) =>
+  lines.filter((l) => l.file === f && ASSERTION.test(l.text)).length
 for (const { file, text } of removed) {
-  if (
-    isTest(file) &&
-    !deleted.includes(file) &&
-    // An assertion is a call: `expect(`, `assert.x` or `.should`. A bare `expect` in an import is not one.
-    /\bexpect\(|\bassert[.(]|\.should\b/.test(text)
-  ) {
-    flag('assertion-removed', file, text)
+  if (isTest(file) && !deleted.includes(file) && ASSERTION.test(text)) {
+    const replaced =
+      approvedAssertion.has(file) &&
+      assertionCount(added, file) >= assertionCount(removed, file)
+    if (!replaced) flag('assertion-removed', file, text)
   }
 }
 
