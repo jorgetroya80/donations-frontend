@@ -43,6 +43,8 @@ describe('DonorsPage', () => {
 
     expect(screen.getByText('Activo')).toBeInTheDocument()
     expect(screen.getByText('Inactivo')).toBeInTheDocument()
+    expect(screen.getByText('Activo')).toHaveClass('bg-success-soft')
+    expect(screen.getByText('Inactivo')).toHaveClass('bg-secondary')
   })
 
   it('renders pagination info', async () => {

@@ -102,6 +102,7 @@ export function ExpensesPage() {
                   ariaSort={ariaSort('amount')}
                   onSort={() => toggleSort('amount')}
                   indicator={sortIndicator('amount')}
+                  align="right"
                 >
                   {t('expenses.amount')}
                 </SortableTh>
@@ -117,7 +118,9 @@ export function ExpensesPage() {
                   <TableCell>
                     {dayjs(e.expenseDate).format('DD/MM/YYYY')}
                   </TableCell>
-                  <TableCell>{formatCurrency(e.amount ?? 0)}</TableCell>
+                  <TableCell className="text-right">
+                    {formatCurrency(e.amount ?? 0)}
+                  </TableCell>
                   <TableCell>
                     <Badge variant="secondary">
                       {t(`expenses.categories.${e.category}`)}
