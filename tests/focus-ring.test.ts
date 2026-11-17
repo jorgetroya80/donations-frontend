@@ -39,9 +39,9 @@ describe('focus indicator', () => {
   it('uses a ring token that clears 3:1 against its surface in both themes', () => {
     const css = readFileSync('src/index.css', 'utf8')
 
-    // 7.44:1 on --background, 6.82:1 on --muted
-    expect(css).toContain('--ring: oklch(0.45 0 0)')
-    // 11.33:1 on --card, 12.52:1 on --background
-    expect(css).toContain('--ring: oklch(0.85 0 0)')
+    // 6.63:1 on --background, 6.07:1 on --muted
+    expect(css).toContain('--ring: oklch(0.491 0.216 264.52)')
+    // 6.61:1 on --card, 7.46:1 on --background
+    expect(css).toContain('--ring: oklch(0.726 0.141 267.25)')
   })
 })

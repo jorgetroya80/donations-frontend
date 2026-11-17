@@ -32,8 +32,8 @@ Task 1 quality bar (CONSTRAINTS.md + floor-guard.mjs)
 
 ### Phase 1: Tokens (PR 1, branch `style/sereno-tokens`)
 
-- [ ] Task 1: Add the `Assertion:` route to the floor rule and guard
-- [ ] Task 2: Apply Sereno token values, blue ring included
+- [x] Task 1: Add the `Assertion:` route to the floor rule and guard
+- [x] Task 2: Apply Sereno token values, blue ring included
 
 ### Checkpoint 1
 
