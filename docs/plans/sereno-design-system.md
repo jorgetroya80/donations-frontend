@@ -48,7 +48,7 @@ Task 1 quality bar (CONSTRAINTS.md + floor-guard.mjs)
 - [x] Task 3: Outlined fields and muted disabled background
 - [x] Task 4: `--primary-hover` and final primary `#1F4FD8`
 - [x] Task 5: Soft green status badge
-- [ ] Task 6: Right-align amount columns
+- [x] Task 6: Right-align amount columns
 
 ### Checkpoint 2
 

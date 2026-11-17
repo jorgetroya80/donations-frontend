@@ -102,6 +102,7 @@ export function DonationsPage() {
                   ariaSort={ariaSort('amount')}
                   onSort={() => toggleSort('amount')}
                   indicator={sortIndicator('amount')}
+                  align="right"
                 >
                   {t('donations.amount')}
                 </SortableTh>
@@ -117,7 +118,9 @@ export function DonationsPage() {
                   <TableCell>
                     {dayjs(d.donationDate).format('DD/MM/YYYY')}
                   </TableCell>
-                  <TableCell>{formatCurrency(d.amount ?? 0)}</TableCell>
+                  <TableCell className="text-right">
+                    {formatCurrency(d.amount ?? 0)}
+                  </TableCell>
                   <TableCell>
                     <Badge variant="secondary">
                       {t(`donations.types.${d.donationType}`)}
