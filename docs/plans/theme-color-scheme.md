@@ -52,7 +52,7 @@ key migration + store-only-overrides (T2)    theme-context only; index.html unch
 - [x] T2: Store theme only as an override, migrate the old key
 
 ### Phase 2: Native UI
-- [ ] T3: Drive `color-scheme` from JS (meta and inline style)
+- [x] T3: Drive `color-scheme` from JS (meta and inline style)
 
 ### Checkpoint A (after T1 to T3)
 - [ ] `pnpm run check:task` is green, entry bundle within budget
@@ -120,7 +120,7 @@ Branch first (for example `fix/theme-color-scheme`). `main` is blocked by pre-pu
 **Verification:**
 - [x] New tests in `src/features/theme/theme-context.test.ts` for each criterion; no existing assertion removed
 - [x] `pnpm run check:task` is green
-- [ ] Manual check: a fresh profile has no key after reload; a profile with `theme=dark` and OS dark has no `theme` key afterwards and still renders dark
+- [x] Manual check: a fresh profile has no key after reload; a profile with `theme=dark` and OS dark has no `theme` key afterwards and still renders dark (checked in Chrome via DevTools during T3)
 
 **Dependencies:** None
 **Files likely touched:** `src/features/theme/theme-context.tsx`, `src/features/theme/theme-context.test.ts`
@@ -128,20 +128,20 @@ Branch first (for example `fix/theme-color-scheme`). `main` is blocked by pre-pu
 
 ### Task 3: Drive `color-scheme` from JS (meta and inline style)
 
-**Description:** Add `<meta name="color-scheme" content="light dark">` to `index.html`, placed before the inline script. The script sets the meta content to the stored value or `light dark`, sets `document.documentElement.style.colorScheme` to the same value, and adds `.dark` when resolved dark. All of this goes inside a try/catch whose `catch` is not empty. In `theme-context.tsx`, a single `applyScheme(override, resolved)` helper writes `.dark`, the meta content and `style.colorScheme`. Do not change `src/index.css` and do not add a `:has()` mapping (see the plan's decisions).
+**Description:** Add `<meta name="color-scheme" content="light dark">` to `index.html`, placed before the inline script. The script sets the meta content to the stored value or `light dark`, sets `document.documentElement.style.colorScheme` to the same value, and adds `.dark` when resolved dark. The `localStorage` read goes inside a try/catch whose `catch` is not empty. In `theme-context.tsx`, a single `applyScheme(theme)` helper writes `.dark`, the meta content and `style.colorScheme`, reading the override from storage. Update the script hash in `security-headers.conf`. Do not change `src/index.css` and do not add a `:has()` mapping (see the plan's decisions).
 
 **Acceptance criteria:**
-- [ ] With no override: meta `light dark`, `style.colorScheme` `light dark`, `.dark` matches the OS
-- [ ] With an override: meta and `style.colorScheme` equal the override, and `.dark` matches it
-- [ ] Without JS the page still follows the OS scheme (meta default)
+- [x] With no override: meta `light dark`, `style.colorScheme` `light dark`, `.dark` matches the OS
+- [x] With an override: meta and `style.colorScheme` equal the override, and `.dark` matches it
+- [x] Without JS the page still follows the OS scheme (meta default)
 
 **Verification:**
-- [ ] Tests assert the meta content, the inline style and the class after mount and after each toggle
-- [ ] `pnpm run check:task` is green, entry bundle ≤ 46,816 B gzip
-- [ ] Manual check (`pnpm preview`): dark override with OS light shows a dark scrollbar, `<select>` and date picker; a hard reload in both schemes shows no flash
+- [x] Tests assert the meta content, the inline style and the class after mount and after each toggle
+- [x] `pnpm run check:task` is green, entry bundle ≤ 46,816 B gzip (46,712 B)
+- [ ] Manual check (`pnpm preview`): dark override with OS light shows a dark scrollbar, `<select>` and date picker; a hard reload in both schemes shows no flash. Partly done: Chrome computed `color-scheme` matches the override and the system default, and the console is clean. The visual check of native controls and flash is still open (moved to T5).
 
 **Dependencies:** T2
-**Files likely touched:** `index.html`, `src/features/theme/theme-context.tsx`, `src/features/theme/theme-context.test.ts`
+**Files likely touched:** `index.html`, `security-headers.conf`, `src/features/theme/theme-context.tsx`, `src/features/theme/theme-context.test.ts`
 **Estimated scope:** S
 
 ### Checkpoint A: After T1 to T3

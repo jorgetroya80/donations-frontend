@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { getInitialTheme, ThemeProvider, useTheme } from './theme-context'
 
@@ -136,6 +136,56 @@ describe('override storage', () => {
     const { result } = renderHook(() => useTheme(), { wrapper: ThemeProvider })
     expect(result.current.theme).toBe('dark')
     expect(localStorage.getItem('theme')).toBe('dark')
+  })
+})
+
+describe('color-scheme', () => {
+  let meta: HTMLMetaElement
+
+  beforeEach(() => {
+    document.documentElement.classList.remove('dark')
+    document.documentElement.style.removeProperty('color-scheme')
+    meta = document.createElement('meta')
+    meta.name = 'color-scheme'
+    meta.content = 'light dark'
+    document.head.append(meta)
+  })
+
+  afterEach(() => {
+    meta.remove()
+  })
+
+  it('follows the OS scheme when there is no override', () => {
+    mockMatchMedia(true)
+    renderHook(() => useTheme(), { wrapper: ThemeProvider })
+    expect(meta.content).toBe('light dark')
+    expect(
+      document.documentElement.style.getPropertyValue('color-scheme')
+    ).toBe('light dark')
+    expect(document.documentElement.classList.contains('dark')).toBe(true)
+  })
+
+  it('pins the stored override', () => {
+    mockMatchMedia(false)
+    localStorage.setItem('theme', 'dark')
+    localStorage.setItem('theme-migrated', '1')
+    renderHook(() => useTheme(), { wrapper: ThemeProvider })
+    expect(meta.content).toBe('dark')
+    expect(
+      document.documentElement.style.getPropertyValue('color-scheme')
+    ).toBe('dark')
+  })
+
+  it('pins on toggle away from the OS and releases on toggle back', () => {
+    mockMatchMedia(false)
+    const { result } = renderHook(() => useTheme(), { wrapper: ThemeProvider })
+    act(() => result.current.toggleTheme())
+    expect(meta.content).toBe('dark')
+    act(() => result.current.toggleTheme())
+    expect(meta.content).toBe('light dark')
+    expect(
+      document.documentElement.style.getPropertyValue('color-scheme')
+    ).toBe('light dark')
   })
 })
 

@@ -5,13 +5,24 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Donations</title>
+    <meta name="color-scheme" content="light dark" />
     <script>
-      /* Keep in sync with getInitialTheme() in src/features/theme/theme-context.tsx */
+      /* Keep in sync with getInitialTheme() and applyScheme() in src/features/theme/theme-context.tsx */
       (function () {
-        const saved = localStorage.getItem('theme')
+        let saved = null
+        try {
+          saved = localStorage.getItem('theme')
+        } catch (e) {
+          // Storage blocked: follow the OS scheme.
+          saved = null
+        }
+        const scheme = saved === 'light' || saved === 'dark' ? saved : 'light dark'
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-        if (saved === 'dark' || (!saved && prefersDark)) {
-          document.documentElement.classList.add('dark')
+        const root = document.documentElement
+        document.querySelector('meta[name="color-scheme"]').content = scheme
+        root.style.colorScheme = scheme
+        if (scheme === 'dark' || (scheme === 'light dark' && prefersDark)) {
+          root.classList.add('dark')
         }
       })()
     </script>

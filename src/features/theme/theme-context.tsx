@@ -46,6 +46,20 @@ export function getInitialTheme(): Theme {
   return isTheme(saved) ? saved : getSystemTheme()
 }
 
+// Native UI (scrollbars, form controls) follows color-scheme, colors follow
+// .dark. 'light dark' lets the browser follow the OS; a single value pins it.
+// The inline script in index.html does the same before first paint.
+function applyScheme(theme: Theme) {
+  const saved = localStorage.getItem(STORAGE_KEY)
+  const scheme = isTheme(saved) ? saved : 'light dark'
+  const root = document.documentElement
+  root.classList.toggle('dark', theme === 'dark')
+  root.style.setProperty('color-scheme', scheme)
+  document
+    .querySelector('meta[name="color-scheme"]')
+    ?.setAttribute('content', scheme)
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>(getInitialTheme)
 
@@ -63,7 +77,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme === 'dark')
+    applyScheme(theme)
   }, [theme])
 
   return (
