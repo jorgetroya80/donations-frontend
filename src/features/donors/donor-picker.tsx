@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 
 import { Skeleton } from '@/components/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { getProblemMessage } from '@/lib/get-problem-message'
 import { useDebouncedValue } from '@/lib/use-debounced-value'
@@ -20,6 +19,7 @@ export function DonorPicker({ value, onChange }: DonorPickerProps) {
   const { t } = useTranslation()
   const listboxId = useId()
   const containerRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
@@ -83,8 +83,9 @@ export function DonorPicker({ value, onChange }: DonorPickerProps) {
   const inputValue = open ? query : (selectedDonor?.fullName ?? '')
 
   return (
-    <div ref={containerRef} className="relative flex gap-2">
+    <div ref={containerRef} className="relative">
       <Input
+        ref={inputRef}
         id="donorId"
         type="text"
         role="combobox"
@@ -96,7 +97,7 @@ export function DonorPicker({ value, onChange }: DonorPickerProps) {
           open && highlight >= 0 ? optionId(donors[highlight]?.id) : undefined
         }
         placeholder={t('donations.searchDonor')}
-        className="flex-1"
+        className="pr-8"
         value={inputValue}
         onFocus={() => {
           if (!open) openWithFreshQuery()
@@ -108,24 +109,20 @@ export function DonorPicker({ value, onChange }: DonorPickerProps) {
         }}
         onKeyDown={handleKeyDown}
       />
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon"
-        aria-label={t('donations.clearDonor')}
-        aria-hidden={value == null}
-        tabIndex={value == null ? -1 : 0}
-        className={`relative transition-opacity duration-150 before:absolute before:-inset-1 before:content-[''] ${
-          value == null ? 'pointer-events-none opacity-0' : 'opacity-100'
-        }`}
-        onClick={() => {
-          onChange(null)
-          setQuery('')
-          setOpen(false)
-        }}
-      >
-        <X size={16} />
-      </Button>
+      {value != null && (
+        <button
+          type="button"
+          aria-label={t('donations.clearDonor')}
+          onClick={() => {
+            onChange(null)
+            setQuery('')
+            inputRef.current?.focus()
+          }}
+          className="focus-visible:ring-ring absolute top-0 right-0 flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-3"
+        >
+          <X size={16} />
+        </button>
+      )}
 
       {open && (
         <div className="absolute top-9 left-0 z-50 w-full overflow-hidden rounded-lg border border-input bg-background shadow-md">

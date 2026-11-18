@@ -98,6 +98,19 @@ describe('DonorPicker', () => {
 
     await user.click(screen.getByRole('button', { name: 'Quitar donante' }))
     expect(onChange).toHaveBeenCalledWith(null)
+    expect(screen.getByRole('combobox')).toHaveFocus()
+  })
+
+  it('renders the clear button only when a donor is selected', () => {
+    const { rerender } = renderWithProviders(
+      <DonorPicker value={null} onChange={vi.fn()} />
+    )
+    expect(screen.queryByRole('button', { name: 'Quitar donante' })).toBeNull()
+
+    rerender(<DonorPicker value={1} onChange={vi.fn()} />)
+    expect(
+      screen.getByRole('button', { name: 'Quitar donante' })
+    ).toBeInTheDocument()
   })
 
   it('shows an empty state when search yields no donors', async () => {
