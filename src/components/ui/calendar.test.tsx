@@ -1,11 +1,11 @@
-import { act, render, waitFor } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 
 import { Calendar } from './calendar'
 
 // January 2026 is fixed so the grid is deterministic:
-// 2026-01-14 is a Wednesday, its week runs Sun 2026-01-11 .. Sat 2026-01-17.
+// 2026-01-14 is a Wednesday, its week runs Mon 2026-01-12 .. Sun 2026-01-18.
 const JANUARY_2026 = new Date(2026, 0, 1)
 const START = '2026-01-14'
 
@@ -31,6 +31,13 @@ function renderCalendar() {
 
   return { container, dayButton, focusDay }
 }
+
+describe('Calendar locale', () => {
+  it('renders Spanish month names by default', () => {
+    renderCalendar()
+    expect(screen.getByText(/enero 2026/i)).toBeInTheDocument()
+  })
+})
 
 describe('Calendar keyboard navigation', () => {
   it('does not steal focus on mount', () => {
