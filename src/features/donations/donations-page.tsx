@@ -49,7 +49,7 @@ export function DonationsPage() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <PageHeader title={t('donations.title')} />
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <DateRangePicker
             from={range.from}
             to={range.to}
