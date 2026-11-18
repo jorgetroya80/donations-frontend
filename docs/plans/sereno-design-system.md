@@ -2,11 +2,14 @@
 
 Spec: `docs/PRD-sereno-design-system.md` (reviewed against the code and approved 2026-11-17, designer decisions folded in).
 Design reference: https://claude.ai/code/artifact/533bcba1-9427-4c7f-9d29-b63ee03ab22a
+Phase 3 spec: `docs/PRD-sereno-alert.md` (reviewed against the code and approved 2026-11-18).
 Related, separate: issue #218 (Spanish calendar, toolbar wrap, donor search clear button). It ships on its own, before this plan, and is not tracked here.
 
 ## Overview
 
 Two PRs. PR 1 changes token values, including a blue focus ring, which first needs a narrow, approved change to the floor rule for replaced assertions. PR 2 adjusts the components the new values affect: outlined fields, a hover token with the final primary `#1F4FD8`, a soft green status badge, and right-aligned amounts.
+
+PR 3 (Phase 3, added from `docs/PRD-sereno-alert.md`) gives the destructive alert the canvas's soft red fill. It touches only `src/index.css` and the `destructive` entry of `src/components/ui/alert.tsx`.
 
 ## Architecture Decisions
 
@@ -16,6 +19,7 @@ Two PRs. PR 1 changes token values, including a blue focus ring, which first nee
 - **Primary moves to `#1F4FD8` together with `--primary-hover`.** Never before: `hover:bg-primary/80` on `#1F4FD8` gives 4.37:1.
 - **Fill fixes grouped by file.** Disabled background (PRD 2.1) and outlined fields (PRD 2.5) touch the same class strings in the same four files, so they are one task.
 - **No `--warning` tokens.** Nothing reads them (PRD 2.3 skipped).
+- **Alert fix in the component, one task.** The token and the variant only make sense together: the token alone renders nothing, and the variant fails to compile its class without the `@theme` mapping. So Task 7 is one vertical slice, and all 25 destructive alerts pick it up with no page edits.
 
 ## Dependency graph
 
@@ -26,6 +30,9 @@ Task 1 quality bar (CONSTRAINTS.md + floor-guard.mjs)
           ├── Task 4 primary-hover + #1F4FD8        ├ PR 2
           │      └── Task 5 success badge (same files: index.css, badge.tsx)
           └── Task 6 amount columns (independent)  ┘
+
+Task 5 --success-soft pattern (merged, #220)
+   └── Task 7 --destructive-soft + destructive alert variant → PR 3
 ```
 
 ## Task List
@@ -56,6 +63,17 @@ Task 1 quality bar (CONSTRAINTS.md + floor-guard.mjs)
 - [ ] Manual check, both themes: field hover/focus/disabled, primary button hover, outline button hover, status badges, amount columns
 - [ ] PR opened: `style(ui): adjust controls for Sereno tokens`
 
+### Phase 3: Destructive alert (PR 3, branch `style/sereno-alert`, from `main`)
+
+- [x] Task 7: Soft fill for the destructive alert
+
+### Checkpoint 3
+
+- [x] `pnpm run check:task` passes, real result reported (bundle budget included)
+- [x] `git diff --stat main` lists only `src/index.css`, `src/components/ui/alert.tsx` and the two docs
+- [x] Manual check, light and dark, of the four usages in the PRD
+- [ ] PR opened: `style(ui): soft fill for destructive alerts`, What / Why / Test plan, login error screenshots before and after in both themes
+
 ## Risks and Mitigations
 
 | Risk | Impact | Mitigation |
@@ -65,6 +83,8 @@ Task 1 quality bar (CONSTRAINTS.md + floor-guard.mjs)
 | New route used to weaken an assertion | Med | Guard requires added ≥ removed assertions in the file; reviewer checks that each replacement checks at least as much. |
 | Contrast ratios computed, not measured | Med | Manual check in both themes at each checkpoint. Playwright + axe stays deferred per `CONSTRAINTS.md`. |
 | "Inactivo" on users page turns from red to gray | Low: visible change | Designer decision; call it out in the PR body. |
+| Entry bundle headroom is small (budget 46,816 B gzip) and `alert.tsx` ships in the entry chunk with the login page | Low: `check:task` fails on bundle budget | The new class string is about the same length as the old one. Measure in Task 7; if over, report it and stop. Do not raise the budget. |
+| Donor picker, list pages and donation form errors need a running API to reproduce | Med: manual check skipped | Use the local fullstack env (`docker-compose`), stop the API container for the list and picker errors. If it cannot run, say which checks were skipped. |
 
 ## Open Questions
 
@@ -185,3 +205,28 @@ Task 1 quality bar (CONSTRAINTS.md + floor-guard.mjs)
 **Files likely touched:** `src/components/sortable-th.tsx`, its test, `src/features/donations/donations-page.tsx`, `src/features/expenses/expenses-page.tsx`
 
 **Estimated scope:** M
+
+### Task 7: Soft fill for the destructive alert
+
+**Description:** In `src/index.css`, add `--destructive-soft` next to `--destructive`: `oklch(0.957 0.018 17.48)` in `:root`, `oklch(0.298 0.069 22.15)` in `.dark`. Add `--color-destructive-soft: var(--destructive-soft);` in `@theme inline` next to `--color-destructive`. In `src/components/ui/alert.tsx`, replace the `destructive` entry with `bg-destructive-soft border-transparent text-foreground *:data-[slot=alert-description]:text-foreground *:[svg]:text-destructive`. Base classes and the `default` entry stay as they are.
+
+**Acceptance criteria:**
+- [x] Token in both themes plus the `@theme inline` mapping, values as in the PRD
+- [x] Destructive alert: soft red fill, no visible border, red icon, message in `--foreground`, in both themes
+- [x] `default` entry, base classes and all page files unchanged
+- [x] No new test that only asserts class strings (`src/components/ui/**` is outside coverage)
+
+**Verification:**
+- [x] `pnpm run check:task` passes
+- [x] Manual, light and dark (`pnpm dev` against the local fullstack env):
+  - Login with wrong credentials: icon red, text dark/light, fields still point to `login-error`
+  - Donor picker with a search error: fill reads well inside the dropdown, no border
+  - New donation with a server error, and the duplicate warning: the primary `Button` keeps its own colors
+  - Change password: the forced-rotation and success alerts (`default`) look exactly as on `main`; the API error alert gets the fill
+  - One list page with the API stopped: fill on the page background
+
+**Dependencies:** None (Phases 1 and 2 merged)
+
+**Files likely touched:** `src/index.css`, `src/components/ui/alert.tsx`
+
+**Estimated scope:** XS (about 10 minutes of edits, 20 minutes of manual checks)
