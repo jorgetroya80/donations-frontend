@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.3.21](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.20...donations-frontend-v0.3.21) (2026-11-18)
+
+
+### Features
+
+* add ESP lang to calendar ([#221](https://github.com/jorgetroya80/donations-frontend/issues/221)) ([5d92314](https://github.com/jorgetroya80/donations-frontend/commit/5d92314c684917f9d8e151c8f88a8a879edd7055))
+
+
+### Bug Fixes
+
+* **ui:** move donor clear button inside search field ([#225](https://github.com/jorgetroya80/donations-frontend/issues/225)) ([215c35c](https://github.com/jorgetroya80/donations-frontend/commit/215c35cb04203befb2cac8ef55a6c647b3f95994)), closes [#218](https://github.com/jorgetroya80/donations-frontend/issues/218)
+* **ui:** wrap list toolbars and pin calendar locale test ([#224](https://github.com/jorgetroya80/donations-frontend/issues/224)) ([e83c85a](https://github.com/jorgetroya80/donations-frontend/commit/e83c85a7779e96e74f4f6edab779b3553d8c41b9)), closes [#218](https://github.com/jorgetroya80/donations-frontend/issues/218)
+
 ## [0.3.20](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.19...donations-frontend-v0.3.20) (2026-11-17)
 
 
