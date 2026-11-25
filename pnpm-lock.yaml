@@ -24,8 +24,8 @@ importers:
         specifier: 5.2.2
         version: 5.2.2(react-hook-form@7.73.1(react@19.2.8))
       '@jorgetroya80/donations-api-client':
-        specifier: 2.3.0
-        version: 2.3.0
+        specifier: 2.4.0
+        version: 2.4.0
       '@tanstack/react-query':
         specifier: 5.99.2
         version: 5.99.2(react@19.2.8)
@@ -426,8 +426,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@jorgetroya80/donations-api-client@2.3.0':
-    resolution: {integrity: sha512-g2CauWqPxWC3bVkkr3IQkbWr8cbK1sIiJycSkdm6Yk8hEm/1e++N48cDLZ8+zcLmbDSd3gob3/f5/GgTnTWtfQ==, tarball: https://npm.pkg.github.com/download/@jorgetroya80/donations-api-client/2.3.0/a41b16f2a3ccbe3cf65366c129981adcd5df0aad}
+  '@jorgetroya80/donations-api-client@2.4.0':
+    resolution: {integrity: sha512-gr81ubjmFU8vD3y/q0t/BL1a3aESKJ4UR7Uqc5pxkqq4QkCtBIczZ+p//E3Tv5k+GhBrtcyUjk6kq44VJpO75Q==, tarball: https://npm.pkg.github.com/download/@jorgetroya80/donations-api-client/2.4.0/1ed7b5e9d4bc7f35bb78c6b96739dab0681494a2}
 
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
@@ -2600,7 +2600,7 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.12.2
 
-  '@jorgetroya80/donations-api-client@2.3.0': {}
+  '@jorgetroya80/donations-api-client@2.4.0': {}
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
