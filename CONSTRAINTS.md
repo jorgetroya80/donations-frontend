@@ -14,18 +14,18 @@ To reword or remove a floor bullet, commit with a trailer `Floor: <old bullet te
 
 ## Enforced with numbers
 
-| Dimension        | Rule                                                                                       | Why                                                                 | Checked by                                                                           | Runs at    |
-| ---------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ---------- |
-| Types            | Zero type errors                                                                           | Build and CI gate                                                   | `pnpm run typecheck`                                                                 | check:fast |
-| Lint             | Zero errors from `.oxlintrc.json`                                                          | CI gate                                                             | `pnpm exec oxlint src/`                                                              | check:fast |
-| Secrets          | No secrets in source                                                                       | Leaked key ends up in history                                       | `gitleaks detect --redact --no-banner --source .`                                    | check:fast |
+| Dimension        | Rule                                                                                                                                     | Why                                                                 | Checked by                                                                           | Runs at    |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ---------- |
+| Types            | Zero type errors                                                                                                                         | Build and CI gate                                                   | `pnpm run typecheck`                                                                 | check:fast |
+| Lint             | Zero errors from `.oxlintrc.json`                                                                                                        | CI gate                                                             | `pnpm exec oxlint src/`                                                              | check:fast |
+| Secrets          | No secrets in source                                                                                                                     | Leaked key ends up in history                                       | `gitleaks detect --redact --no-banner --source .`                                    | check:fast |
 | Accessibility    | Zero critical or serious axe violations on every form page: login, password change, create and edit (contrast excluded, needs a browser) | Missing labels and broken ARIA hit keyboard and screen-reader users | `pnpm run test`, `src/test/a11y.test.tsx`                                            | check:task |
-| Coverage         | Changed lines ≥ 80% covered                                                                | Forces a test for new code, leaves room for config lines            | `node scripts/changed-line-coverage.mjs --min 80`                                    | check:task |
-| Floor            | No move that lowers the bar                                                                | Cheapest road to green                                              | `node scripts/floor-guard.mjs`                                                       | check:task |
-| Project coverage | Project line coverage ≥ 84.2%                                                              | Ratchet: 84.77% measured, 0.5% tolerance                            | `pnpm run test:coverage` (`coverage.thresholds` in `vitest.config.ts`)               | check:task |
-| Entry bundle     | Gzip of `index-*.js` ≤ 46,816 B                                                            | Ratchet: 46,583 B measured, +0.5% tolerance                         | `node scripts/bundle-budget.mjs` (after `pnpm run build`)                            | check:task |
-| Security: code   | No Semgrep findings (`p/default`, `p/owasp-top-ten`)                                       | Input handling and XSS paths                                        | `semgrep scan --config p/default --config p/owasp-top-ten --error --metrics=off src` | check:full |
-| Security: deps   | Nothing at high or above                                                                   | Below high is mostly noise                                          | `osv-scanner scan source -r .`                                                       | check:full |
+| Coverage         | Changed lines ≥ 80% covered                                                                                                              | Forces a test for new code, leaves room for config lines            | `node scripts/changed-line-coverage.mjs --min 80`                                    | check:task |
+| Floor            | No move that lowers the bar                                                                                                              | Cheapest road to green                                              | `node scripts/floor-guard.mjs`                                                       | check:task |
+| Project coverage | Project line coverage ≥ 84.2%                                                                                                            | Ratchet: 84.77% measured, 0.5% tolerance                            | `pnpm run test:coverage` (`coverage.thresholds` in `vitest.config.ts`)               | check:task |
+| Entry bundle     | Gzip of `index-*.js` ≤ 46,816 B                                                                                                          | Ratchet: 46,583 B measured, +0.5% tolerance                         | `node scripts/bundle-budget.mjs` (after `pnpm run build`)                            | check:task |
+| Security: code   | No Semgrep findings (`p/default`, `p/owasp-top-ten`)                                                                                     | Input handling and XSS paths                                        | `semgrep scan --config p/default --config p/owasp-top-ten --error --metrics=off src` | check:full |
+| Security: deps   | Nothing at high or above                                                                                                                 | Below high is mostly noise                                          | `osv-scanner scan source -r .`                                                       | check:full |
 
 Every row names the command that produces the verdict.
 
@@ -33,12 +33,12 @@ Every row names the command that produces the verdict.
 
 Install the binaries once. Checked versions are the ones the rules were measured with.
 
-| Tool | Version | Install | Needed by | Notes |
-| --- | --- | --- | --- | --- |
-| gitleaks | 8.30.1 | `brew install gitleaks` | `check:fast` | Always run with `--redact`. Never print a matched secret. |
-| semgrep | 1.183.0 | `brew install semgrep` | `check:full` | Pulls rules from the registry, so needs network. Use `--metrics=off`. |
-| osv-scanner | 2.7.0 | `brew install osv-scanner` | `check:full` | Reads the advisory database online. |
-| Node, pnpm | per `.nvmrc`, `packageManager` | per README | all | `pnpm install` needs `NODE_AUTH_TOKEN` (GitHub Packages). See AGENTS.md. |
+| Tool        | Version                        | Install                    | Needed by    | Notes                                                                    |
+| ----------- | ------------------------------ | -------------------------- | ------------ | ------------------------------------------------------------------------ |
+| gitleaks    | 8.30.1                         | `brew install gitleaks`    | `check:fast` | Always run with `--redact`. Never print a matched secret.                |
+| semgrep     | 1.183.0                        | `brew install semgrep`     | `check:full` | Pulls rules from the registry, so needs network. Use `--metrics=off`.    |
+| osv-scanner | 2.7.0                          | `brew install osv-scanner` | `check:full` | Reads the advisory database online.                                      |
+| Node, pnpm  | per `.nvmrc`, `packageManager` | per README                 | all          | `pnpm install` needs `NODE_AUTH_TOKEN` (GitHub Packages). See AGENTS.md. |
 
 Missing binary: `check:fast` fails with `command not found`. Install it, then rerun. Do not skip the check.
 
@@ -80,5 +80,6 @@ To add a row:
 
 The guard (`check:task`) fails when a row's Expires date has passed. Fix the code, or renew with a new row, new ID, and new trailer.
 
-| ID  | Rule | Path | Reason | Owner | Expires |
-| --- | ---- | ---- | ------ | ----- | ------- |
+| ID  | Rule                    | Path                                 | Reason                                                                                                                                                                                                                                           | Owner         | Expires    |
+| --- | ----------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------- | ---------- |
+| E2  | Entry bundle ≤ 46,816 B | `src/layouts/`, `src/components/ui/` | Motion pass (`docs/plans/motion.md`): mobile drawer kept mounted for its exit animation, sidebar label fade, popup easing. Measured 46,932 B. `check:task` passes `--max 48000` to `bundle-budget.mjs` until this expires; remove the flag then. | @jorgetroya80 | 2027-02-23 |
