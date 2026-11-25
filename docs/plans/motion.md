@@ -170,13 +170,13 @@ T2–T5 are independent of each other once T1 is done.
 **Verification:**
 
 - [ ] Manual: DevTools Rendering panel, emulate `prefers-reduced-motion: reduce`, repeat the T2–T5 manual checks
-- [ ] `pnpm run check:task`
+- [x] `pnpm run check:task` (bundle 46,927 B, max 48,000 B)
 
 **Dependencies:** T2, T3, T4, T5
 **Files:** `src/index.css`
 **Scope:** XS
 
-**Status:** code and guard test (`tests/reduced-motion.test.ts`) committed. Pending: browser check with reduced motion emulated, and `check:task`.
+**Status:** code and guard test (`tests/reduced-motion.test.ts`) committed. `check:task` green. Pending: browser check with reduced motion emulated.
 
 ### Checkpoint C (complete)
 
