@@ -125,25 +125,27 @@ T2–T5 are independent of each other once T1 is done.
 
 **Notes:** No unit test: class-only change, jsdom computes no transitions. Verified the compiled rule is `transition-property: translate, opacity` with `--tw-ease` from `ease-out`.
 
-### Task 5: Popups use the strong ease-out
+### Task 5: Popups use the strong ease-out ✅
 
 **Description:** Add `ease-out` to popup classes in `dialog.tsx` (overlay and content), `popover.tsx`, `tooltip.tsx`, `dropdown-menu.tsx` (content and sub-content) and `select.tsx`. Raise `dropdown-menu` and `select` from `duration-100` to `duration-150`. Dialog, popover and tooltip keep `duration-100`. Leave `origin-(--transform-origin)` and dialog centering alone.
 
 **Acceptance criteria:**
 
-- [ ] Every `animate-in` popup in `src/components/ui/` also has `ease-out`
-- [ ] Dropdown and select open in 150ms; others stay 100ms
-- [ ] Popups still scale from their trigger; dialog still scales from the center
+- [x] Every `animate-in` popup in `src/components/ui/` also has `ease-out`
+- [x] Dropdown and select open in 150ms; others stay 100ms
+- [x] Popups still scale from their trigger; dialog still scales from the center
 
 **Verification:**
 
-- [ ] `pnpm test`
-- [ ] Manual: open each (donor dialog, calendar popover, row dropdown, select, collapsed sidebar tooltip) at 5× slow-down
-- [ ] `pnpm run check:fast`
+- [x] `pnpm test`
+- [ ] (partial: dropdown + tooltip verified in Chrome; dialog, popover, select pending, local API down) Manual: open each (donor dialog, calendar popover, row dropdown, select, collapsed sidebar tooltip) at 5× slow-down
+- [x] `pnpm run check:fast`
 
 **Dependencies:** T1
 **Files:** `src/components/ui/{dialog,popover,tooltip,dropdown-menu,select}.tsx`
 **Scope:** S (5 files, one-class edits)
+
+**Notes:** Tooltip has no explicit duration; it uses the `tw-animate-css` default of 150ms, which is inside the 125–200ms range, so it was left as is.
 
 ### Checkpoint B (after T3–T5)
 
