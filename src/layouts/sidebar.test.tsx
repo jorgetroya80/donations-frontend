@@ -104,6 +104,26 @@ describe('Sidebar collapsed state', () => {
     const nestedLinks = container.querySelectorAll('button a')
     expect(nestedLinks).toHaveLength(0)
   })
+
+  it('toggle keeps the same icon element so it can rotate between states', () => {
+    setUser('admin', ['ADMIN'])
+    const { rerender } = renderCollapsedSidebar()
+    const collapsedIcon = screen
+      .getByRole('button', { name: 'Expandir menú' })
+      .querySelector('svg')
+
+    rerender(
+      <TooltipProvider>
+        <Sidebar collapsed={false} onToggle={() => undefined} />
+      </TooltipProvider>
+    )
+    const expandedIcon = screen
+      .getByRole('button', { name: 'Colapsar menú' })
+      .querySelector('svg')
+
+    expect(collapsedIcon).not.toBeNull()
+    expect(expandedIcon).toBe(collapsedIcon)
+  })
 })
 
 describe('Sidebar forced password rotation', () => {
