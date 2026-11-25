@@ -22,7 +22,7 @@ function Toaster() {
             key={toast.id}
             toast={toast}
             data-slot="toast"
-            className="data-ending-style:translate-y-2 data-ending-style:opacity-0 data-starting-style:translate-y-2 data-starting-style:opacity-0 relative w-full rounded-lg border bg-card p-3 pr-8 text-card-foreground shadow-md transition-all duration-200"
+            className="data-ending-style:translate-y-2 data-ending-style:opacity-0 data-starting-style:translate-y-2 data-starting-style:opacity-0 relative w-full rounded-lg border bg-card p-3 pr-8 text-card-foreground shadow-md transition-[translate,opacity] duration-200 ease-out"
           >
             <ToastPrimitive.Title
               data-slot="toast-title"

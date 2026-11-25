@@ -105,23 +105,25 @@ T2–T5 are independent of each other once T1 is done.
 **Files:** `src/layouts/sidebar.tsx`
 **Scope:** XS
 
-### Task 4: Toast uses named properties
+### Task 4: Toast uses named properties ✅
 
 **Description:** In `src/components/ui/toast.tsx:25`, replace `transition-all` with `transition-[translate,opacity]` and add `ease-out`. Keep `duration-200`. It enters and exits through the bottom.
 
 **Acceptance criteria:**
 
-- [ ] No `transition-all` left in `src/` (grep)
-- [ ] Toast enters from and exits toward the bottom; `toast.test.tsx` passes
+- [x] No `transition-all` left in `src/` (grep)
+- [x] Toast enters from and exits toward the bottom; `toast.test.tsx` passes
 
 **Verification:**
 
-- [ ] `pnpm test -- toast`
-- [ ] Manual: trigger a save toast; fire two quickly and check the second one picks up mid-animation
+- [x] `pnpm test -- toast`
+- [ ] (pending: local API down, 502) Manual: trigger a save toast; fire two quickly and check the second one picks up mid-animation
 
 **Dependencies:** T1
 **Files:** `src/components/ui/toast.tsx`
 **Scope:** XS
+
+**Notes:** No unit test: class-only change, jsdom computes no transitions. Verified the compiled rule is `transition-property: translate, opacity` with `--tw-ease` from `ease-out`.
 
 ### Task 5: Popups use the strong ease-out
 
