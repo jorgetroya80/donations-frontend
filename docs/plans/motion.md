@@ -117,7 +117,7 @@ T2–T5 are independent of each other once T1 is done.
 **Verification:**
 
 - [x] `pnpm test -- toast`
-- [ ] (pending: local API down, 502) Manual: trigger a save toast; fire two quickly and check the second one picks up mid-animation
+- [ ] (pending: needs a real save, which creates data) Manual: trigger a save toast; fire two quickly and check the second one picks up mid-animation
 
 **Dependencies:** T1
 **Files:** `src/components/ui/toast.tsx`
@@ -138,7 +138,7 @@ T2–T5 are independent of each other once T1 is done.
 **Verification:**
 
 - [x] `pnpm test`
-- [ ] (partial: dropdown + tooltip verified in Chrome; dialog, popover, select pending, local API down) Manual: open each (donor dialog, calendar popover, row dropdown, select, collapsed sidebar tooltip) at 5× slow-down
+- [x] (dropdown, tooltip, popover verified in Chrome; select opens over its trigger, so `data-[align-trigger=true]:animate-none` turns its animation off on purpose; dialog has no consumers in the app) Manual: open each (donor dialog, calendar popover, row dropdown, select, collapsed sidebar tooltip) at 5× slow-down
 - [x] `pnpm run check:fast`
 
 **Dependencies:** T1
