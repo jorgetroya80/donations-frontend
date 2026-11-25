@@ -102,6 +102,11 @@ const approvedFloor = new Set(
 const approvedAssertion = new Set(
   [...messages.matchAll(/^Assertion: (.+)$/gm)].map((m) => m[1].trim())
 )
+// Ratchet: a numbered rule whose threshold moves the loose way is approved only by
+// `Ratchet: <rule key>` in a commit. The key is the first cell of the rule's table row.
+const approvedRatchet = new Set(
+  [...messages.matchAll(/^Ratchet: (.+)$/gm)].map((m) => m[1].trim())
+)
 
 const SUPPRESSIONS =
   /@ts-ignore|@ts-nocheck|eslint-disable|oxlint-disable|biome-ignore|# *noqa|# *type: *ignore|istanbul ignore|nosemgrep|gitleaks:allow|Stryker disable/
@@ -206,7 +211,8 @@ for (const r of removedRules) {
       }
     })
   }
-  if (verdict) flag(verdict, r.file, r.text + '  ->  ' + a.text)
+  if (verdict && !approvedRatchet.has(ruleKey(r.text)))
+    flag(verdict, r.file, r.text + '  ->  ' + a.text)
 }
 
 // Expired exceptions: any row whose Expires cell (last column) is before today.
