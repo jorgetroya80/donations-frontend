@@ -1,6 +1,5 @@
 import {
   ChevronLeft,
-  ChevronRight,
   Church,
   HandCoins,
   Home,
@@ -91,7 +90,7 @@ export function Sidebar({ collapsed, onToggle, onNavigate }: SidebarProps) {
     <aside
       aria-label={navLabel}
       className={cn(
-        'bg-card flex h-screen flex-col border-r transition-[width] duration-200',
+        'bg-card flex h-screen flex-col overflow-hidden border-r transition-[width] duration-200 ease-out',
         collapsed ? 'w-16' : 'w-56'
       )}
     >
@@ -103,7 +102,9 @@ export function Sidebar({ collapsed, onToggle, onNavigate }: SidebarProps) {
       >
         <Church size={24} className="text-primary shrink-0" />
         {!collapsed && (
-          <span className="truncate font-semibold">{t('app.name')}</span>
+          <span className="truncate font-semibold animate-in fade-in-0 duration-200 ease-out">
+            {t('app.name')}
+          </span>
         )}
       </div>
 
@@ -131,7 +132,11 @@ export function Sidebar({ collapsed, onToggle, onNavigate }: SidebarProps) {
                   }
                 >
                   {item.icon}
-                  {!collapsed && <span>{t(item.labelKey)}</span>}
+                  {!collapsed && (
+                    <span className="whitespace-nowrap animate-in fade-in-0 duration-200 ease-out">
+                      {t(item.labelKey)}
+                    </span>
+                  )}
                 </NavLink>
               )
 
@@ -178,7 +183,13 @@ export function Sidebar({ collapsed, onToggle, onNavigate }: SidebarProps) {
             onClick={onToggle}
             aria-label={collapsed ? t('sidebar.expand') : t('sidebar.collapse')}
           >
-            {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+            <ChevronLeft
+              size={16}
+              className={cn(
+                'transition-transform duration-200 ease-out',
+                collapsed && 'rotate-180'
+              )}
+            />
           </Button>
         </div>
       )}

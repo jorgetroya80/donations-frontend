@@ -104,6 +104,16 @@ describe('Sidebar collapsed state', () => {
     const nestedLinks = container.querySelectorAll('button a')
     expect(nestedLinks).toHaveLength(0)
   })
+
+  it('toggle keeps one chevron icon so it can rotate between states', () => {
+    setUser('admin', ['ADMIN'])
+    renderCollapsedSidebar()
+
+    const toggle = screen.getByRole('button', {
+      name: 'Expandir menú',
+    })
+    expect(toggle.querySelector('svg.lucide-chevron-left')).not.toBeNull()
+  })
 })
 
 describe('Sidebar forced password rotation', () => {

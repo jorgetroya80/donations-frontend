@@ -85,21 +85,21 @@ T2–T5 are independent of each other once T1 is done.
 
 ## Phase 2: Sidebar collapse and existing motion fixes
 
-### Task 3: Sidebar collapse without text squeeze
+### Task 3: Sidebar collapse without text squeeze ✅
 
 **Description:** In `src/layouts/sidebar.tsx`: add `overflow-hidden` and `ease-out` to the `<aside>`. Add `whitespace-nowrap` and `animate-in fade-in-0 duration-200 ease-out` to the app name and nav labels. Replace the two chevrons with one `ChevronLeft` that rotates (`rotate-180` when collapsed, `transition-transform duration-200 ease-out`). Keep the current `aria-label`s.
 
 **Acceptance criteria:**
 
-- [ ] Expanding: labels fade in on one line and never wrap while the width grows
-- [ ] Collapsing: no text overflow visible during the width transition
-- [ ] The toggle chevron rotates instead of being swapped; existing sidebar tests pass
+- [x] Expanding: labels fade in on one line and never wrap while the width grows
+- [x] Collapsing: no text overflow visible during the width transition
+- [x] The toggle chevron rotates instead of being swapped; existing sidebar tests pass
 
 **Verification:**
 
-- [ ] `pnpm test -- sidebar`
-- [ ] Manual: toggle at 5× slow-down; check the expanded state looks the same as before
-- [ ] `pnpm run check:fast`
+- [x] `pnpm test -- sidebar`
+- [x] Manual: toggle at 5× slow-down; check the expanded state looks the same as before
+- [x] `pnpm run check:fast` (bundle 46,932 B, +12 B; budget handled after T5)
 
 **Dependencies:** T1
 **Files:** `src/layouts/sidebar.tsx`
