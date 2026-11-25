@@ -67,7 +67,7 @@ T2–T5 are independent of each other once T1 is done.
 
 - [x] `pnpm test -- app-layout`
 - [x] Manual: `pnpm dev` at 375px width, open and close 3 ways. Watch at 5× slow-down in the DevTools Animations panel. Tab after closing must not land in the drawer.
-- [x] `pnpm run check:task` (bundle budget included): passes under exception E2 (`--max 48000`, expires 2027-02-23)
+- [x] `pnpm run check:task` (bundle budget included): passes against the fixed 48,000 B budget (was exception E2 until 2026-11-25)
 
 **Dependencies:** T1
 **Files:** `src/layouts/app-layout.tsx`, `src/layouts/app-layout.test.tsx`
@@ -149,7 +149,7 @@ T2–T5 are independent of each other once T1 is done.
 
 ### Checkpoint B (after T3–T5)
 
-- [x] `pnpm run check:task` green, bundle 46,932 B within E2 limit of 48,000 B
+- [x] `pnpm run check:task` green, bundle 46,932 B within the fixed 48,000 B budget (was exception E2)
 - [ ] Light and dark theme spot-check
 - [ ] Human review before Phase 3
 
