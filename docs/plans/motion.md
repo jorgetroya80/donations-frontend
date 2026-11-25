@@ -157,26 +157,26 @@ T2–T5 are independent of each other once T1 is done.
 
 ## Phase 3: Reduced motion
 
-### Task 6: Gentler reduced motion instead of none
+### Task 6: Gentler reduced motion instead of none ✅
 
 **Description:** The global rule in `src/index.css:137` currently cuts every animation and transition to 0.01ms. Replace it with: no movement (`translate`, `scale` and `rotate` don't animate), but opacity fades stay. Approach: under `prefers-reduced-motion: reduce`, reset the `tw-animate-css` enter/exit translate and scale variables, and set `transition-property` to `opacity, visibility, color, background-color, border-color` on the elements T2–T5 touch. The drawer then fades in place instead of sliding.
 
 **Acceptance criteria:**
 
 - [x] With reduced motion on, nothing slides, scales or rotates, but popups, toast and drawer still fade
-- [ ] Animations still end in the right state (drawer fully hidden, popups gone)
+- [x] Animations still end in the right state (drawer fully hidden, popups gone)
 - [x] Rule is 20 lines or fewer, with no JS
 
 **Verification:**
 
-- [ ] Manual: DevTools Rendering panel, emulate `prefers-reduced-motion: reduce`, repeat the T2–T5 manual checks
+- [x] Manual: DevTools Rendering panel, emulate `prefers-reduced-motion: reduce`, repeat the T2–T5 manual checks
 - [x] `pnpm run check:task` (bundle 46,927 B, max 48,000 B)
 
 **Dependencies:** T2, T3, T4, T5
 **Files:** `src/index.css`
 **Scope:** XS
 
-**Status:** code and guard test (`tests/reduced-motion.test.ts`) committed. `check:task` green. Pending: browser check with reduced motion emulated.
+**Status:** code and guard test (`tests/reduced-motion.test.ts`) committed. `check:task` green. Browser check with reduced motion emulated done by the user.
 
 ### Checkpoint C (complete)
 
