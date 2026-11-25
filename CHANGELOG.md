@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.22](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.21...donations-frontend-v0.3.22) (2026-11-25)
+
+
+### Features
+
+* **ui:** add motion to sidebar, drawer and popups ([#226](https://github.com/jorgetroya80/donations-frontend/issues/226)) ([da41790](https://github.com/jorgetroya80/donations-frontend/commit/da41790b373111c32da91f57a5b27e0b2140eb6c))
+
+
+### Bug Fixes
+
+* **deps:** bump donations-api-client to 2.4.0 ([#228](https://github.com/jorgetroya80/donations-frontend/issues/228)) ([dea2a93](https://github.com/jorgetroya80/donations-frontend/commit/dea2a935876381346b0a18ebd5917c15ed13fa29))
+
 ## [0.3.21](https://github.com/jorgetroya80/donations-frontend/compare/donations-frontend-v0.3.20...donations-frontend-v0.3.21) (2026-11-18)
 
 
