@@ -105,14 +105,24 @@ describe('Sidebar collapsed state', () => {
     expect(nestedLinks).toHaveLength(0)
   })
 
-  it('toggle keeps one chevron icon so it can rotate between states', () => {
+  it('toggle keeps the same icon element so it can rotate between states', () => {
     setUser('admin', ['ADMIN'])
-    renderCollapsedSidebar()
+    const { rerender } = renderCollapsedSidebar()
+    const collapsedIcon = screen
+      .getByRole('button', { name: 'Expandir menú' })
+      .querySelector('svg')
 
-    const toggle = screen.getByRole('button', {
-      name: 'Expandir menú',
-    })
-    expect(toggle.querySelector('svg.lucide-chevron-left')).not.toBeNull()
+    rerender(
+      <TooltipProvider>
+        <Sidebar collapsed={false} onToggle={() => undefined} />
+      </TooltipProvider>
+    )
+    const expandedIcon = screen
+      .getByRole('button', { name: 'Colapsar menú' })
+      .querySelector('svg')
+
+    expect(collapsedIcon).not.toBeNull()
+    expect(expandedIcon).toBe(collapsedIcon)
   })
 })
 

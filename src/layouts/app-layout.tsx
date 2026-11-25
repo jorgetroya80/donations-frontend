@@ -53,7 +53,7 @@ export function AppLayout() {
       <div
         data-slot="mobile-drawer"
         inert={!mobileOpen}
-        aria-hidden={mobileOpen ? undefined : true}
+        aria-hidden={!mobileOpen || undefined}
         className="fixed inset-0 z-50 md:hidden [&[inert]]:invisible [&[inert]]:transition-[visibility] [&[inert]]:duration-300"
       >
         <div
