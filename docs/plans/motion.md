@@ -117,7 +117,7 @@ T2–T5 are independent of each other once T1 is done.
 **Verification:**
 
 - [x] `pnpm test -- toast`
-- [ ] (pending: needs a real save, which creates data) Manual: trigger a save toast; fire two quickly and check the second one picks up mid-animation
+- [x] (checked by hand by the user) Manual: trigger a save toast; fire two quickly and check the second one picks up mid-animation
 
 **Dependencies:** T1
 **Files:** `src/components/ui/toast.tsx`
