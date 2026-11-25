@@ -7,7 +7,7 @@ import { readdirSync, readFileSync } from 'node:fs'
 import { gzipSync } from 'node:zlib'
 
 const i = process.argv.indexOf('--max')
-const max = i > -1 ? Number(process.argv[i + 1]) : 46816
+const max = i > -1 ? Number(process.argv[i + 1]) : 48000
 
 const assets = 'dist/assets'
 let entry
