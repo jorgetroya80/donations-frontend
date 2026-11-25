@@ -35,6 +35,23 @@ describe('AppLayout mobile navigation', () => {
     expect(menuButton).toHaveFocus()
   })
 
+  it('keeps the closed drawer mounted but inert so it can animate out', async () => {
+    const user = userEvent.setup()
+    const { container } = renderWithProviders(<AppLayout />)
+
+    const drawer = container.querySelector('[data-slot="mobile-drawer"]')
+    expect(drawer).toHaveAttribute('inert')
+    expect(drawer).toHaveAttribute('aria-hidden', 'true')
+
+    await user.click(screen.getByRole('button', { name: 'Abrir menú' }))
+    expect(drawer).not.toHaveAttribute('inert')
+    expect(drawer).not.toHaveAttribute('aria-hidden')
+
+    await user.keyboard('{Escape}')
+    expect(container.querySelector('[data-slot="mobile-drawer"]')).toBe(drawer)
+    expect(drawer).toHaveAttribute('inert')
+  })
+
   it('closes the drawer when a nav link is clicked', async () => {
     const user = userEvent.setup()
     renderWithProviders(<AppLayout />)

@@ -40,10 +40,12 @@ T2–T5 are independent of each other once T1 is done.
 **Description:** Add the three curves to the `@theme` block in `src/index.css`. This overrides Tailwind's weak default `ease-out` and `ease-in-out` across the app.
 
 **Acceptance criteria:**
+
 - [x] `ease-out`, `ease-in-out` and `ease-drawer` utilities produce the curves above in the built CSS
 - [x] Existing `ease-*` utility users (grep `ease-`) still look correct
 
 **Verification:**
+
 - [x] `pnpm build` then grep `dist/assets/*.css` for `cubic-bezier(.23,1,.32,1)`
 - [x] `pnpm run check:fast`
 
@@ -51,25 +53,30 @@ T2–T5 are independent of each other once T1 is done.
 **Files:** `src/index.css`
 **Scope:** XS
 
-### Task 2: Mobile drawer slides in and out
+### Task 2: Mobile drawer slides in and out ✅
 
 **Description:** Keep the drawer mounted in `src/layouts/app-layout.tsx`. The panel slides with `translate-x` (`-100%` to `0`) and the backdrop fades with `opacity`, both `duration-300 ease-drawer`. Closed state: `inert`, `aria-hidden`, `invisible`. Name each transition property (`transition-[translate,visibility]`, `transition-[opacity,visibility]`), never `transition-all`.
 
 **Acceptance criteria:**
-- [ ] Opening slides the panel from the left and fades the backdrop in; closing (Escape, backdrop click, nav click) reverses it
-- [ ] When closed, nothing in the drawer can be focused with Tab or seen by a screen reader
-- [ ] Existing tests in `app-layout.test.tsx` pass unchanged; new test asserts the closed drawer is `inert`
+
+- [x] Opening slides the panel from the left and fades the backdrop in; closing (Escape, backdrop click, nav click) reverses it
+- [x] When closed, nothing in the drawer can be focused with Tab or seen by a screen reader
+- [x] Existing tests in `app-layout.test.tsx` pass unchanged; new test asserts the closed drawer is `inert`
 
 **Verification:**
-- [ ] `pnpm test -- app-layout`
-- [ ] Manual: `pnpm dev` at 375px width, open and close 3 ways. Watch at 5× slow-down in the DevTools Animations panel. Tab after closing must not land in the drawer.
-- [ ] `pnpm run check:task` (bundle budget included)
+
+- [x] `pnpm test -- app-layout`
+- [x] Manual: `pnpm dev` at 375px width, open and close 3 ways. Watch at 5× slow-down in the DevTools Animations panel. Tab after closing must not land in the drawer.
+- [ ] `pnpm run check:task` (bundle budget included) — blocked: 46,920 B > 46,816 B; exception + new limit after T5 (user decision)
 
 **Dependencies:** T1
 **Files:** `src/layouts/app-layout.tsx`, `src/layouts/app-layout.test.tsx`
 **Scope:** S
 
+**Notes:** Closed state is styled with `[&[inert]]:` on the wrapper (self only) and `inert:` on children. The visibility transition applies only on close; on open the drawer must be visible at once or `focus()` is ignored. Static class strings, no `cn()`: React Compiler cache slots cost ~200 B gzip.
+
 ### Checkpoint A (after T1–T2)
+
 - [ ] `pnpm run check:task` green
 - [ ] Drawer feel-checked on a real phone or device emulation
 - [ ] Human review before Phase 2
@@ -83,11 +90,13 @@ T2–T5 are independent of each other once T1 is done.
 **Description:** In `src/layouts/sidebar.tsx`: add `overflow-hidden` and `ease-out` to the `<aside>`. Add `whitespace-nowrap` and `animate-in fade-in-0 duration-200 ease-out` to the app name and nav labels. Replace the two chevrons with one `ChevronLeft` that rotates (`rotate-180` when collapsed, `transition-transform duration-200 ease-out`). Keep the current `aria-label`s.
 
 **Acceptance criteria:**
+
 - [ ] Expanding: labels fade in on one line and never wrap while the width grows
 - [ ] Collapsing: no text overflow visible during the width transition
 - [ ] The toggle chevron rotates instead of being swapped; existing sidebar tests pass
 
 **Verification:**
+
 - [ ] `pnpm test -- sidebar`
 - [ ] Manual: toggle at 5× slow-down; check the expanded state looks the same as before
 - [ ] `pnpm run check:fast`
@@ -101,10 +110,12 @@ T2–T5 are independent of each other once T1 is done.
 **Description:** In `src/components/ui/toast.tsx:25`, replace `transition-all` with `transition-[translate,opacity]` and add `ease-out`. Keep `duration-200`. It enters and exits through the bottom.
 
 **Acceptance criteria:**
+
 - [ ] No `transition-all` left in `src/` (grep)
 - [ ] Toast enters from and exits toward the bottom; `toast.test.tsx` passes
 
 **Verification:**
+
 - [ ] `pnpm test -- toast`
 - [ ] Manual: trigger a save toast; fire two quickly and check the second one picks up mid-animation
 
@@ -117,11 +128,13 @@ T2–T5 are independent of each other once T1 is done.
 **Description:** Add `ease-out` to popup classes in `dialog.tsx` (overlay and content), `popover.tsx`, `tooltip.tsx`, `dropdown-menu.tsx` (content and sub-content) and `select.tsx`. Raise `dropdown-menu` and `select` from `duration-100` to `duration-150`. Dialog, popover and tooltip keep `duration-100`. Leave `origin-(--transform-origin)` and dialog centering alone.
 
 **Acceptance criteria:**
+
 - [ ] Every `animate-in` popup in `src/components/ui/` also has `ease-out`
 - [ ] Dropdown and select open in 150ms; others stay 100ms
 - [ ] Popups still scale from their trigger; dialog still scales from the center
 
 **Verification:**
+
 - [ ] `pnpm test`
 - [ ] Manual: open each (donor dialog, calendar popover, row dropdown, select, collapsed sidebar tooltip) at 5× slow-down
 - [ ] `pnpm run check:fast`
@@ -131,6 +144,7 @@ T2–T5 are independent of each other once T1 is done.
 **Scope:** S (5 files, one-class edits)
 
 ### Checkpoint B (after T3–T5)
+
 - [ ] `pnpm run check:task` green, bundle within budget
 - [ ] Light and dark theme spot-check
 - [ ] Human review before Phase 3
@@ -144,11 +158,13 @@ T2–T5 are independent of each other once T1 is done.
 **Description:** The global rule in `src/index.css:137` currently cuts every animation and transition to 0.01ms. Replace it with: no movement (`translate`, `scale` and `rotate` don't animate), but opacity fades stay. Approach: under `prefers-reduced-motion: reduce`, reset the `tw-animate-css` enter/exit translate and scale variables, and set `transition-property` to `opacity, visibility, color, background-color, border-color` on the elements T2–T5 touch. The drawer then fades in place instead of sliding.
 
 **Acceptance criteria:**
+
 - [ ] With reduced motion on, nothing slides, scales or rotates, but popups, toast and drawer still fade
 - [ ] Animations still end in the right state (drawer fully hidden, popups gone)
 - [ ] Rule is 20 lines or fewer, with no JS
 
 **Verification:**
+
 - [ ] Manual: DevTools Rendering panel, emulate `prefers-reduced-motion: reduce`, repeat the T2–T5 manual checks
 - [ ] `pnpm run check:task`
 
@@ -157,6 +173,7 @@ T2–T5 are independent of each other once T1 is done.
 **Scope:** XS
 
 ### Checkpoint C (complete)
+
 - [ ] All acceptance criteria met
 - [ ] `pnpm run check:task` green
 - [ ] Deep review with the `code-reviewer` agent
@@ -166,13 +183,13 @@ T2–T5 are independent of each other once T1 is done.
 
 ## Risks and mitigations
 
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| `inert` on an older device ignored | Med: closed drawer focusable | `inert` is Baseline Widely available as of 2025; `invisible` (visibility hidden) also blocks focus as a fallback |
-| Overriding Tailwind `--ease-out` changes curves elsewhere | Low | T1 greps current `ease-` users and checks them |
-| Always-mounted mobile drawer renders a second `Sidebar` | Low: one extra hidden nav | Wrapper is `md:hidden`; measure with the bundle budget and React Profiler if needed |
-| Feel can't be judged in jsdom | Med | Each task has a 5× slow-down manual check; feel-check again the next day |
-| T6 reset misses a `tw-animate-css` variable | Low | Emulate reduced motion and open every popup |
+| Risk                                                      | Impact                       | Mitigation                                                                                                       |
+| --------------------------------------------------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `inert` on an older device ignored                        | Med: closed drawer focusable | `inert` is Baseline Widely available as of 2025; `invisible` (visibility hidden) also blocks focus as a fallback |
+| Overriding Tailwind `--ease-out` changes curves elsewhere | Low                          | T1 greps current `ease-` users and checks them                                                                   |
+| Always-mounted mobile drawer renders a second `Sidebar`   | Low: one extra hidden nav    | Wrapper is `md:hidden`; measure with the bundle budget and React Profiler if needed                              |
+| Feel can't be judged in jsdom                             | Med                          | Each task has a 5× slow-down manual check; feel-check again the next day                                         |
+| T6 reset misses a `tw-animate-css` variable               | Low                          | Emulate reduced motion and open every popup                                                                      |
 
 ## Open questions
 
