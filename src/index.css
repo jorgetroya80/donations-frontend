@@ -138,13 +138,23 @@
   }
 }
 
+/* Gentler, not none: nothing slides, scales or rotates; fades keep their timing. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
+    --tw-enter-translate-x: initial !important;
+    --tw-enter-translate-y: initial !important;
+    --tw-enter-scale: initial !important;
+    --tw-enter-rotate: initial !important;
+    --tw-exit-translate-x: initial !important;
+    --tw-exit-translate-y: initial !important;
+    --tw-exit-scale: initial !important;
+    --tw-exit-rotate: initial !important;
+    transition-property:
+      opacity, visibility, color, background-color, border-color, outline-color,
+      text-decoration-color, fill, stroke, box-shadow !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
 }

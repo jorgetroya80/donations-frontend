@@ -163,9 +163,9 @@ T2–T5 are independent of each other once T1 is done.
 
 **Acceptance criteria:**
 
-- [ ] With reduced motion on, nothing slides, scales or rotates, but popups, toast and drawer still fade
+- [x] With reduced motion on, nothing slides, scales or rotates, but popups, toast and drawer still fade
 - [ ] Animations still end in the right state (drawer fully hidden, popups gone)
-- [ ] Rule is 20 lines or fewer, with no JS
+- [x] Rule is 20 lines or fewer, with no JS
 
 **Verification:**
 
@@ -175,6 +175,8 @@ T2–T5 are independent of each other once T1 is done.
 **Dependencies:** T2, T3, T4, T5
 **Files:** `src/index.css`
 **Scope:** XS
+
+**Status:** code and guard test (`tests/reduced-motion.test.ts`) committed. Pending: browser check with reduced motion emulated, and `check:task`.
 
 ### Checkpoint C (complete)
 
