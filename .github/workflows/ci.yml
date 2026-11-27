@@ -59,6 +59,9 @@ jobs:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          # Full history: the diff-scoped gates need origin/main and the branch commits.
+          fetch-depth: 0
 
       - uses: pnpm/action-setup@v6.0.8
         with:
@@ -76,6 +79,12 @@ jobs:
 
       - name: Coverage
         run: pnpm run test:coverage
+
+      - name: Changed-line coverage
+        run: node scripts/changed-line-coverage.mjs --base origin/main
+
+      - name: Floor guard (CONSTRAINTS.md exceptions and floor)
+        run: node scripts/floor-guard.mjs --base origin/main
 
   build:
     name: Build
@@ -98,3 +107,18 @@ jobs:
 
       - name: Build
         run: pnpm run build
+
+      - name: Bundle budget
+        run: node scripts/bundle-budget.mjs
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
