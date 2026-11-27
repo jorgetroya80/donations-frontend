@@ -164,8 +164,10 @@ works with Claude Code, Codex and OpenCode, and enforces it:
 - **Automatic guardrails.** Hooks format every edited file. Before a turn ends they run
   typecheck plus the tests related to the change, and a failure sends the errors back to the
   agent to fix.
-- **Measured behavior.** `bash scripts/run-evals.sh` runs eval cases against the harness in
-  throwaway git worktrees, so changes to the setup are checked, not assumed.
+- **Measured behavior.** `bash scripts/run-evals.sh` runs the cases in `evals/cases/` against
+  the harness in throwaway git worktrees, so changes to the setup are checked, not assumed.
+  `EVAL_AGENT=codex` or `EVAL_AGENT=opencode` runs the same cases with another agent, and
+  `EVAL_NO_HARNESS=1` runs the control arm with the harness removed.
 
 **Setup:** install `jq` (`brew install jq`).
 

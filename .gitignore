@@ -35,11 +35,12 @@ yarn-error.log*
 !.claude/settings.json
 !.claude/launch.json
 !.claude/hooks/
-!.claude/evals/
 # Repo skills: canonical copy in .agents/skills/, linked here for Claude Code
 !.claude/skills/
 .claude/skills/*
 !.claude/skills/update-api-client
 !.claude/skills/dependabot
 !.claude/skills/pre-merge-review
-.claude/evals/results/
+
+# Eval runs (scripts/run-evals.sh): local, per machine
+evals/results/
