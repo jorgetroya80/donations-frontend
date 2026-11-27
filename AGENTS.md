@@ -69,8 +69,8 @@ degradation and a fallback of 20 lines or fewer, with no new dependency or polyf
 - `chore(main):` is reserved for release-please. Do not write it.
 - Breaking change: `!` after the type or scope, and a `BREAKING CHANGE:` footer in the body.
 - PR body: What / Why / Test plan.
-- Deep pre-merge review: use the `code-reviewer` agent.
-- Repo workflows live as skills in `.agents/skills/`: `update-api-client` (bump the API client and adapt the code) and `dependabot` (fix PRs for open security alerts). Both open PRs and never merge.
+- Deep pre-merge review: skill `pre-merge-review` in `.agents/skills/`.
+- Repo workflows live as skills in `.agents/skills/`: `pre-merge-review` (review a branch against this quality bar), `update-api-client` (bump the API client and adapt the code) and `dependabot` (fix PRs for open security alerts). The last two open PRs and never merge.
 
 ## Exceptions
 
