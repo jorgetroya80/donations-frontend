@@ -14,9 +14,11 @@
 # EVAL_PERMISSION_MODE=bypassPermissions to drop every permission check for the run —
 # only worth it inside the disposable worktree.
 #
-# EVAL_NO_HARNESS=1 deletes CLAUDE.md and .claude/settings.json inside the worktree before
-# the agent starts, so the case runs with no project context and no hooks. That is the
-# control arm: same cases, same model, harness off, to compare against a labelled run.
+# EVAL_NO_HARNESS=1 deletes CLAUDE.md, AGENTS.md, .claude/settings.json and the versioned
+# skills inside the worktree before the agent starts, so the case runs with no project
+# context, no hooks and no repo skills. That is the control arm: same cases, same model,
+# harness off, to compare against a labelled run. AGENTS.md must go too: since Claude Code
+# 2.1.277 it is loaded whenever no CLAUDE.md is on the path.
 set -uo pipefail
 
 ROOT=$(git rev-parse --show-toplevel)
@@ -71,10 +73,11 @@ for case_file in "${cases[@]}"; do
   cp -Rc "$ROOT/node_modules" "$tree/node_modules" 2>/dev/null ||
     cp -R "$ROOT/node_modules" "$tree/node_modules"
 
-  # Control arm: strip the project context and the hooks from the worktree. Personal
-  # skills and agents are gitignored, so they are absent from the worktree already.
+  # Control arm: strip the project context, the hooks and the repo skills from the
+  # worktree. Personal skills and agents are gitignored, so they are absent already.
   if [ "$NO_HARNESS" = "1" ]; then
-    rm -f "$tree/CLAUDE.md" "$tree/.claude/settings.json"
+    rm -f "$tree/CLAUDE.md" "$tree/AGENTS.md" "$tree/.claude/settings.json"
+    rm -rf "$tree/.agents" "$tree/.claude/skills"
   fi
 
   prompt=$(section Prompt "$case_file")

@@ -1,6 +1,8 @@
 # CLAUDE.md
 
-Read `AGENTS.md` first. It holds the commands, conventions, workflow and quality bar for this repo.
+@AGENTS.md
+
+Above: commands, conventions, workflow and quality bar for this repo.
 Quality bar detail: `CONSTRAINTS.md`. Never weaken it to make a change pass.
 
 ## Claude-specific
