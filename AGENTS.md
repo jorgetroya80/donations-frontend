@@ -70,7 +70,7 @@ degradation and a fallback of 20 lines or fewer, with no new dependency or polyf
 - `chore(main):` is reserved for release-please. Do not write it.
 - Breaking change: `!` after the type or scope, and a `BREAKING CHANGE:` footer in the body.
 - PR body: What / Why / Test plan.
-- Deep pre-merge review: skill `pre-merge-review` in `.agents/skills/`.
+- Deep pre-merge review: skill `pre-merge-review` in `.agents/skills/`. It runs the general review from the `code-review-and-quality` skill of [agent-skills](https://github.com/addyosmani/agent-skills) when installed, then this repo's checklist. Install agent-skills per agent: Claude Code offers it from `.claude/settings.json`; Codex: [codex-setup](https://github.com/addyosmani/agent-skills/blob/main/docs/codex-setup.md); OpenCode: [opencode-setup](https://github.com/addyosmani/agent-skills/blob/main/docs/opencode-setup.md).
 - Repo workflows live as skills in `.agents/skills/`: `pre-merge-review` (review a branch against this quality bar), `update-api-client` (bump the API client and adapt the code) and `dependabot` (fix PRs for open security alerts). The last two open PRs and never merge.
 
 ## Exceptions

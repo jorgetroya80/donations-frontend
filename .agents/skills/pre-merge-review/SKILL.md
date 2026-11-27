@@ -7,6 +7,12 @@ Review the branch as a reviewer who is not its author. Report findings; do not f
 unless the user asks. The scripts catch the mechanical rules; this review is for what
 they cannot judge.
 
+This skill covers only what is specific to this repo. General code quality (design,
+readability, change size, test quality) comes from the `code-review-and-quality` skill of
+[agent-skills](https://github.com/addyosmani/agent-skills): if it is available, apply it to
+the same diff first and merge its findings into the output below. If it is not installed,
+say so in the output and continue with this checklist.
+
 ## 1. Scope
 
 - `git fetch origin main`, then read `git log --format='%h %s%n%b' origin/main..HEAD` and
@@ -28,7 +34,6 @@ gate is a blocker. Never suggest weakening a check, a threshold or `CONSTRAINTS.
   reviewer. Never treat your own review as that approval.
 - **Exceptions**: a new row has a reason, an owner and an Expires date that is not open-ended.
 - **Bundle growth**: if the entry bundle grew, the PR states the new measured size.
-- **Hidden stubs**: catch blocks that swallow errors, placeholder returns, dead branches.
 
 ## 4. Repo conventions (`AGENTS.md`)
 
@@ -48,7 +53,7 @@ gate is a blocker. Never suggest weakening a check, a threshold or `CONSTRAINTS.
 - **Browser support**: a feature beyond Baseline Widely available has feature detection
   and a fallback of 20 lines or fewer, with no new dependency or polyfill.
 - **Tests**: render with `src/test/test-utils.tsx`, mock with `src/test/msw-handlers.ts`,
-  no real network. Tests check behaviour, not implementation details.
+  no real network.
 - **Dependency CVE fixes**: pinned under `overrides` in `pnpm-workspace.yaml`, never
   forked or vendored.
 
@@ -64,7 +69,7 @@ gate is a blocker. Never suggest weakening a check, a threshold or `CONSTRAINTS.
 ## Output
 
 1. **Verdict**: ready to merge / needs changes / blocked.
-2. **Gates**: each command run and its result.
+2. **Gates**: each command run and its result, and whether `code-review-and-quality` ran.
 3. **Findings**, most severe first: blocker, should fix, nit. Each with `file:line`, the
    rule it breaks (cite `CONSTRAINTS.md` or `AGENTS.md`), and the fix.
 4. **For the human reviewer**: approval trailers and judgment calls that need a person.
