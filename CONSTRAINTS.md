@@ -44,7 +44,7 @@ Missing binary: `check:fast` fails with `command not found`. Install it, then re
 
 ### What to run, and when
 
-Run these on your machine. CI does not run the constraint scripts; it only runs its own jobs (`ci.yml`). The checks here are your gate.
+Run these on your machine before pushing. CI (`ci.yml`) also runs typecheck, lint, tests, coverage, changed-line coverage, the floor guard, the bundle budget and gitleaks on every PR, but not Semgrep or osv-scanner: `check:full` stays a local gate.
 
 1. After each edit: `pnpm run check:fast`. Seconds.
 2. Before you report a task done, and before you open a PR: `pnpm run check:task`. Under 90 s. It needs `origin/main` fetched, because the guard and changed-line coverage diff against it: `git fetch origin main`.
