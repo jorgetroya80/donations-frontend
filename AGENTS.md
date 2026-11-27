@@ -13,6 +13,7 @@ Quality bar: read `CONSTRAINTS.md` before writing code. Never weaken it to make 
 - `pnpm check`: oxlint + oxfmt, auto-fix (`src/`)
 - `pnpm check:ci`: same checks, no writes (use before pushing)
 - `pnpm test`: unit tests. `pnpm test:watch`, `pnpm test:coverage` for variants
+- `pnpm check:agent`: typecheck + tests related to the changed `src` files. Run before ending a turn. Claude Code and Codex run it on Stop (`scripts/agent/stop-hook.sh`); in any other agent, run it yourself.
 - `pnpm check:fast`: typecheck, oxlint, gitleaks. Seconds. Run after edits.
 - `pnpm check:task`: `check:fast` + coverage + changed-line coverage + floor guard. Under 90 s.
 - `pnpm check:full`: `check:task` + Semgrep + osv-scanner. Needs network.

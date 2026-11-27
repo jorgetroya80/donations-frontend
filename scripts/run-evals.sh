@@ -76,8 +76,8 @@ for case_file in "${cases[@]}"; do
   # Control arm: strip the project context, the hooks and the repo skills from the
   # worktree. Personal skills and agents are gitignored, so they are absent already.
   if [ "$NO_HARNESS" = "1" ]; then
-    rm -f "$tree/CLAUDE.md" "$tree/AGENTS.md" "$tree/.claude/settings.json"
-    rm -rf "$tree/.agents" "$tree/.claude/skills"
+    rm -f "$tree/CLAUDE.md" "$tree/AGENTS.md" "$tree/.claude/settings.json" "$tree/opencode.json"
+    rm -rf "$tree/.agents" "$tree/.claude/skills" "$tree/.codex"
   fi
 
   prompt=$(section Prompt "$case_file")

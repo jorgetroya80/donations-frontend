@@ -1,0 +1,16 @@
+{
+  "description": "donations-frontend harness: verify changed files before the turn ends.",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$(git rev-parse --show-toplevel)/scripts/agent/stop-hook.sh\"",
+            "timeout": 300
+          }
+        ]
+      }
+    ]
+  }
+}

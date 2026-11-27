@@ -1,17 +1,15 @@
 #!/bin/bash
-# Stop: before the turn ends, typecheck and run the tests related to what changed.
-# Exit 2 hands the failure back to the agent so it fixes it instead of stopping.
+# Typecheck and run the tests related to the src files changed in the working tree
+# (unstaged, staged and untracked). Agent-neutral: `pnpm check:agent` runs it, and the
+# Claude Code and Codex Stop hooks call it through scripts/agent/stop-hook.sh.
+#
+# Exit: 0 clean or nothing changed, 1 failure (report on stderr).
 set -uo pipefail
 
 # The local binaries are called directly rather than through `pnpm exec`: the eval
-# worktrees symlink node_modules, and pnpm aborts there trying to purge it.
+# worktrees copy node_modules, and pnpm can abort there trying to purge it.
 
-cd "${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel)}" || exit 0
-
-input=$(cat)
-
-# Already re-entered once after a block — let the turn end rather than loop forever.
-[ "$(jq -r '.stop_hook_active // false' <<<"$input")" = "true" ] && exit 0
+cd "$(git rev-parse --show-toplevel)" || exit 0
 
 # Bash 3.2 on macOS: no mapfile, keep the list newline-separated.
 changed=$(
@@ -22,7 +20,10 @@ changed=$(
   } | sort -u | grep -E '\.tsx?$'
 )
 
-[ -n "$changed" ] || exit 0
+if [ -z "$changed" ]; then
+  echo "check:agent: no changed src files"
+  exit 0
+fi
 
 failed=""
 
@@ -41,8 +42,9 @@ $test_out
 fi
 
 if [ -n "$failed" ]; then
-  printf 'Verification failed on the files you changed. Fix this before finishing.\n\n%s' "$failed" >&2
-  exit 2
+  printf '%s' "$failed" >&2
+  exit 1
 fi
 
+echo "check:agent: typecheck and related tests pass"
 exit 0

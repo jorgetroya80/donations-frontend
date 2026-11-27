@@ -1,24 +1,7 @@
 #!/bin/bash
-# PostToolUse(Edit|Write): format and organize imports on the file the agent just touched.
-# Fast enough to run on every edit. Always exits 0 — formatting is never a reason to block.
+# PostToolUse(Edit|Write): pass the edited file to the shared formatter.
 set -uo pipefail
-
-# The local binaries are called directly rather than through `pnpm exec`: the eval
-# worktrees symlink node_modules, and pnpm aborts there trying to purge it.
-
-cd "${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel)}" || exit 0
-
 file=$(jq -r '.tool_input.file_path // empty')
 [ -n "$file" ] || exit 0
-
-# Only source files the linter and formatter are configured for.
-case "$file" in
-  "$PWD"/src/*.ts | "$PWD"/src/*.tsx | src/*.ts | src/*.tsx) ;;
-  *) exit 0 ;;
-esac
-
-[ -f "$file" ] || exit 0
-
-./node_modules/.bin/oxlint --fix "$file" >/dev/null 2>&1
-./node_modules/.bin/oxfmt "$file" >/dev/null 2>&1
+bash "${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel)}/scripts/agent/format-file.sh" "$file"
 exit 0

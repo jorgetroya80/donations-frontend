@@ -1,0 +1,12 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "formatter": {
+    "prettier": {
+      "disabled": true
+    },
+    "oxc": {
+      "command": ["bash", "scripts/agent/format-file.sh", "$FILE"],
+      "extensions": [".ts", ".tsx"]
+    }
+  }
+}
