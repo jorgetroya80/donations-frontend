@@ -156,17 +156,30 @@ The script downloads the app, creates a settings file and pulls the Docker image
 
 ## AI-assisted development
 
-AI agents work on this repo under the same quality bar as a human contributor. The Claude Code
-harness in `.claude/` enforces it:
+AI agents work on this repo under the same quality bar as a human contributor. The harness
+works with Claude Code, Codex and OpenCode, and enforces it:
 
-- **Written conventions.** `CLAUDE.md` holds the project rules (feature slices, API access,
+- **Written conventions.** `AGENTS.md` holds the project rules (feature slices, API access,
   error handling, i18n, testing) that agents follow.
 - **Automatic guardrails.** Hooks format every edited file. Before a turn ends they run
   typecheck plus the tests related to the change, and a failure sends the errors back to the
   agent to fix.
-- **Measured behavior.** `bash scripts/run-evals.sh` runs eval cases against the harness in
-  throwaway git worktrees, so changes to the setup are checked, not assumed.
+- **Measured behavior.** `bash scripts/run-evals.sh` runs the cases in `evals/cases/` against
+  the harness in throwaway git worktrees, so changes to the setup are checked, not assumed.
+  `EVAL_AGENT=codex` or `EVAL_AGENT=opencode` runs the same cases with another agent, and
+  `EVAL_NO_HARNESS=1` runs the control arm with the harness removed.
 
-**Setup:** install `jq` (`brew install jq`), then run
-`/plugin marketplace add addyosmani/agent-skills` in an interactive `claude` session. Personal
-overrides go in `.claude/settings.local.json` (not versioned). Hooks load at session start.
+**Setup:** install `jq` (`brew install jq`).
+
+- **Claude Code:** trust the folder when asked. `.claude/settings.json` declares the plugin
+  marketplaces (`agent-skills`, `caveman`), so Claude Code offers to install them; they do not
+  load until the folder is trusted. Personal overrides go in `.claude/settings.local.json`
+  (not versioned).
+- **Codex:** trust the project, then approve the Stop hook in `/hooks`. Project config
+  (`.codex/config.toml`, `.codex/hooks.json`) only loads in a trusted project, and a changed
+  hook needs approving again.
+- **OpenCode:** `opencode.json` sets the formatter and the MCP server. It has no Stop hook, so
+  run `pnpm check:agent` before ending a turn, as `AGENTS.md` says.
+
+The same `chrome-devtools` MCP server is configured for each tool: `.mcp.json`,
+`.codex/config.toml` and `opencode.json`. Change all three together.

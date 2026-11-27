@@ -36,7 +36,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/verify.sh\"",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/agent/stop-hook.sh\"",
             "timeout": 300
           }
         ]
@@ -52,6 +52,20 @@
         ]
       }
     ]
+  },
+  "extraKnownMarketplaces": {
+    "addy-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "addyosmani/agent-skills"
+      }
+    },
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
+    }
   },
   "enabledPlugins": {
     "agent-skills@addy-agent-skills": true,
