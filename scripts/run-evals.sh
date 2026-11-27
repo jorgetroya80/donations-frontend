@@ -77,9 +77,13 @@ run_agent() {
         -c "projects.\"$real\".trust_level=\"trusted\"" \
         ${AGENT_ARGS[@]+"${AGENT_ARGS[@]}"} "$prompt") >"$out" 2>"$out.err"
       local status=$?
-      # JSONL events. A failed turn or a non-zero exit is a dead session, not a failed case.
+      # JSONL events. The session counts only when every line parses, at least one turn
+      # completed and none failed. Anything else is a dead session, not a failed case: jq
+      # exits non-zero on a parse error, so invalid output cannot read as clean.
       if [ "$status" -eq 0 ] && [ -s "$out" ] &&
-        ! jq -e 'select(.type == "turn.failed" or .type == "error")' "$out" >/dev/null 2>&1; then
+        jq -s -e 'any(.[]; .type == "turn.completed")
+                  and (any(.[]; .type == "turn.failed" or .type == "error") | not)' \
+          "$out" >/dev/null 2>&1; then
         ok=1
         metrics=$(jq -s -c '[.[] | select(.type == "turn.completed") | .usage]
                   | {tokens: {input: (map(.input_tokens // 0) | add // 0),
