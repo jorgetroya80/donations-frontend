@@ -2,6 +2,7 @@
 
 React 19 + TypeScript + Vite SPA for managing church donations, expenses and reports.
 Full architecture: `docs/ARCHITECTURE.md`. Setup and env: `README.md`.
+`docs/plans/` is a history of past plans, some superseded (`*.original.md` are first drafts). Do not take a rule from it: current rules are this file, `CONSTRAINTS.md`, `docs/ARCHITECTURE.md` and the code.
 Quality bar: read `CONSTRAINTS.md` before writing code. Never weaken it to make a change pass.
 
 ## Commands
