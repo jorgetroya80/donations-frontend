@@ -70,6 +70,7 @@ degradation and a fallback of 20 lines or fewer, with no new dependency or polyf
 - Breaking change: `!` after the type or scope, and a `BREAKING CHANGE:` footer in the body.
 - PR body: What / Why / Test plan.
 - Deep pre-merge review: use the `code-reviewer` agent.
+- Repo workflows live as skills in `.agents/skills/`: `update-api-client` (bump the API client and adapt the code) and `dependabot` (fix PRs for open security alerts). Both open PRs and never merge.
 
 ## Exceptions
 
