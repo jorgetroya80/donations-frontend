@@ -53,6 +53,20 @@
       }
     ]
   },
+  "extraKnownMarketplaces": {
+    "addy-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "addyosmani/agent-skills"
+      }
+    },
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
+    }
+  },
   "enabledPlugins": {
     "agent-skills@addy-agent-skills": true,
     "caveman@caveman": true

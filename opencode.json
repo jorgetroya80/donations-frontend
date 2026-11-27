@@ -8,5 +8,13 @@
       "command": ["bash", "scripts/agent/format-file.sh", "$FILE"],
       "extensions": [".ts", ".tsx"]
     }
+  },
+  "mcp": {
+    "servers": {
+      "chrome-devtools": {
+        "type": "local",
+        "command": ["npx", "-y", "chrome-devtools-mcp@1.6.0", "--isolated"]
+      }
+    }
   }
 }

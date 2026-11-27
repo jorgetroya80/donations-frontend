@@ -1,0 +1,6 @@
+# Codex project config. Loads only when the project is trusted.
+# Keep MCP servers in sync with .mcp.json (Claude Code) and opencode.json (OpenCode).
+
+[mcp_servers.chrome-devtools]
+command = "npx"
+args = ["-y", "chrome-devtools-mcp@1.6.0", "--isolated"]
